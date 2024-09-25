@@ -1,0 +1,30 @@
+{
+	"name": "react-multi-page-form",
+	"version": "0.0.1",
+	"description": "Tools to handle multi-page forms",
+	"main": "dist/index.js",
+	"scripts": {
+		"build": "tsc",
+		"build:watch": "tsc -w",
+		"format": "biome format --write .",
+		"lint": "biome lint ./src",
+		"prepare": "husky",
+		"test": "vitest"
+	},
+	"keywords": ["forms", "multi-page"],
+	"author": "Stu Kabakoff",
+	"license": "MIT",
+	"devDependencies": {
+		"@biomejs/biome": "^1.9.2",
+		"@testing-library/dom": "^10.4.0",
+		"@testing-library/react": "^16.0.1",
+		"@tsconfig/recommended": "^1.0.7",
+		"@types/jest": "^29.5.13",
+		"@types/react": "^18.3.9",
+		"husky": "^9.1.6",
+		"jest": "^29.7.0",
+		"jest-environment-jsdom": "^29.7.0",
+		"ts-jest": "^29.2.5",
+		"typescript": "^5.6.2"
+	}
+}
