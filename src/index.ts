@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { type SyntheticEvent, useEffect, useMemo, useState } from 'react';
 import { PageNeeded, StartingPage } from './types';
 import type {
 	SequenceChild,
@@ -100,19 +100,56 @@ export function useMultiPageForm<
 
 	const currentPage = pages[currentPageIndex];
 
-	const nextIncompleteStep = useMemo(() => {
+	// biome-ignore lint/correctness/useExhaustiveDependencies: onPageChange should be excluded.
+	useEffect(() => {
 		const data = getCurrentData();
+		if (onPageChange) {
+			onPageChange(data, currentPage);
+		}
+		if (currentPage.onArrive) {
+			currentPage.onArrive(data);
+		}
+	}, [currentPage]);
+
+	const previousStep = useMemo(() => {
+		const data = getCurrentData();
+
+		for (let i = currentPageIndex - 1; i >= 0; i--) {
+			const page = pages[i];
+			const pageIsNeeded = isNeeded(page, data);
+			if (pageIsNeeded) {
+				return page;
+			}
+		}
+	}, [currentPageIndex, pages, getCurrentData]);
+
+	const [nextStep, nextIncompleteStep] = useMemo(() => {
+		const data = getCurrentData();
+		let nextStep: FormPage<DataT, PageIdentifier, ErrorList> | undefined;
+		let nextIncompleteStep:
+			| FormPage<DataT, PageIdentifier, ErrorList>
+			| undefined;
 		if (!currentPage.isFinal?.(data)) {
 			for (let i = currentPageIndex + 1; i < pages.length; i++) {
 				const page = pages[i];
-				if (isNeeded(page, data) && !page.isComplete(data)) {
-					return page;
+				const pageIsNeeded = isNeeded(page, data);
+				const pageIsComplete = page.isComplete(data);
+				if (pageIsNeeded && !nextStep) {
+					nextStep = page;
+				}
+				if (pageIsNeeded && !pageIsComplete) {
+					nextIncompleteStep = page;
+					break;
 				}
 			}
 		}
+		return [nextStep, nextIncompleteStep];
 	}, [currentPage, currentPageIndex, pages, getCurrentData]);
 
-	const advance = useCallbackRef(async () => {
+	const advance = useCallbackRef(async (event?: SyntheticEvent) => {
+		if (event) {
+			event.preventDefault();
+		}
 		const data = getCurrentData();
 
 		const page = pages[currentPageIndex];
@@ -126,7 +163,10 @@ export function useMultiPageForm<
 
 		if (onBeforePageChange) {
 			const errorList = await onBeforePageChange(data, pages[currentPageIndex]);
-			if (errorList) {
+			if (errorList === false) {
+				return;
+			}
+			if (errorList !== true && errorList) {
 				if (onValidationError) {
 					onValidationError(errorList);
 				}
@@ -139,6 +179,9 @@ export function useMultiPageForm<
 		for (let i = currentPageIndex + 1; i < pages.length; i++) {
 			const page = pages[i];
 			if (isNeeded(page, data)) {
+				if (currentPage.onExit) {
+					await currentPage.onExit(data);
+				}
 				setCurrentPageIndex(i);
 				nextPage = page;
 				nextPageIndex = i;
@@ -147,7 +190,10 @@ export function useMultiPageForm<
 		}
 	});
 
-	const goBack = useCallbackRef(() => {
+	const goBack = useCallbackRef(async (event?: SyntheticEvent) => {
+		if (event) {
+			event.preventDefault();
+		}
 		const data = getCurrentData();
 		for (let i = currentPageIndex - 1; i >= 0; i--) {
 			const page = pages[i];
@@ -162,6 +208,8 @@ export function useMultiPageForm<
 		currentPage: pages[currentPageIndex],
 		advance,
 		goBack,
+		previousStep,
+		nextStep,
 		nextIncompleteStep,
 	};
 }

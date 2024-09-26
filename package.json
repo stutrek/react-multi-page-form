@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "tsc",
 		"build:watch": "tsc -w",
+		"devcontainer": "devcontainer exec --workspace-folder=. bash",
 		"format": "biome format --write .",
 		"lint": "biome lint ./src",
 		"prepare": "husky",

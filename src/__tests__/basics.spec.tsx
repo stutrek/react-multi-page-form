@@ -8,13 +8,13 @@ describe('should increment counter', () => {
 				id: 'first',
 				isComplete: () => false,
 				validate: () => undefined,
-				Component: <div />,
+				Component: () => <div />,
 			},
 			{
 				id: 'second',
 				isComplete: () => false,
 				validate: () => undefined,
-				Component: <div />,
+				Component: () => <div />,
 			},
 		];
 

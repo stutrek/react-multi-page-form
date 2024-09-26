@@ -15,13 +15,14 @@ export type IsNeededPredicate<DataT> = (data: DataT) => PageNeeded;
 
 export type FormPage<DataT, PageIdentifier extends string, ErrorList> = {
 	id: PageIdentifier;
-	isNeeded?: IsNeededPredicate<DataT>;
-	isComplete: (data: DataT) => boolean;
-	isFinal?: (data: DataT) => boolean;
-	validate: (data: DataT) => ErrorList | undefined;
-	onArrive?: (data: DataT) => void;
-	onComplete?: (data: DataT) => void;
-	Component: ReactElement<{ formData: DataT }>;
+	isNeeded?: IsNeededPredicate<Partial<DataT>>;
+	isComplete: (data: Partial<DataT>) => boolean;
+	isFinal?: (data: Partial<DataT>) => boolean;
+	validate: (data: Partial<DataT>) => ErrorList | undefined;
+	onArrive?: (data: Partial<DataT>) => void;
+	onExit?: (data: Partial<DataT>) => Promise<void> | void;
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	Component: (props: any) => JSX.Element;
 };
 
 export type FormSequence<DataT, PageIdentifier extends string, ErrorList> = {
@@ -44,7 +45,7 @@ export type MultiPageFormParams<
 	onBeforePageChange?: (
 		data: DataT,
 		page: FormPage<DataT, PageIdentifier, ErrorList>,
-	) => Promise<ErrorList> | ErrorList;
+	) => Promise<ErrorList | boolean> | ErrorList | boolean;
 	onPageChange?: (
 		data: DataT,
 		newPage: FormPage<DataT, PageIdentifier, ErrorList>,
