@@ -6,5 +6,8 @@
 		"vscode": {
 			"extensions": ["biomejs.biome"]
 		}
-	}
+	},
+	"mounts": [
+            "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
+        ]
 }
