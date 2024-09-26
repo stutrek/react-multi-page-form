@@ -10,7 +10,7 @@
 		}
 	},
 	"mounts": [
-		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached",
 		"source=${localWorkspaceFolder}/.devcontainer/.bash_history,target=/home/node/.bash_history,type=bind"
 	]
 }
