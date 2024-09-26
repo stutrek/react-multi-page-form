@@ -1,13 +1,16 @@
 {
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:22",
 	"features": {},
+	"initializeCommand": "touch .devcontainer/.bash_history",
 	"postCreateCommand": "npm install",
+	"postStartCommand": "chmod 666 /home/node/.bash_history",
 	"customizations": {
 		"vscode": {
 			"extensions": ["biomejs.biome"]
 		}
 	},
 	"mounts": [
-            "source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached"
-        ]
+		"source=${localEnv:HOME}/.ssh,target=/root/.ssh,type=bind,consistency=cached",
+		"source=${localWorkspaceFolder}/.devcontainer/.bash_history,target=/home/node/.bash_history,type=bind"
+	]
 }
