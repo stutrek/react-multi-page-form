@@ -44,42 +44,59 @@ import type {
 
 // Helper Types
 const DocumentReferenceSchema: z.ZodType<DocumentReference> = z.object({
-	fileName: z.string(),
-	fileType: z.string(),
-	fileSize: z.number(), // in bytes
-	fileUrl: z.string().optional(), // URL if the file is stored remotely
+	fileName: z.string().min(1, { message: 'File name is required.' }),
+	fileType: z.string().min(1, { message: 'File type is required.' }),
+	fileSize: z.number().min(1, { message: 'File size must be greater than 0.' }), // in bytes
+	fileUrl: z
+		.string()
+		.min(1, { message: 'File URL is required.' })
+		.url({ message: 'Invalid URL format.' })
+		.optional(), // URL if the file is stored remotely
 });
 
 // 1. Applicant Information
 const ContactInformationSchema: z.ZodType<ContactInformation> = z.object({
-	address: z.string(),
-	phoneNumber: z.string(),
-	email: z.string().email(),
+	address: z.string().min(1, { message: 'Address is required.' }),
+	phoneNumber: z.string().min(1, { message: 'Phone number is required.' }),
+	email: z.string().email({ message: 'Invalid email address.' }),
 });
 
 const LicenseNumbersSchema: z.ZodType<LicenseNumbers> = z.object({
-	contractorLicense: z.string().optional(),
-	businessLicense: z.string().optional(),
+	contractorLicense: z
+		.string()
+		.min(1, { message: 'Contractor license is required.' })
+		.optional(),
+	businessLicense: z
+		.string()
+		.min(1, { message: 'Business license is required.' })
+		.optional(),
 });
 
 const ApplicantInformationSchema: z.ZodType<ApplicantInformation> = z.object({
-	fullName: z.string(),
-	companyName: z.string().optional(),
+	fullName: z.string().min(1, { message: 'Full name is required.' }),
+	companyName: z
+		.string()
+		.min(1, { message: 'Company name is required.' })
+		.optional(),
 	contactInformation: ContactInformationSchema,
 	licenseNumbers: LicenseNumbersSchema.optional(),
-	roleInProject: z.enum([
-		'Owner',
-		'Developer',
-		'Contractor',
-		'Authorized Agent',
-	]),
+	roleInProject: z.enum(
+		['Owner', 'Developer', 'Contractor', 'Authorized Agent'],
+		{
+			invalid_type_error: 'Invalid role in project.',
+		},
+	),
 });
 
 // 2. Project Location and Description
 const PropertyDetailsSchema: z.ZodType<PropertyDetails> = z.object({
-	streetAddress: z.string(),
-	parcelIdentificationNumber: z.string(),
-	legalDescriptionOfProperty: z.string(),
+	streetAddress: z.string().min(1, { message: 'Street address is required.' }),
+	parcelIdentificationNumber: z
+		.string()
+		.min(1, { message: 'Parcel identification number is required.' }),
+	legalDescriptionOfProperty: z
+		.string()
+		.min(1, { message: 'Legal description of property is required.' }),
 });
 
 const ProjectTypeSchema: z.ZodType<ProjectType> = z.enum([
@@ -94,15 +111,21 @@ const VarianceOrSpecialUsePermitSchema: z.ZodType<VarianceOrSpecialUsePermit> =
 	z.object({
 		varianceRequested: z.boolean(),
 		specialUsePermitRequested: z.boolean(),
-		justificationStatement: z.string(),
+		justificationStatement: z
+			.string()
+			.min(1, { message: 'Justification statement is required.' }),
 		supportingDocuments: z.array(DocumentReferenceSchema).optional(),
 	});
 
 const ZoningComplianceVerificationSchema: z.ZodType<ZoningComplianceVerification> =
 	z
 		.object({
-			currentZoningClassification: z.string(),
-			intendedUseDescription: z.string(),
+			currentZoningClassification: z
+				.string()
+				.min(1, { message: 'Current zoning classification is required.' }),
+			intendedUseDescription: z
+				.string()
+				.min(1, { message: 'Intended use description is required.' }),
 			varianceOrSpecialUsePermit: VarianceOrSpecialUsePermitSchema.optional(),
 		})
 		.superRefine((data, ctx) => {
@@ -160,7 +183,9 @@ const EnvironmentalImpactAssessmentSchema: z.ZodType<EnvironmentalImpactAssessme
 
 const SitePlanSubmissionSchema: z.ZodType<SitePlanSubmission> = z.object({
 	includesLandscapingChanges: z.boolean(),
-	sitePlanDrawings: z.array(DocumentReferenceSchema),
+	sitePlanDrawings: z
+		.array(DocumentReferenceSchema)
+		.nonempty({ message: 'At least one site plan drawing is required.' }),
 	landscapingPlans: z.array(DocumentReferenceSchema).optional(),
 	parkingLayout: z.array(DocumentReferenceSchema).optional(),
 	environmentalImpactAssessment: EnvironmentalImpactAssessmentSchema.optional(),
@@ -291,7 +316,9 @@ const FireLifeSafetySchema: z.ZodType<FireLifeSafety> = z
 // 10. Floodplain and Stormwater Management
 const StormwaterManagementPlanSchema: z.ZodType<StormwaterManagementPlan> =
 	z.object({
-		erosionControlMeasures: z.string(),
+		erosionControlMeasures: z
+			.string()
+			.min(1, { message: 'Erosion control measures is required.' }),
 		runoffCalculations: DocumentReferenceSchema,
 	});
 
@@ -335,7 +362,9 @@ const HistoricPreservationReviewSchema: z.ZodType<HistoricPreservationReview> =
 // 12. Traffic Impact Analysis
 const TrafficFlowAssessmentSchema: z.ZodType<TrafficFlowAssessment> = z.object({
 	anticipatesTrafficIncrease: z.boolean(),
-	mitigationStrategies: z.string(),
+	mitigationStrategies: z
+		.string()
+		.min(1, { message: 'Mitigation strategies is required.' }),
 });
 
 const TrafficImpactAnalysisSchema: z.ZodType<TrafficImpactAnalysis> = z
@@ -366,8 +395,12 @@ const NotificationRequirementsSchema: z.ZodType<NotificationRequirements> =
 	});
 
 const PublicHearingDetailsSchema: z.ZodType<PublicHearingDetails> = z.object({
-	hearingDate: z.coerce.date(),
-	publicCommentsReceived: z.string(),
+	hearingDate: z.coerce.date({
+		message: 'Invalid date format for hearing date.',
+	}),
+	publicCommentsReceived: z
+		.string()
+		.min(1, { message: 'Public comment is required.' }),
 });
 
 const NeighborNotificationAndPublicHearingsSchema: z.ZodType<NeighborNotificationAndPublicHearings> =
@@ -392,8 +425,8 @@ const NeighborNotificationAndPublicHearingsSchema: z.ZodType<NeighborNotificatio
 
 // 14. Contractor and Subcontractor Details
 const ContractorInformationSchema: z.ZodType<ContractorInformation> = z.object({
-	name: z.string(),
-	licenseNumber: z.string(),
+	name: z.string().min(1, { message: 'Contractor name is required.' }),
+	licenseNumber: z.string().min(1, { message: 'License number is required.' }),
 	contactInformation: ContactInformationSchema,
 });
 
@@ -411,45 +444,78 @@ const ContractorAndSubcontractorDetailsSchema: z.ZodType<ContractorAndSubcontrac
 
 // 15. Fee Calculation and Payment
 const AdditionalFeesSchema: z.ZodType<AdditionalFees> = z.object({
-	impactFees: z.number().optional(),
-	reviewFees: z.number().optional(),
+	impactFees: z
+		.number()
+		.min(0, { message: 'Impact fees must be non-negative.' })
+		.optional(),
+	reviewFees: z
+		.number()
+		.min(0, { message: 'Review fees must be non-negative.' })
+		.optional(),
 });
 
 const FeeCalculationAndPaymentSchema: z.ZodType<FeeCalculationAndPayment> =
 	z.object({
-		permitFee: z.number(),
+		permitFee: z
+			.number()
+			.min(0, { message: 'Permit fee must be non-negative.' }),
 		additionalFees: AdditionalFeesSchema.optional(),
-		totalFee: z.number(),
-		paymentMethod: z.enum(['Online', 'Check', 'Money Order']),
-		paymentReferenceNumber: z.string().optional(),
+		totalFee: z.number().min(0, { message: 'Total fee must be non-negative.' }),
+		paymentMethod: z.enum(['Online', 'Check', 'Money Order'], {
+			invalid_type_error: 'Invalid payment method.',
+		}),
+		paymentReferenceNumber: z
+			.string()
+			.min(1, { message: 'Payment reference number is required.' })
+			.optional(),
 	});
 
 // 16. Final Review and Certification
 const SubmissionConfirmationSchema: z.ZodType<SubmissionConfirmation> =
 	z.object({
-		applicationReferenceNumber: z.string(),
-		estimatedProcessingTime: z.string(),
+		applicationReferenceNumber: z
+			.string()
+			.min(1, { message: 'Application reference number is required.' }),
+		estimatedProcessingTime: z
+			.string()
+			.min(1, { message: 'Estimated processing time is required.' }),
 	});
 
 const FinalReviewAndCertificationSchema: z.ZodType<FinalReviewAndCertification> =
 	z.object({
-		reviewSummary: z.string(),
-		certificationStatement: z.string(),
-		digitalSignature: z.string(),
+		reviewSummary: z
+			.string()
+			.min(1, { message: 'Review summary is required.' }),
+		certificationStatement: z
+			.string()
+			.min(1, { message: 'Certification statement is required.' }),
+		digitalSignature: z
+			.string()
+			.min(1, { message: 'Digital signature is required.' }),
 		submissionConfirmation: SubmissionConfirmationSchema,
 	});
 
 // 17. Post-Submission Requirements
 const InspectionSchedulingSchema: z.ZodType<InspectionScheduling> = z.object({
-	requiredInspections: z.array(z.string()),
-	schedulingInstructions: z.string(),
+	requiredInspections: z
+		.array(z.string().min(1, { message: 'Inspection type is required.' }))
+		.nonempty({
+			message: 'At least one required inspection must be specified.',
+		}),
+	schedulingInstructions: z
+		.string()
+		.min(1, { message: 'Scheduling instructions is required.' }),
 });
 
 const PostSubmissionRequirementsSchema: z.ZodType<PostSubmissionRequirements> =
 	z.object({
-		supplementalInformationRequests: z.array(z.string()).optional(),
+		supplementalInformationRequests: z
+			.array(z.string().min(1, { message: 'Request is required.' }))
+			.optional(),
 		inspectionScheduling: InspectionSchedulingSchema,
-		permitIssuanceProcedure: z.string(),
+		permitIssuanceProcedure: z
+			.string()
+			.min(1, { message: 'Permit issuance procedure is required.' }),
 	});
 
 // Main Application Schema
@@ -539,7 +605,8 @@ export const BuildingPermitApplicationSchema: z.ZodType<BuildingPermitApplicatio
 			// Payment Reference Number Validation
 			if (
 				data.feeCalculationAndPayment.paymentMethod !== 'Online' &&
-				!data.feeCalculationAndPayment.paymentReferenceNumber
+				(!data.feeCalculationAndPayment.paymentReferenceNumber ||
+					data.feeCalculationAndPayment.paymentReferenceNumber.trim() === '')
 			) {
 				ctx.addIssue({
 					path: ['feeCalculationAndPayment', 'paymentReferenceNumber'],

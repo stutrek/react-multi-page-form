@@ -1,4 +1,9 @@
-import type { FieldErrors, FieldValues, UseFormReturn } from 'react-hook-form';
+import type {
+	FieldErrors,
+	FieldValues,
+	Path,
+	UseFormReturn,
+} from 'react-hook-form';
 import { useMultiPageForm } from '.';
 import type { MultiPageFormParams } from './types';
 
@@ -10,6 +15,28 @@ type MultiPageReactHookFormParams<
 	MultiPageFormParams<DataT, ComponentProps, ErrorList>,
 	'getCurrentData'
 >;
+
+function getMountedFields<DataT extends FieldValues>(
+	fields: UseFormReturn<DataT>['control']['_fields'],
+	mountedFields: Path<DataT>[] = [],
+	prefix = '',
+): Path<DataT>[] {
+	for (const field in fields) {
+		if (fields[field]?._f) {
+			if (fields[field]?._f.mount) {
+				mountedFields.push(`${prefix}${field}` as Path<DataT>);
+			}
+		} else {
+			getMountedFields(
+				fields[field] as unknown as UseFormReturn<DataT>['control']['_fields'],
+				mountedFields,
+				`${prefix}${field}.`,
+			);
+		}
+	}
+	return mountedFields;
+}
+
 export const useMultiPageHookForm = <
 	DataT extends FieldValues,
 	ComponentProps,
@@ -29,7 +56,11 @@ export const useMultiPageHookForm = <
 					return result;
 				}
 			}
-			const valid = await trigger();
+			const mountedFields = getMountedFields(
+				formApi.control._fields,
+			) as Path<DataT>[];
+			const valid = await trigger(mountedFields);
+
 			if (valid) {
 				reset(undefined, { keepValues: true });
 			}

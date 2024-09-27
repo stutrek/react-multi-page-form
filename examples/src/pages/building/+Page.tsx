@@ -1,14 +1,17 @@
 import { useForm, type SubmitHandler } from 'react-hook-form';
-import { Button } from '../../FormLibrary';
-
 import { useMultiPageHookForm } from '../../../../src/hookForm';
+import { zodResolver } from '@hookform/resolvers/zod';
+
+import { Button } from '../../FormLibrary';
 import { sample, type BuildingPermitApplication } from './data';
 import { buildingPermitApplicationSequence } from './sequence';
 import { StartingPage } from '../../../../src/types';
+import { BuildingPermitApplicationSchema } from './validator';
 
 export function Page() {
 	const formApi = useForm<BuildingPermitApplication>({
 		defaultValues: sample,
+		resolver: zodResolver(BuildingPermitApplicationSchema),
 	});
 	const {
 		register,
@@ -20,6 +23,7 @@ export function Page() {
 	} = formApi;
 
 	// rest.getValues
+	console.log(formApi);
 
 	const { currentPage, advance, goBack, nextStep, previousStep } =
 		useMultiPageHookForm({
@@ -34,6 +38,8 @@ export function Page() {
 	const onSubmit: SubmitHandler<BuildingPermitApplication> = (data) => {
 		console.log('submit', data);
 	};
+
+	console.log(errors);
 	return (
 		<>
 			<h1>Multi Page Form Example</h1>
