@@ -1,20 +1,167 @@
 # react-multi-page-form
 
-This is a tool for managing the sequence and flow of multi-page workflows. Given a long series of screens, it can put them in the proper order and help choose which one to show.
+This is a tool for managing the sequence and flow of multi-page workflows. Given a long series of screens, it can put them in the proper order makes it easy to show and hide screens based on previous input.
 
 Workflows can be composed, allowing you to reuse parts of a flow.
 
-## Basic Example
+This should be used in combination with a component library and validation schema to improve your form management.
 
-```ts
+All of the examples use react-hook-form, but any library could be used.
 
-const data = 
+## Basic API
 
-const sequence = [
+- Create an array of pages and/or sequences. One for each page of the form.
+- Set up `react-hook-form` 
+- Pass the pages and the hook for API into `useMultiPageHookForm` to get the multi-page state and controls.
 
+```typescript
+import { useForm } from 'react-hook-form';
+import { useMultiPageHookForm } from 'react-multi-page-forms';
+
+// create a list of pages for the form
+const pages = [
+    {
+        id: 'first',
+        Component: FirstPage,
+    },
+    {
+        id: 'second',
+        Component: SecondPage,
+    },
+]
+const MyMultiPageForm = () => {
+    // use react-hook-form's useForm
+    const formApi = useForm<FormModel>();
+    
+    // create multi-page controls
+    const { 
+        currentPage, // the page object above
+        advance, // goes to the next page
+        goBack, // goes back one page
+        nextStep, // the page object for the next step
+        previousStep // the page object for the previous step
+    } = useMultiPageHookForm({
+        formApi,
+        pages,
+    });
+    
+    // render the component and controls
+    return (<>
+        <currentPage.Component
+            errors={errors}
+            register={register}
+        />
+    
+        {previousStep && <button onClick={goBack}>Prev</button>}
+        {nextStep ? (
+            <button onClick={advance}>Next</button>
+        ) : (
+            <button type="submit">Submit</button>
+        )}
+    </>);
+};
+```
+### Pages and Sequences
+
+A **page** represents a single screen that will be shown to the user as part of this multi-step form. It can have as many fields or as few as you'd like. It can even have logic to show and hide fields built in.
+
+A **sequence** is an array of pages and sequences that represent a specific flow. For example, they may be a series of screens specific to a certain country.
+
+```typescript
+type FormPage<DataT, ComponentProps, ErrorList> = {
+    id: string;
+    // determines whether or not this page is needed
+    isNeeded?: (data: Partial<DataT>) => boolean | undefined
+    // determines if the page is already complete
+    isComplete: (data: Partial<DataT>) => boolean;
+    // determines if this should be a final step in the flow
+    isFinal?: (data: Partial<DataT>) => boolean;
+    // if you need specific validation logic, put it here.
+    // Mounted inputs are automatically validated.
+    validate?: (data: Partial<DataT>) => ErrorList | undefined;
+    // callback on arrival
+    onArrive?: (data: Partial<DataT>) => void;
+    // callback on departure
+    onExit?: (data: Partial<DataT>) => Promise<void> | void;
+    // the component that will be rendered
+    Component: (props: ComponentProps) => JSX.Element;
+};
+
+export type FormSequence<DataT, ComponentProps, ErrorList> = {
+    id: string;
+    // an array of pages or sequences that make up this sequence
+    pages: SequenceChild<DataT, ComponentProps, ErrorList>[];
+    // determines if this sequence is needed
+    isNeeded?: IsNeededPredicate<DataT>;
+};
+```
+
+## A More Complete Example
+
+```typescript
+import { useMultiPageHookForm } from 'react-multi-page-forms'
+
+const pages = [
+    {
+        id: 'first',
+        isComplete: (data) => !!data.name?.length,
+        Component: FirstPage,
+    },
+    {
+        id: 'second',
+        isComplete: (data) => !!data.pet?.length,
+        Component: SecondPage,
+    },
 ]
 
-const process = useMultiPageForm()
-
-
+export function MyMultiPageForm() {
+    // set up React Hook Form
+    const formApi = useForm<FormModel>({});
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = formApi;
+    
+    // set up the multi-page controls
+    const { 
+        currentPage,
+        advance,
+        goBack,
+        nextStep,
+        previousStep 
+    } = useMultiPageHookForm({
+        formApi,
+        pages: sequence,
+    });
+    
+    const onSubmit: SubmitHandler<FormModel> = (data) => {
+        console.log('submit', data);
+    };
+    
+    return (
+        <>
+            <h1>Multi Page Form Example</h1>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="card">
+                    {/* render the current page */}
+                    <currentPage.Component
+                        errors={errors}
+                        register={register}
+                    />
+                </div>
+                <div className="card">
+                    {previousStep && <button onClick={goBack}>Prev</button>}
+                    {nextStep ? (
+                        <button onClick={advance}>Next</button>
+                    ) : (
+                        <button type="submit">Submit</button>
+                    )}
+                </div>
+            </form>
+        </>
+    );
+}
 ```
+
+
