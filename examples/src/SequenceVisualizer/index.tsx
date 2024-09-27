@@ -8,7 +8,7 @@ type SequenceVisualizerProps<T> = {
     currentPage: SequenceChild<T, any, any>;
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     pages: SequenceChild<T, any, any>[];
-    idPrefix: string;
+    idPrefix?: string;
 };
 
 export function SequenceVisualizer<T>({

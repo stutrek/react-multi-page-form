@@ -4,7 +4,6 @@ import type {
     SequenceChild,
     FormPage,
     MultiPageFormParams,
-    IsNeededPredicate,
     FormSequence,
 } from './types';
 import { useCallbackRef } from './utils';
