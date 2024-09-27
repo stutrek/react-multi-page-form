@@ -1,24 +1,18 @@
-import type { ReactElement } from 'react';
-
-export enum PageNeeded {
-	NotNeeded = 0,
-	Needed = 1,
-	Unsure = 2,
-}
-
 export enum StartingPage {
 	FirstIncomplete = 1,
 	FirstPage = 2,
 }
 
-export type IsNeededPredicate<DataT> = (data: DataT) => PageNeeded;
+export type IsNeededPredicate<DataT> = (
+	data: Partial<DataT>,
+) => boolean | undefined;
 
 export type FormPage<DataT, ComponentProps, ErrorList> = {
 	id: string;
-	isNeeded?: IsNeededPredicate<Partial<DataT>>;
+	isNeeded?: IsNeededPredicate<DataT>;
 	isComplete: (data: Partial<DataT>) => boolean;
 	isFinal?: (data: Partial<DataT>) => boolean;
-	validate: (data: Partial<DataT>) => ErrorList | undefined;
+	validate?: (data: Partial<DataT>) => ErrorList | undefined;
 	onArrive?: (data: Partial<DataT>) => void;
 	onExit?: (data: Partial<DataT>) => Promise<void> | void;
 	Component: (props: ComponentProps) => JSX.Element;

@@ -1,5 +1,5 @@
 import { type SyntheticEvent, useEffect, useMemo, useState } from 'react';
-import { PageNeeded, StartingPage } from './types';
+import { StartingPage } from './types';
 import type {
 	SequenceChild,
 	FormPage,
@@ -18,13 +18,13 @@ function wrapChild<DataT, T extends SequenceChild<DataT, any, any>>(
 		isNeeded: (data: DataT) => {
 			if (isNeeded) {
 				const parentIsNeeded = isNeeded(data);
-				if (parentIsNeeded === PageNeeded.NotNeeded) {
-					return PageNeeded.NotNeeded;
+				if (parentIsNeeded === false) {
+					return false;
 				}
 				if (child.isNeeded) {
 					return child.isNeeded(data);
 				}
-				return PageNeeded.Needed;
+				return true;
 			}
 		},
 	} as T;
@@ -35,10 +35,7 @@ function isNeeded<DataT, Page extends FormPage<DataT, any, any>>(
 	page: Page,
 	data: DataT,
 ) {
-	if (
-		page.isNeeded === undefined ||
-		page.isNeeded(data) !== PageNeeded.NotNeeded
-	) {
+	if (page.isNeeded === undefined || page.isNeeded(data) !== false) {
 		return true;
 	}
 }
@@ -148,7 +145,7 @@ export function useMultiPageForm<DataT, ComponentProps, ErrorList>({
 		const data = getCurrentData();
 
 		const page = pages[currentPageIndex];
-		const validationErrors = page.validate(data);
+		const validationErrors = page.validate?.(data);
 		if (validationErrors) {
 			if (onValidationError) {
 				onValidationError(validationErrors);
