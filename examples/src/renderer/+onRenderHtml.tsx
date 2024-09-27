@@ -2,7 +2,7 @@
 import { escapeInject } from 'vike/server';
 
 export async function onRenderHtml() {
-	return escapeInject`
+    return escapeInject`
 <!doctype html>
 <html lang="en">
   <head>

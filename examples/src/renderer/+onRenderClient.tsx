@@ -5,16 +5,16 @@ import { PageLayout } from './PageLayout';
 import type { ComponentType } from 'react';
 
 interface PageContext {
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	Page: ComponentType<any>;
+    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    Page: ComponentType<any>;
 }
 
 async function onRenderClient(pageContext: PageContext): Promise<void> {
-	const { Page } = pageContext;
-	// biome-ignore lint/style/noNonNullAssertion: <explanation>
-	createRoot(document.getElementById('root')!).render(
-		<PageLayout>
-			<Page />
-		</PageLayout>,
-	);
+    const { Page } = pageContext;
+    // biome-ignore lint/style/noNonNullAssertion: <explanation>
+    createRoot(document.getElementById('root')!).render(
+        <PageLayout>
+            <Page />
+        </PageLayout>,
+    );
 }
