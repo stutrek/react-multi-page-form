@@ -5,12 +5,10 @@ import {
 	type UseFormRegister,
 	type SubmitHandler,
 } from 'react-hook-form';
-import { Button, TextInput } from './FormLibrary';
+import { Button, TextInput } from '../../FormLibrary';
 
-import type { SequenceChild } from '../../src/types';
-import { useMultiPageForm } from '../../src/index';
-import { useCallbackRef } from '../../src/utils';
-import { useState } from 'react';
+import type { SequenceChild } from '../../../../src/types';
+import { useMultiPageForm } from '../../../../src/index';
 
 type FormModel = {
 	name: string;
@@ -70,29 +68,29 @@ const SecondPage = (props: PageProps) => {
 	);
 };
 
-const sequence: SequenceChild<FormModel, string, FieldErrors<FormModel>>[] = [
-	{
-		id: 'first',
-		isComplete: (data) => !!data.name?.length,
-		validate: () => undefined,
-		Component: FirstPage,
-	},
-	{
-		id: 'second',
-		isComplete: (data) => !!data.pet?.length,
-		validate: () => undefined,
-		Component: SecondPage,
-	},
-] as const;
+const sequence: SequenceChild<FormModel, PageProps, FieldErrors<FormModel>>[] =
+	[
+		{
+			id: 'first',
+			isComplete: (data) => !!data.name?.length,
+			validate: () => undefined,
+			Component: FirstPage,
+		},
+		{
+			id: 'second',
+			isComplete: (data) => !!data.pet?.length,
+			validate: () => undefined,
+			Component: SecondPage,
+		},
+	] as const;
 
-function App() {
+export function Page() {
 	const {
 		register,
 		handleSubmit,
 		getValues,
 		trigger,
 		reset,
-		clearErrors,
 		formState: { errors },
 	} = useForm<FormModel>({});
 
@@ -105,8 +103,7 @@ function App() {
 			onBeforePageChange: async () => {
 				const valid = await trigger();
 				if (valid) {
-					clearErrors();
-					reset(undefined, { keepValues: true, keepIsSubmitted: false });
+					reset(undefined, { keepValues: true });
 				}
 				return valid;
 			},
@@ -137,5 +134,3 @@ function App() {
 		</>
 	);
 }
-
-export default App;

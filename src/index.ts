@@ -8,12 +8,11 @@ import type {
 } from './types';
 import { useCallbackRef } from './utils';
 
-function wrapChild<
-	DataT,
-	PageIdentifier extends string,
-	ErrorList,
-	T extends SequenceChild<DataT, PageIdentifier, ErrorList>,
->(isNeeded: IsNeededPredicate<DataT>, child: T): T {
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+function wrapChild<DataT, T extends SequenceChild<DataT, any, any>>(
+	child: T,
+	isNeeded: IsNeededPredicate<DataT>,
+): T {
 	return {
 		...child,
 		isNeeded: (data: DataT) => {
@@ -28,7 +27,7 @@ function wrapChild<
 				return PageNeeded.Needed;
 			}
 		},
-	};
+	} as T;
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
@@ -44,18 +43,14 @@ function isNeeded<DataT, Page extends FormPage<DataT, any, any>>(
 	}
 }
 
-export function useMultiPageForm<
-	DataT,
-	PageIdentifier extends string,
-	ErrorList,
->({
+export function useMultiPageForm<DataT, ComponentProps, ErrorList>({
 	getCurrentData,
 	pages: pagesInput,
 	startingPage,
 	onBeforePageChange,
 	onPageChange,
 	onValidationError,
-}: MultiPageFormParams<DataT, PageIdentifier, ErrorList>) {
+}: MultiPageFormParams<DataT, ComponentProps, ErrorList>) {
 	const pages = useMemo(() => {
 		const pages = [...pagesInput];
 		for (let i = 0; i < pages.length; i++) {
@@ -64,7 +59,7 @@ export function useMultiPageForm<
 				if (item.isNeeded) {
 					const isNeeded = item.isNeeded;
 					const sequencePages = item.pages.map((child) =>
-						wrapChild(isNeeded, child),
+						wrapChild(child, isNeeded),
 					);
 					pages.splice(i, 1, ...sequencePages);
 				}
@@ -72,7 +67,7 @@ export function useMultiPageForm<
 				i -= 1;
 			}
 		}
-		return pages as FormPage<DataT, PageIdentifier, ErrorList>[];
+		return pages as FormPage<DataT, ComponentProps, ErrorList>[];
 	}, [pagesInput]);
 
 	const [currentPageIndex, setCurrentPageIndex] = useState(() => {
@@ -125,9 +120,9 @@ export function useMultiPageForm<
 
 	const [nextStep, nextIncompleteStep] = useMemo(() => {
 		const data = getCurrentData();
-		let nextStep: FormPage<DataT, PageIdentifier, ErrorList> | undefined;
+		let nextStep: FormPage<DataT, ComponentProps, ErrorList> | undefined;
 		let nextIncompleteStep:
-			| FormPage<DataT, PageIdentifier, ErrorList>
+			| FormPage<DataT, ComponentProps, ErrorList>
 			| undefined;
 		if (!currentPage.isFinal?.(data)) {
 			for (let i = currentPageIndex + 1; i < pages.length; i++) {
@@ -174,7 +169,7 @@ export function useMultiPageForm<
 			}
 		}
 
-		let nextPage: FormPage<DataT, PageIdentifier, ErrorList> | undefined;
+		let nextPage: FormPage<DataT, ComponentProps, ErrorList> | undefined;
 		let nextPageIndex: number | undefined;
 		for (let i = currentPageIndex + 1; i < pages.length; i++) {
 			const page = pages[i];

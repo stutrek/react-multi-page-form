@@ -13,42 +13,38 @@ export enum StartingPage {
 
 export type IsNeededPredicate<DataT> = (data: DataT) => PageNeeded;
 
-export type FormPage<DataT, PageIdentifier extends string, ErrorList> = {
-	id: PageIdentifier;
+export type FormPage<DataT, ComponentProps, ErrorList> = {
+	id: string;
 	isNeeded?: IsNeededPredicate<Partial<DataT>>;
 	isComplete: (data: Partial<DataT>) => boolean;
 	isFinal?: (data: Partial<DataT>) => boolean;
 	validate: (data: Partial<DataT>) => ErrorList | undefined;
 	onArrive?: (data: Partial<DataT>) => void;
 	onExit?: (data: Partial<DataT>) => Promise<void> | void;
-	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	Component: (props: any) => JSX.Element;
+	Component: (props: ComponentProps) => JSX.Element;
 };
 
-export type FormSequence<DataT, PageIdentifier extends string, ErrorList> = {
-	pages: SequenceChild<DataT, PageIdentifier, ErrorList>[];
+export type FormSequence<DataT, ComponentProps, ErrorList> = {
+	pages: SequenceChild<DataT, ComponentProps, ErrorList>[];
 	isNeeded?: IsNeededPredicate<DataT>;
+	Component?: (props: ComponentProps) => JSX.Element;
 };
 
-export type SequenceChild<DataT, PageIdentifier extends string, ErrorList> =
-	| FormPage<DataT, PageIdentifier, ErrorList>
-	| FormSequence<DataT, PageIdentifier, ErrorList>;
+export type SequenceChild<DataT, ComponentProps, ErrorList> =
+	| FormPage<DataT, ComponentProps, ErrorList>
+	| FormSequence<DataT, ComponentProps, ErrorList>;
 
-export type MultiPageFormParams<
-	DataT,
-	PageIdentifier extends string,
-	ErrorList,
-> = {
+export type MultiPageFormParams<DataT, ComponentProps, ErrorList> = {
 	getCurrentData: () => DataT;
-	pages: Array<SequenceChild<DataT, PageIdentifier, ErrorList>>;
-	startingPage?: PageIdentifier | StartingPage;
+	pages: Array<SequenceChild<DataT, ComponentProps, ErrorList>>;
+	startingPage?: ComponentProps | StartingPage;
 	onBeforePageChange?: (
 		data: DataT,
-		page: FormPage<DataT, PageIdentifier, ErrorList>,
+		page: FormPage<DataT, ComponentProps, ErrorList>,
 	) => Promise<ErrorList | boolean> | ErrorList | boolean;
 	onPageChange?: (
 		data: DataT,
-		newPage: FormPage<DataT, PageIdentifier, ErrorList>,
+		newPage: FormPage<DataT, ComponentProps, ErrorList>,
 	) => void;
 	onComplete?: (data: DataT) => void;
 	onValidationError?: (errorList: ErrorList) => void;
