@@ -1,5 +1,4 @@
 // Import necessary libraries and types
-import React from 'react';
 import type {
 	UseFormRegister,
 	FieldErrors,
@@ -31,7 +30,9 @@ type BuildingFormComponent = (props: ComponentProps) => JSX.Element;
 export const ApplicantInformationComponent: BuildingFormComponent = ({
 	register,
 	errors,
+	watch,
 }) => {
+	const role = watch('applicantInformation.roleInProject');
 	return (
 		<div>
 			<h2>Applicant Information</h2>
@@ -60,7 +61,7 @@ export const ApplicantInformationComponent: BuildingFormComponent = ({
 				{...register('applicantInformation.contactInformation.email')}
 				error={errors.applicantInformation?.contactInformation?.email}
 			/>
-			<RadioGroup name="roleInProject">
+			<RadioGroup name="roleInProject" value={role}>
 				<Radio
 					label="Owner"
 					value="Owner"
@@ -90,7 +91,9 @@ export const ApplicantInformationComponent: BuildingFormComponent = ({
 export const ProjectLocationDescriptionComponent: BuildingFormComponent = ({
 	register,
 	errors,
+	watch,
 }) => {
+	const projectType = watch('projectLocationDescription.projectType');
 	return (
 		<div>
 			<h2>Project Location and Description</h2>
@@ -123,7 +126,7 @@ export const ProjectLocationDescriptionComponent: BuildingFormComponent = ({
 						?.legalDescriptionOfProperty
 				}
 			/>
-			<RadioGroup name="projectType">
+			<RadioGroup name="projectType" value={projectType}>
 				<Radio
 					label="New Construction"
 					value="New Construction"
@@ -782,7 +785,9 @@ export const ContractorDetailsComponent: BuildingFormComponent = ({
 export const FeeCalculationAndPaymentComponent: BuildingFormComponent = ({
 	register,
 	errors,
+	watch,
 }) => {
+	const paymentMethod = watch('feeCalculationAndPayment.paymentMethod');
 	return (
 		<div>
 			<h2>Fee Calculation and Payment</h2>
@@ -798,7 +803,7 @@ export const FeeCalculationAndPaymentComponent: BuildingFormComponent = ({
 				{...register('feeCalculationAndPayment.totalFee')}
 				error={errors.feeCalculationAndPayment?.totalFee}
 			/>
-			<RadioGroup name="paymentMethod">
+			<RadioGroup name="paymentMethod" value={paymentMethod}>
 				<Radio
 					label="Online"
 					value="Online"

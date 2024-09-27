@@ -8,7 +8,7 @@ import {
 import { Button, TextInput } from '../../FormLibrary';
 
 import type { SequenceChild } from '../../../../src/types';
-import { useMultiPageForm } from '../../../../src/index';
+import { useMultiPageHookForm } from '../../../../src/hookForm';
 
 type FormModel = {
 	name: string;
@@ -85,31 +85,19 @@ const sequence: SequenceChild<FormModel, PageProps, FieldErrors<FormModel>>[] =
 	] as const;
 
 export function Page() {
+	const formApi = useForm<FormModel>({});
 	const {
 		register,
 		handleSubmit,
-		getValues,
-		trigger,
-		reset,
 		formState: { errors },
-	} = useForm<FormModel>({});
+	} = formApi;
 
 	// rest.getValues
 
 	const { currentPage, advance, goBack, nextStep, previousStep } =
-		useMultiPageForm({
-			getCurrentData: () => getValues(),
+		useMultiPageHookForm({
+			formApi,
 			pages: sequence,
-			onBeforePageChange: async () => {
-				const valid = await trigger();
-				if (valid) {
-					reset(undefined, { keepValues: true });
-				}
-				return valid;
-			},
-			onPageChange: (data) => {
-				console.log('saving', data);
-			},
 		});
 
 	const onSubmit: SubmitHandler<FormModel> = (data) => {

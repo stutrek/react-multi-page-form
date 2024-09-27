@@ -4,12 +4,7 @@ import JoyRadioGroup from '@mui/joy/RadioGroup';
 import JoyRadio from '@mui/joy/Radio';
 import JoyButton from '@mui/joy/Button';
 import { type ChangeEvent, forwardRef, type PropsWithChildren } from 'react';
-import type {
-	FieldError,
-	FieldErrorsImpl,
-	Merge,
-	UseFormSetValue,
-} from 'react-hook-form';
+import type { FieldError, UseFormSetValue } from 'react-hook-form';
 import { FormControl, FormHelperText, FormLabel } from '@mui/joy';
 
 export const Button = JoyButton;
