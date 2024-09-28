@@ -16,20 +16,11 @@ const data = {
     file: undefined,
 };
 
-const radioOptions = [
-    { value: 'dog', label: 'Dog' },
-    { value: 'cat', label: 'Cat' },
-    { value: 'fish', label: 'Fish' },
-];
-
 export function Page() {
     const {
         register,
         handleSubmit,
         setValue,
-        getValues,
-        trigger,
-        reset,
         formState: { errors },
     } = useForm({
         defaultValues: data,

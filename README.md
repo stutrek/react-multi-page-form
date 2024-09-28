@@ -76,8 +76,8 @@ type FormPage<DataT, ComponentProps, ErrorList> = {
     isComplete: (data: Partial<DataT>) => boolean;
     // determines if this should be a final step in the flow
     isFinal?: (data: Partial<DataT>) => boolean;
-    // if you need specific validation logic, put it here.
     // Mounted inputs are automatically validated.
+    // If you need specific validation logic, put it here.
     validate?: (data: Partial<DataT>) => ErrorList | undefined;
     // callback on arrival
     onArrive?: (data: Partial<DataT>) => void;
