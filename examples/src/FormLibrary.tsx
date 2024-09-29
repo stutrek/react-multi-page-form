@@ -3,6 +3,8 @@ import JoyCheckbox from '@mui/joy/Checkbox';
 import JoyRadioGroup from '@mui/joy/RadioGroup';
 import JoyRadio from '@mui/joy/Radio';
 import JoyButton from '@mui/joy/Button';
+
+import type React from 'react';
 import { type ChangeEvent, forwardRef, type PropsWithChildren } from 'react';
 import type { FieldError, UseFormSetValue } from 'react-hook-form';
 import { FormControl, FormHelperText, FormLabel } from '@mui/joy';
@@ -12,7 +14,7 @@ export const RadioGroup = JoyRadioGroup;
 export const Radio = JoyRadio;
 
 type AdditionalProps = {
-    error?: FieldError | undefined;
+    error?: FieldError | undefined | string;
     label?: string;
 };
 
@@ -27,6 +29,12 @@ type FormFieldContainerProps = {
     labelAfter?: boolean;
 } & AdditionalProps;
 
+function ErrorText({ error }: { error: FieldError | undefined | string }) {
+    return typeof error === 'string'
+        ? error
+        : (error?.message ?? <span>&nbsp;</span>);
+}
+
 export const FormFieldContainer = ({
     children,
     label,
@@ -37,7 +45,9 @@ export const FormFieldContainer = ({
         {labelAfter ? null : <FormLabel>{label}</FormLabel>}
         {children}
         {labelAfter ? <FormLabel>{label}</FormLabel> : null}
-        <FormHelperText>{error?.message ?? <span>&nbsp;</span>}</FormHelperText>
+        <FormHelperText>
+            <ErrorText error={error} />
+        </FormHelperText>
     </FormControl>
 );
 
@@ -52,6 +62,32 @@ export const TextInput = forwardRef<HTMLInputElement, InputProps<typeof Input>>(
     },
 );
 
+type SelectOption = {
+    label: string;
+    value: string;
+};
+
+export const Select = forwardRef<
+    HTMLSelectElement,
+    React.HTMLProps<HTMLSelectElement> &
+        AdditionalProps & {
+            options: SelectOption[];
+        }
+>((props, ref) => {
+    const { error, label, options, ...rest } = props;
+    return (
+        <FormFieldContainer label={label} error={error}>
+            <select {...rest} ref={ref}>
+                {options.map((option) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+        </FormFieldContainer>
+    );
+});
+
 export const Checkbox = forwardRef<
     HTMLInputElement,
     InputProps<typeof JoyCheckbox>
@@ -61,7 +97,7 @@ export const Checkbox = forwardRef<
         <FormControl error={!!error}>
             <JoyCheckbox {...rest} ref={ref} />
             <FormHelperText>
-                {error?.message ?? <span>&nbsp;</span>}
+                <ErrorText error={error} />
             </FormHelperText>
         </FormControl>
     );
@@ -97,7 +133,7 @@ export const FileInput = forwardRef<
                 ref={ref}
             />
             <FormHelperText>
-                {error?.message ?? <span>&nbsp;</span>}
+                <ErrorText error={error} />
             </FormHelperText>
         </FormControl>
     );
