@@ -1,4 +1,5 @@
 import classNames from 'classnames';
+
 import type { SequenceChild } from '../../../src/types';
 import styles from './SequenceVisualizer.module.css';
 
@@ -18,7 +19,7 @@ export function SequenceVisualizer<T>({
     idPrefix = '',
 }: SequenceVisualizerProps<T>) {
     return (
-        <div>
+        <div className={styles.visualizer}>
             {pages.map((page) => {
                 const isNeeded = page.isNeeded?.(data) !== false;
                 const isComplete =
@@ -35,6 +36,7 @@ export function SequenceVisualizer<T>({
                         key={page.id}
                     >
                         <div className={styles.label}>
+                            {isComplete ? '✅ ' : ''}
                             {page.id
                                 .replaceAll('-', ' ')
                                 .replace(/([A-Z])/g, ' $1')

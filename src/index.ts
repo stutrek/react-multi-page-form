@@ -198,10 +198,18 @@ export function useMultiPageForm<DataT, ComponentProps, ErrorList>({
         }
     });
 
+    const goTo = useCallbackRef((pageId: string) => {
+        const index = pages.findIndex((page) => page.id === pageId);
+        if (index !== -1) {
+            setCurrentPageIndex(index);
+        }
+    });
+
     return {
         currentPage: pages[currentPageIndex],
         advance,
         goBack,
+        goTo,
         previousStep,
         nextStep,
         nextIncompleteStep,

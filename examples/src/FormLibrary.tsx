@@ -2,6 +2,7 @@ import Input from '@mui/joy/Input';
 import JoyRadioGroup from '@mui/joy/RadioGroup';
 import JoyRadio from '@mui/joy/Radio';
 import JoyButton from '@mui/joy/Button';
+import JoyBox from '@mui/joy/Box';
 
 import type React from 'react';
 import { type ChangeEvent, forwardRef, type PropsWithChildren } from 'react';
@@ -11,6 +12,7 @@ import { FormControl, FormHelperText, FormLabel } from '@mui/joy';
 export const Button = JoyButton;
 export const RadioGroup = JoyRadioGroup;
 export const Radio = JoyRadio;
+export const Box = JoyBox;
 
 type AdditionalProps = {
     error?: FieldError | undefined | string;

@@ -1,5 +1,5 @@
 import { useFieldArray } from 'react-hook-form';
-import { TextInput, Select } from '../../../FormLibrary';
+import { TextInput, Select, Button } from '../../../FormLibrary';
 import type { FormComponentProps } from '../types';
 
 export const CoOwnershipForm = ({
@@ -86,24 +86,23 @@ export const CoOwnershipForm = ({
                             { value: 'Other', label: 'Other' },
                         ]}
                     />
-                    <button type="button" onClick={() => remove(index)}>
+                    <Button color="danger" onClick={() => remove(index)}>
                         Remove
-                    </button>
+                    </Button>
                 </div>
             ))}
-            <button
-                type="button"
+            <Button
                 onClick={() =>
                     append({
                         name: '',
                         email: '',
                         ownershipPercentage: 0,
-                        relationshipToPrimaryOwner: '',
+                        relationshipToPrimaryOwner: 'Other',
                     })
                 }
             >
                 Add Co-Owner
-            </button>
+            </Button>
         </div>
     );
 };

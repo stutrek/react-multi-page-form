@@ -1,26 +1,15 @@
 import './App.css';
-import {
-    type FieldErrors,
-    useForm,
-    type UseFormRegister,
-    type SubmitHandler,
-} from 'react-hook-form';
-import { Button, TextInput } from '../../FormLibrary';
-
+import { TextInput } from '../../FormLibrary';
 import type { SequenceChild } from '../../../../src/types';
-import { useMultiPageHookForm } from '../../../../src/hookForm';
+import { type FormComponentProps, FormContainer } from '../../FormContainer';
+import type { FieldErrors } from 'react-hook-form';
 
 type FormModel = {
     name: string;
     pet: string;
 };
 
-type PageProps = {
-    errors: FieldErrors<FormModel>;
-    register: UseFormRegister<FormModel>;
-};
-
-const FirstPage = (props: PageProps) => {
+const FirstPage = (props: FormComponentProps<FormModel>) => {
     const { errors, register } = props;
     return (
         <>
@@ -43,7 +32,7 @@ const FirstPage = (props: PageProps) => {
     );
 };
 
-const SecondPage = (props: PageProps) => {
+const SecondPage = (props: FormComponentProps<FormModel>) => {
     const { errors, register } = props;
     return (
         <>
@@ -68,60 +57,30 @@ const SecondPage = (props: PageProps) => {
     );
 };
 
-const sequence: SequenceChild<FormModel, PageProps, FieldErrors<FormModel>>[] =
-    [
-        {
-            id: 'first',
-            isComplete: (data) => !!data.name?.length,
-            validate: () => undefined,
-            Component: FirstPage,
-        },
-        {
-            id: 'second',
-            isComplete: (data) => !!data.pet?.length,
-            validate: () => undefined,
-            Component: SecondPage,
-        },
-    ] as const;
+const sequence: SequenceChild<
+    FormModel,
+    FormComponentProps<FormModel>,
+    FieldErrors<FormModel>
+>[] = [
+    {
+        id: 'first',
+        isComplete: (data) => !!data.name?.length,
+        validate: () => undefined,
+        Component: FirstPage,
+    },
+    {
+        id: 'second',
+        isComplete: (data) => !!data.pet?.length,
+        validate: () => undefined,
+        Component: SecondPage,
+    },
+] as const;
 
 export function Page() {
-    const formApi = useForm<FormModel>({});
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-    } = formApi;
-
-    // rest.getValues
-
-    const { currentPage, advance, goBack, nextStep, previousStep } =
-        useMultiPageHookForm({
-            formApi,
-            pages: sequence,
-        });
-
-    const onSubmit: SubmitHandler<FormModel> = (data) => {
-        console.log('submit', data);
-    };
     return (
         <>
             <h1>Multi Page Form Example</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
-                <div className="card">
-                    <currentPage.Component
-                        errors={errors}
-                        register={register}
-                    />
-                </div>
-                <div className="card">
-                    {previousStep && <Button onClick={goBack}>Prev</Button>}
-                    {nextStep ? (
-                        <Button onClick={advance}>Next</Button>
-                    ) : (
-                        <Button type="submit">Submit</Button>
-                    )}
-                </div>
-            </form>
+            <FormContainer defaultValues={{}} pages={sequence} />
         </>
     );
 }

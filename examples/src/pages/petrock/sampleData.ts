@@ -12,7 +12,7 @@ export const rockyMcSmooth: PetRockSystem = {
         rockDetails: {
             name: 'Rocky McSmooth',
             alias: 'Smooth Operator',
-            dateOfAcquisition: new Date('2023-04-01'),
+            dateOfAcquisition: '2023-04-01',
             type: 'Sedimentary',
             weight: 150, // grams
             color: {
@@ -25,7 +25,7 @@ export const rockyMcSmooth: PetRockSystem = {
                 colorChanges: [
                     {
                         previousColor: 'Dull Gray',
-                        dateChanged: new Date('2023-05-10'),
+                        dateChanged: '2023-05-10',
                         method: 'Polish',
                     },
                 ],
@@ -35,7 +35,7 @@ export const rockyMcSmooth: PetRockSystem = {
             accessories: [
                 {
                     type: 'Tiny Sunglasses',
-                    dateAdded: new Date('2023-06-15'),
+                    dateAdded: '2023-06-15',
                     material: 'Plastic',
                     securelyAttached: true,
                 },
@@ -77,7 +77,7 @@ export const rockyMcSmooth: PetRockSystem = {
         colorChangeDetails: [
             {
                 previousColor: 'Dull Gray',
-                dateChanged: new Date('2023-05-10'),
+                dateChanged: '2023-05-10',
                 reasonForChange: 'Polishing for better reflection',
             },
         ],
@@ -86,13 +86,13 @@ export const rockyMcSmooth: PetRockSystem = {
         accessories: [
             {
                 type: 'Tiny Sunglasses',
-                dateAdded: new Date('2023-06-15'),
+                dateAdded: '2023-06-15',
                 material: 'Plastic',
                 securelyAttached: true,
             },
             {
                 type: 'Mini Hat',
-                dateAdded: new Date('2023-07-20'),
+                dateAdded: '2023-07-20',
                 material: 'Felt',
                 securelyAttached: false,
             },
@@ -113,7 +113,7 @@ export const rockyMcSmooth: PetRockSystem = {
         coverageType: 'Damage',
         claimsHistory: [
             {
-                date: new Date('2023-08-15'),
+                date: '2023-08-15',
                 description: 'Minor chip from accidental drop',
                 claimAmount: 25.0,
                 witnesses: ['Pebbly Pete'],
@@ -133,11 +133,11 @@ export const rockyMcSmooth: PetRockSystem = {
     looseAccessoryReport: {
         accessory: {
             type: 'Mini Hat',
-            dateAdded: new Date('2023-07-20'),
+            dateAdded: '2023-07-20',
             material: 'Felt',
             securelyAttached: false,
         },
-        noticedDate: new Date('2024-01-10'),
+        noticedDate: '2024-01-10',
         hazardDescription: 'Hat keeps rolling away',
         reattachmentAttempted: true,
     },
@@ -155,7 +155,7 @@ export const rockyMcSmooth: PetRockSystem = {
     claimReports: [
         {
             incident: {
-                date: new Date('2023-08-15'),
+                date: '2023-08-15',
                 description: 'Minor chip from accidental drop',
                 claimAmount: 25.0,
                 witnesses: ['Pebbly Pete'],
@@ -186,7 +186,7 @@ export const bumpyMcRough: PetRockSystem = {
         ],
         rockDetails: {
             name: 'Bumpy McRough',
-            dateOfAcquisition: new Date('2022-11-05'),
+            dateOfAcquisition: '2022-11-05',
             type: 'Metamorphic',
             weight: 200,
             color: {
@@ -198,7 +198,7 @@ export const bumpyMcRough: PetRockSystem = {
             accessories: [
                 {
                     type: 'Tiny Backpack',
-                    dateAdded: new Date('2023-02-14'),
+                    dateAdded: '2023-02-14',
                     material: 'Leather',
                     securelyAttached: false,
                 },
@@ -238,7 +238,7 @@ export const bumpyMcRough: PetRockSystem = {
         accessories: [
             {
                 type: 'Tiny Backpack',
-                dateAdded: new Date('2023-02-14'),
+                dateAdded: '2023-02-14',
                 material: 'Leather',
                 securelyAttached: false,
             },
@@ -262,11 +262,11 @@ export const bumpyMcRough: PetRockSystem = {
     looseAccessoryReport: {
         accessory: {
             type: 'Tiny Backpack',
-            dateAdded: new Date('2023-02-14'),
+            dateAdded: '2023-02-14',
             material: 'Leather',
             securelyAttached: false,
         },
-        noticedDate: new Date('2024-03-22'),
+        noticedDate: '2024-03-22',
         hazardDescription: 'Backpack keeps falling off',
         reattachmentAttempted: false,
     },
@@ -289,7 +289,7 @@ export const glassyMcShiny: PetRockSystem = {
         rockDetails: {
             name: 'Glassy McShiny',
             alias: 'Sparkle Rock',
-            dateOfAcquisition: new Date('2021-07-20'),
+            dateOfAcquisition: '2021-07-20',
             type: 'Igneous',
             weight: 120,
             color: {
@@ -302,13 +302,13 @@ export const glassyMcShiny: PetRockSystem = {
             accessories: [
                 {
                     type: 'Mini Disco Ball',
-                    dateAdded: new Date('2022-12-31'),
+                    dateAdded: '2022-12-31',
                     material: 'Metal',
                     securelyAttached: true,
                 },
                 {
                     type: 'LED Lights',
-                    dateAdded: new Date('2023-01-01'),
+                    dateAdded: '2023-01-01',
                     material: 'Plastic',
                     securelyAttached: false,
                 },
@@ -343,7 +343,7 @@ export const glassyMcShiny: PetRockSystem = {
         colorChangeDetails: [
             {
                 previousColor: 'Transparent',
-                dateChanged: new Date('2022-01-01'),
+                dateChanged: '2022-01-01',
                 reasonForChange: 'Added LED Lights for sparkle effect',
             },
         ],
@@ -352,13 +352,13 @@ export const glassyMcShiny: PetRockSystem = {
         accessories: [
             {
                 type: 'Mini Disco Ball',
-                dateAdded: new Date('2022-12-31'),
+                dateAdded: '2022-12-31',
                 material: 'Metal',
                 securelyAttached: true,
             },
             {
                 type: 'LED Lights',
-                dateAdded: new Date('2023-01-01'),
+                dateAdded: '2023-01-01',
                 material: 'Plastic',
                 securelyAttached: false,
             },
@@ -378,7 +378,7 @@ export const glassyMcShiny: PetRockSystem = {
         coverageType: 'Emotional Distress',
         claimsHistory: [
             {
-                date: new Date('2023-02-14'),
+                date: '2023-02-14',
                 description: 'Glitter malfunction causing stress',
                 claimAmount: 100.0,
                 witnesses: ['Twinkle Tina'],
@@ -398,11 +398,11 @@ export const glassyMcShiny: PetRockSystem = {
     looseAccessoryReport: {
         accessory: {
             type: 'LED Lights',
-            dateAdded: new Date('2023-01-01'),
+            dateAdded: '2023-01-01',
             material: 'Plastic',
             securelyAttached: false,
         },
-        noticedDate: new Date('2024-05-05'),
+        noticedDate: '2024-05-05',
         hazardDescription: 'Lights flickering uncontrollably',
         reattachmentAttempted: true,
     },
@@ -415,7 +415,7 @@ export const glassyMcShiny: PetRockSystem = {
     claimReports: [
         {
             incident: {
-                date: new Date('2023-02-14'),
+                date: '2023-02-14',
                 description: 'Glitter malfunction causing stress',
                 claimAmount: 100.0,
                 witnesses: ['Twinkle Tina'],

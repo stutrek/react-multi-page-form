@@ -48,7 +48,10 @@ h1 {
     }
 }
 
-form {
-    max-width: 400px;
+.form {
+    max-width: 600px;
     margin: auto;
+}
+.form form {
+    width: 400px;
 }

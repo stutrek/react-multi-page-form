@@ -47,7 +47,7 @@ export const useMultiPageHookForm = <
     onBeforePageChange,
     ...rest
 }: MultiPageReactHookFormParams<DataT, ComponentProps, FieldErrors>) => {
-    const { trigger, reset, control, formState } = formApi;
+    const { trigger, reset, control } = formApi;
 
     const multiPageForm = useMultiPageForm({
         getCurrentData: () => formApi.getValues(),

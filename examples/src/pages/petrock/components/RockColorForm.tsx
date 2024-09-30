@@ -1,4 +1,5 @@
 // components/RockColorForm.tsx
+import { Divider, Stack } from '@mui/joy';
 import { TextInput, Checkbox, Button } from '../../../FormLibrary';
 import type { FormComponentProps } from '../types';
 import { useFieldArray } from 'react-hook-form';
@@ -19,7 +20,7 @@ export const RockColorForm = ({
     });
 
     return (
-        <div>
+        <Stack spacing={1}>
             <h2>Rock Color Information</h2>
             <TextInput
                 label="Primary Color"
@@ -35,13 +36,12 @@ export const RockColorForm = ({
                     style={{
                         display: 'flex',
                         alignItems: 'center',
-                        marginBottom: '10px',
                     }}
                 >
                     <TextInput
                         label={`Secondary Color ${index + 1}`}
                         {...register(
-                            `registration.rockDetails.color.secondaryColors.${index}`,
+                            `registration.rockDetails.color.secondaryColors.${index}.name`,
                             {
                                 required: 'Secondary color is required',
                                 minLength: {
@@ -59,27 +59,18 @@ export const RockColorForm = ({
                     <Button
                         type="button"
                         onClick={() => remove(index)}
-                        style={{
-                            marginLeft: '10px',
-                            backgroundColor: '#f44336',
-                            color: '#fff',
-                        }}
+                        color="danger"
                     >
                         Remove
                     </Button>
                 </div>
             ))}
-            <Button
-                type="button"
-                onClick={() => append({ name: '' })}
-                style={{
-                    backgroundColor: '#4CAF50',
-                    color: '#fff',
-                    marginTop: '10px',
-                }}
-            >
-                Add Secondary Color
-            </Button>
+            <div>
+                <Button type="button" onClick={() => append({ name: '' })}>
+                    Add Secondary Color
+                </Button>
+            </div>
+            <Divider />
             <Checkbox
                 label="Is this rock artificially colored?"
                 {...register('registration.rockDetails.color.isArtificial')}
@@ -101,6 +92,6 @@ export const RockColorForm = ({
                     }
                 />
             )}
-        </div>
+        </Stack>
     );
 };

@@ -1,22 +1,17 @@
+.visualizer {
+    padding: 0 5px;
+}
 .page {
-    width: 100px;
-    max-width: calc(100% - 10px);
-    min-height: 50px;
     border: 1px solid silver;
-    margin: 5px;
-    display: inline-block;
+    margin: 0 0 5px;
+    /* display: inline-block; */
     border-radius: 10px;
     box-sizing: border-box;
     font-size: 9px;
-    vertical-align: top;
     color: black;
 }
 .label {
     padding: 10px;
-}
-
-.complete {
-    background-color: palegreen;
 }
 .notNeeded {
     opacity: 0.5;

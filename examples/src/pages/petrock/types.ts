@@ -28,13 +28,13 @@ interface CoOwner extends Omit<Owner, 'hasCoOwners'> {
 
 interface Accessory {
     type: string;
-    dateAdded: Date;
+    dateAdded: string;
     material?: string;
     securelyAttached: boolean;
 }
 
 interface Incident {
-    date: Date;
+    date: string;
     description: string;
     claimAmount?: number;
     witnesses?: string[];
@@ -58,7 +58,7 @@ interface PetRockRegistration {
     rockDetails: {
         name: string;
         alias?: string;
-        dateOfAcquisition: Date;
+        dateOfAcquisition: string;
         type: 'Sedimentary' | 'Igneous' | 'Metamorphic' | 'Other';
         weight: number; // in grams
         color: {
@@ -67,7 +67,7 @@ interface PetRockRegistration {
             isArtificial: boolean;
             colorChanges?: {
                 previousColor: string;
-                dateChanged: Date;
+                dateChanged: string;
                 method: 'Paint' | 'Dye' | 'Polish' | 'Other';
             }[];
         };
@@ -119,7 +119,7 @@ interface ColorDistribution {
     hasColorChanged: boolean;
     colorChangeDetails?: {
         previousColor: string;
-        dateChanged: Date;
+        dateChanged: string;
         reasonForChange: string;
     }[];
 }
@@ -162,7 +162,7 @@ interface PetRockCounselingRequest {
 // Loose Accessory Report
 interface LooseAccessoryReport {
     accessory: Accessory;
-    noticedDate: Date;
+    noticedDate: string;
     hazardDescription: string;
     reattachmentAttempted: boolean;
 }
