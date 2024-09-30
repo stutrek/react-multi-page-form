@@ -30,9 +30,12 @@ export const OwnerForm = ({ register, errors }: FormComponentProps) => {
             <TextInput
                 label="Phone Number"
                 {...register('registration.owner.phone', {
-                    pattern: {
-                        value: /^\+?[1-9]\d{1,14}$/,
-                        message: 'Enter a valid phone number',
+                    validate: (value) => {
+                        const numbers = value?.replace(/\D/g, '');
+                        return (
+                            numbers?.length === 10 ||
+                            'Phone number must be 10 digits'
+                        );
                     },
                 })}
                 error={errors.registration?.owner?.phone}
@@ -49,9 +52,9 @@ export const OwnerForm = ({ register, errors }: FormComponentProps) => {
                 error={errors.registration?.owner?.email}
             />
             <Checkbox
-                label="Are you the sole owner?"
-                {...register('registration.owner.soleOwner')}
-                error={errors.registration?.owner?.soleOwner}
+                label="Is rock in shared custody?"
+                {...register('registration.owner.hasCoOwners')}
+                error={errors.registration?.owner?.hasCoOwners}
             />
         </div>
     );

@@ -9,8 +9,9 @@ export const RockColorForm = ({
     watch,
     control,
 }: FormComponentProps) => {
-    const isArtificialColor =
-        watch('registration.rockDetails.color.isNatural') === false;
+    const isArtificialColor = watch(
+        'registration.rockDetails.color.isArtificial',
+    );
 
     const { fields, append, remove } = useFieldArray({
         control,
@@ -80,11 +81,11 @@ export const RockColorForm = ({
                 Add Secondary Color
             </Button>
             <Checkbox
-                label="Is this rock naturally colored?"
-                {...register('registration.rockDetails.color.isNatural')}
-                error={errors.registration?.rockDetails?.color?.isNatural}
+                label="Is this rock artificially colored?"
+                {...register('registration.rockDetails.color.isArtificial')}
+                error={errors.registration?.rockDetails?.color?.isArtificial}
             />
-            {!isArtificialColor && (
+            {isArtificialColor && (
                 <TextInput
                     label="Method of Artificial Coloring"
                     {...register(

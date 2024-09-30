@@ -83,9 +83,12 @@ export function useMultiPageForm<DataT, ComponentProps, ErrorList>({
             );
         }
         if (!startingPage || startingPage === StartingPage.FirstIncomplete) {
-            return pages.findIndex((page) => {
+            const index = pages.findIndex((page) => {
                 return isNeeded(page, data) && !page.isComplete(data);
             });
+            if (index !== -1) {
+                return index;
+            }
         }
         return 0;
     });
@@ -169,8 +172,6 @@ export function useMultiPageForm<DataT, ComponentProps, ErrorList>({
             }
         }
 
-        let nextPage: FormPage<DataT, ComponentProps, ErrorList> | undefined;
-        let nextPageIndex: number | undefined;
         for (let i = currentPageIndex + 1; i < pages.length; i++) {
             const page = pages[i];
             if (isNeeded(page, data)) {
@@ -178,8 +179,6 @@ export function useMultiPageForm<DataT, ComponentProps, ErrorList>({
                     await currentPage.onExit(data);
                 }
                 setCurrentPageIndex(i);
-                nextPage = page;
-                nextPageIndex = i;
                 break;
             }
         }

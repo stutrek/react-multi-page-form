@@ -47,7 +47,7 @@ export const useMultiPageHookForm = <
     onBeforePageChange,
     ...rest
 }: MultiPageReactHookFormParams<DataT, ComponentProps, FieldErrors>) => {
-    const { trigger, reset } = formApi;
+    const { trigger, reset, control, formState } = formApi;
 
     const multiPageForm = useMultiPageForm({
         getCurrentData: () => formApi.getValues(),
@@ -62,9 +62,14 @@ export const useMultiPageHookForm = <
                 formApi.control._fields,
             ) as Path<DataT>[];
             const valid = await trigger(mountedFields);
+            console.log({ mountedFields, valid });
 
             if (valid) {
                 reset(undefined, { keepValues: true });
+            } else {
+                control._updateFormState({
+                    isSubmitted: true,
+                });
             }
             return valid;
         },

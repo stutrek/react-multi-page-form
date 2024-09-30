@@ -1,5 +1,4 @@
 import Input from '@mui/joy/Input';
-import JoyCheckbox from '@mui/joy/Checkbox';
 import JoyRadioGroup from '@mui/joy/RadioGroup';
 import JoyRadio from '@mui/joy/Radio';
 import JoyButton from '@mui/joy/Button';
@@ -90,12 +89,15 @@ export const Select = forwardRef<
 
 export const Checkbox = forwardRef<
     HTMLInputElement,
-    InputProps<typeof JoyCheckbox>
+    React.HTMLProps<HTMLInputElement> & AdditionalProps
 >((props, ref) => {
-    const { error, ...rest } = props;
+    const { error, label, ...rest } = props;
     return (
-        <FormControl error={!!error}>
-            <JoyCheckbox {...rest} ref={ref} />
+        <FormControl error={!!error} orientation="horizontal">
+            <label>
+                <input type="checkbox" {...rest} ref={ref} />
+                {label}
+            </label>
             <FormHelperText>
                 <ErrorText error={error} />
             </FormHelperText>
@@ -105,12 +107,12 @@ export const Checkbox = forwardRef<
 
 export const FileInput = forwardRef<
     HTMLInputElement,
-    InputProps<typeof JoyCheckbox> & {
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        setValue: UseFormSetValue<any>;
-        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-        error?: any;
-    }
+    React.HTMLProps<HTMLInputElement> &
+        AdditionalProps & {
+            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+            setValue: UseFormSetValue<any>;
+            name: string;
+        }
 >((props, ref) => {
     const { error, onChange, onBlur, setValue, name, ...rest } = props;
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -126,15 +128,13 @@ export const FileInput = forwardRef<
     };
     return (
         <FormControl error={!!error}>
-            <JoyCheckbox
+            <Checkbox
                 name={name}
+                error={error}
                 {...rest}
                 onChange={handleChange}
                 ref={ref}
             />
-            <FormHelperText>
-                <ErrorText error={error} />
-            </FormHelperText>
         </FormControl>
     );
 });

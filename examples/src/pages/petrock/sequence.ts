@@ -25,24 +25,21 @@ export const pages: SequenceChild<
     },
     {
         id: 'co-ownership-info',
-        isNeeded: (data) =>
-            !!data.registration?.coOwners &&
-            data.registration.coOwners.length > 0,
+        isNeeded: (data) => !!data.registration?.owner?.hasCoOwners,
         isComplete: (data) =>
-            !!data.registration?.coOwners &&
-            data.registration.coOwners.every(
-                (coOwner) => !!coOwner?.name && !!coOwner.ownershipPercentage,
-            ),
+            !data.registration?.owner?.hasCoOwners ||
+            (!!data.registration?.coOwners &&
+                data.registration.coOwners.every(
+                    (coOwner) =>
+                        !!coOwner?.name && !!coOwner.ownershipPercentage,
+                )),
         Component: CoOwnershipForm,
     },
     {
         id: 'rock-identification',
         isComplete: (data) =>
             !!data.registration?.rockDetails?.name &&
-            (data.registration.rockDetails.type?.sedimentary ||
-                data.registration.rockDetails.type?.igneous ||
-                data.registration.rockDetails.type?.metamorphic ||
-                !!data.registration.rockDetails.type?.other) &&
+            !!data.registration.rockDetails.type &&
             !!data.registration.rockDetails.weight,
         Component: RockIdentificationForm,
     },
@@ -52,10 +49,10 @@ export const pages: SequenceChild<
             (!!data.registration?.rockDetails?.color?.secondaryColors &&
                 data.registration.rockDetails.color.secondaryColors.length >
                     0) ||
-            !data.registration?.rockDetails?.color?.isNatural,
+            data.registration?.rockDetails?.color?.isArtificial,
         isComplete: (data) =>
             !!data.registration?.rockDetails?.color?.primaryColor &&
-            (data.registration.rockDetails.color.isNatural ||
+            (!data.registration.rockDetails.color.isArtificial ||
                 (!!data.registration.rockDetails.color.colorChanges &&
                     data.registration.rockDetails.color.colorChanges.length >
                         0)),
@@ -63,14 +60,13 @@ export const pages: SequenceChild<
     },
     {
         id: 'rock-siblings',
-        isNeeded: (data) =>
-            !!data.registration?.rockDetails?.lineage?.knownSiblings &&
-            data.registration.rockDetails.lineage.knownSiblings.length > 0,
+        isNeeded: (data) => !!data.registration?.rockDetails?.hasSiblings,
         isComplete: (data) =>
-            !!data.registration?.rockDetails?.lineage?.knownSiblings &&
-            data.registration.rockDetails.lineage.knownSiblings.every(
-                (name) => !!name,
-            ),
+            !data.registration?.rockDetails?.hasSiblings ||
+            (!!data.registration?.rockDetails?.lineage?.knownSiblings &&
+                data.registration.rockDetails.lineage.knownSiblings.every(
+                    (name) => !!name,
+                )),
         Component: RockSiblingForm,
     },
     {
@@ -80,21 +76,19 @@ export const pages: SequenceChild<
     },
     {
         id: 'accessory-inventory',
-        isNeeded: (data) =>
-            !!data.accessoryInventory?.accessories &&
-            data.accessoryInventory.accessories.length > 0,
+        isNeeded: (data) => !!data.registration?.rockDetails?.isAccessorized,
         isComplete: (data) =>
-            !!data.accessoryInventory &&
-            data.accessoryInventory.accessories.every(
-                (accessory) => !!accessory?.type,
-            ),
+            !data.registration?.rockDetails?.isAccessorized ||
+            (!!data.accessoryInventory &&
+                data.accessoryInventory.accessories.every(
+                    (accessory) => !!accessory?.type,
+                )),
         Component: AccessoryInventoryForm,
     },
     {
         id: 'emotional-support',
         isNeeded: (data) =>
-            !!data.emotionalSupportCertification?.supportFunctions &&
-            data.emotionalSupportCertification.supportFunctions.length > 0,
+            !!data.registration?.certifications?.emotionalSupport,
         isComplete: (data) =>
             !!data.emotionalSupportCertification?.certificationDetails
                 ?.registrationNumber,

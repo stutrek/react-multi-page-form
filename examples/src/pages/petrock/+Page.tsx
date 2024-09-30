@@ -4,6 +4,8 @@ import type { PetRockSystem } from './types';
 import * as samples from './sampleData';
 import { useMultiPageHookForm } from '../../../../src/hookForm';
 import { useState } from 'react';
+import { SequenceVisualizer } from '../../SequenceVisualizer';
+import { StartingPage } from '../../../../src/types';
 
 // The multi-page form component
 export const PetRockRegistrationForm = ({
@@ -19,6 +21,7 @@ export const PetRockRegistrationForm = ({
         formState: { errors },
         watch,
         setValue,
+        getValues,
         control,
     } = formApi;
 
@@ -26,6 +29,7 @@ export const PetRockRegistrationForm = ({
         useMultiPageHookForm({
             formApi,
             pages,
+            startingPage: StartingPage.FirstPage,
         });
 
     const onSubmit = (data: PetRockSystem) => {
@@ -33,31 +37,39 @@ export const PetRockRegistrationForm = ({
     };
 
     return (
-        <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="form-card">
-                <currentPage.Component
-                    register={register}
-                    errors={errors}
-                    watch={watch}
-                    setValue={setValue}
-                    control={control}
-                />
-            </div>
-            <div className="form-actions">
-                {previousStep && (
-                    <button onClick={goBack} type="button">
-                        Prev
-                    </button>
-                )}
-                {nextStep ? (
-                    <button onClick={advance} type="button">
-                        Next
-                    </button>
-                ) : (
-                    <button type="submit">Submit</button>
-                )}
-            </div>
-        </form>
+        <>
+            <form onSubmit={handleSubmit(onSubmit)}>
+                <div className="form-card">
+                    <currentPage.Component
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                        getValues={getValues}
+                        control={control}
+                    />
+                </div>
+                <div className="form-actions">
+                    {previousStep && (
+                        <button onClick={goBack} type="button">
+                            Prev
+                        </button>
+                    )}
+                    {nextStep ? (
+                        <button onClick={advance} type="button">
+                            Next
+                        </button>
+                    ) : (
+                        <button type="submit">Submit</button>
+                    )}
+                </div>
+            </form>
+            <SequenceVisualizer
+                data={watch()}
+                currentPage={currentPage}
+                pages={pages}
+            />
+        </>
     );
 };
 

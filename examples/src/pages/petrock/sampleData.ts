@@ -5,17 +5,15 @@ export const rockyMcSmooth: PetRockSystem = {
         owner: {
             name: 'Sandy Pebbleton',
             address: '123 Boulder Blvd, Rocksville',
-            phone: '555-ROCK',
+            phone: '555-345-1234',
             email: 'sandy@rockmail.com',
-            soleOwner: true,
+            hasCoOwners: true,
         },
         rockDetails: {
             name: 'Rocky McSmooth',
             alias: 'Smooth Operator',
             dateOfAcquisition: new Date('2023-04-01'),
-            type: {
-                sedimentary: true,
-            },
+            type: 'Sedimentary',
             weight: 150, // grams
             color: {
                 primaryColor: 'Slate Gray',
@@ -23,7 +21,7 @@ export const rockyMcSmooth: PetRockSystem = {
                     { name: 'Pebble Pink' },
                     { name: 'Granite Green' },
                 ],
-                isNatural: true,
+                isArtificial: true,
                 colorChanges: [
                     {
                         previousColor: 'Dull Gray',
@@ -33,6 +31,7 @@ export const rockyMcSmooth: PetRockSystem = {
                 ],
             },
             texture: 'Smooth',
+            isAccessorized: true,
             accessories: [
                 {
                     type: 'Tiny Sunglasses',
@@ -41,6 +40,7 @@ export const rockyMcSmooth: PetRockSystem = {
                     securelyAttached: true,
                 },
             ],
+            hasSiblings: true,
             lineage: {
                 knownSiblings: [
                     { name: 'Bumpy McRough' },
@@ -64,33 +64,6 @@ export const rockyMcSmooth: PetRockSystem = {
         certifications: {
             competitiveEvents: ['Rock Rolling Championship 2023'],
             emotionalSupport: true,
-        },
-    },
-    coOwnership: {
-        primaryOwner: {
-            name: 'Sandy Pebbleton',
-            address: '123 Boulder Blvd, Rocksville',
-            phone: '555-ROCK',
-            email: 'sandy@rockmail.com',
-            soleOwner: false, // In co-ownership, 'soleOwner' might be false
-        },
-        coOwners: [
-            {
-                name: 'Granite Gary',
-                ownershipPercentage: 50,
-                relationshipToPrimaryOwner: 'Best Friend',
-            },
-        ],
-        visitationSchedule: {
-            daysPerWeek: {
-                primaryOwner: 5,
-                coOwner: 2,
-            },
-            specialEvents: ['Rock Birthday Party'],
-        },
-        custodyDispute: {
-            cause: 'Disagreement over sunglasses style',
-            proposedResolution: 'Mediation',
         },
     },
     colorDistribution: {
@@ -197,13 +170,13 @@ export const bumpyMcRough: PetRockSystem = {
     registration: {
         owner: {
             name: 'Gravel Greg',
-            soleOwner: false,
+            hasCoOwners: true,
         },
         coOwners: [
             {
                 name: 'Stone Stella',
                 ownershipPercentage: 60,
-                relationshipToPrimaryOwner: 'Sister',
+                relationshipToPrimaryOwner: 'Family Member',
             },
             {
                 name: 'Pebble Paul',
@@ -214,16 +187,14 @@ export const bumpyMcRough: PetRockSystem = {
         rockDetails: {
             name: 'Bumpy McRough',
             dateOfAcquisition: new Date('2022-11-05'),
-            type: {
-                metamorphic: true,
-                other: 'Glittery',
-            },
+            type: 'Metamorphic',
             weight: 200,
             color: {
                 primaryColor: 'Granite Gray',
-                isNatural: false,
+                isArtificial: false,
             },
             texture: 'Rough',
+            isAccessorized: true,
             accessories: [
                 {
                     type: 'Tiny Backpack',
@@ -232,6 +203,7 @@ export const bumpyMcRough: PetRockSystem = {
                     securelyAttached: false,
                 },
             ],
+            hasSiblings: false,
             lineage: {
                 familyTree: '/documents/bumpy_family_tree.docx',
             },
@@ -251,31 +223,6 @@ export const bumpyMcRough: PetRockSystem = {
         certifications: {
             competitiveEvents: ['Rock Hopping Contest', 'Pebble Toss'],
             emotionalSupport: false,
-        },
-    },
-    coOwnership: {
-        primaryOwner: {
-            name: 'Gravel Greg',
-            soleOwner: false,
-        },
-        coOwners: [
-            {
-                name: 'Stone Stella',
-                ownershipPercentage: 60,
-                relationshipToPrimaryOwner: 'Sister',
-            },
-            {
-                name: 'Pebble Paul',
-                ownershipPercentage: 40,
-                relationshipToPrimaryOwner: 'Neighbor',
-            },
-        ],
-        visitationSchedule: {
-            daysPerWeek: {
-                primaryOwner: 3,
-                coOwner: 4,
-            },
-            specialEvents: ['Rock Picnic', 'Stone Movie Night'],
         },
     },
     colorDistribution: {
@@ -337,22 +284,21 @@ export const glassyMcShiny: PetRockSystem = {
         owner: {
             name: 'Crystal Claire',
             email: 'crystal@rockstars.com',
-            soleOwner: true,
+            hasCoOwners: false,
         },
         rockDetails: {
             name: 'Glassy McShiny',
             alias: 'Sparkle Rock',
             dateOfAcquisition: new Date('2021-07-20'),
-            type: {
-                igneous: true,
-            },
+            type: 'Igneous',
             weight: 120,
             color: {
                 primaryColor: 'Clear Quartz',
                 secondaryColors: [{ name: 'Rainbow Prism' }],
-                isNatural: true,
+                isArtificial: false,
             },
             texture: 'Polished',
+            isAccessorized: true,
             accessories: [
                 {
                     type: 'Mini Disco Ball',
@@ -367,6 +313,7 @@ export const glassyMcShiny: PetRockSystem = {
                     securelyAttached: false,
                 },
             ],
+            hasSiblings: false,
             lineage: {},
         },
         personalityProfile: {

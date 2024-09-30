@@ -15,5 +15,6 @@
     "mounts": [
         "source=${localEnv:HOME}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached",
         "source=${localWorkspaceFolder}/.devcontainer/.zsh_history,target=/home/node/.zsh_history,type=bind"
-    ]
+    ],
+    "forwardPorts": [3000]
 }

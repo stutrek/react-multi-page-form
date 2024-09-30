@@ -1,6 +1,7 @@
 import type {
     Control,
     FieldErrors,
+    UseFormGetValues,
     UseFormRegister,
     UseFormSetValue,
     UseFormWatch,
@@ -12,19 +13,17 @@ interface Owner {
     address?: string;
     phone?: string;
     email?: string;
-    soleOwner: boolean;
+    hasCoOwners: boolean;
 }
 
-interface CoOwner extends Omit<Owner, 'soleOwner'> {
+interface CoOwner extends Omit<Owner, 'hasCoOwners'> {
     ownershipPercentage: number;
-    relationshipToPrimaryOwner: string;
-}
-
-interface RockType {
-    sedimentary?: boolean;
-    igneous?: boolean;
-    metamorphic?: boolean;
-    other?: string;
+    relationshipToPrimaryOwner:
+        | 'Friend'
+        | 'Family Member'
+        | 'Neighbor'
+        | 'Former Rock Owner'
+        | 'Other';
 }
 
 interface Accessory {
@@ -60,12 +59,12 @@ interface PetRockRegistration {
         name: string;
         alias?: string;
         dateOfAcquisition: Date;
-        type: RockType;
+        type: 'Sedimentary' | 'Igneous' | 'Metamorphic' | 'Other';
         weight: number; // in grams
         color: {
             primaryColor: string;
             secondaryColors?: { name: string }[];
-            isNatural: boolean;
+            isArtificial: boolean;
             colorChanges?: {
                 previousColor: string;
                 dateChanged: Date;
@@ -73,7 +72,9 @@ interface PetRockRegistration {
             }[];
         };
         texture: 'Smooth' | 'Rough' | 'Cracked' | 'Polished' | 'Other';
+        isAccessorized: boolean;
         accessories?: Accessory[];
+        hasSiblings: boolean;
         lineage?: {
             knownSiblings?: { name: string }[];
             familyTree?: string; // Path to a file or document
@@ -99,23 +100,6 @@ interface PetRockRegistration {
     certifications?: {
         competitiveEvents?: string[];
         emotionalSupport?: boolean;
-    };
-}
-
-// Section 2: Co-Ownership Agreement
-interface CoOwnershipAgreement {
-    primaryOwner: Owner;
-    coOwners: CoOwner[];
-    visitationSchedule: {
-        daysPerWeek: {
-            primaryOwner: number;
-            coOwner: number;
-        };
-        specialEvents?: string[];
-    };
-    custodyDispute?: {
-        cause: string;
-        proposedResolution: 'Mediation' | 'Counseling' | 'Shared Custody';
     };
 }
 
@@ -213,7 +197,6 @@ interface ClaimReport {
 // Complete Data Model for Pet Rock System
 export interface PetRockSystem {
     registration: PetRockRegistration;
-    coOwnership?: CoOwnershipAgreement;
     colorDistribution?: ColorDistribution;
     accessoryInventory?: AccessoryInventoryForm;
     emotionalSupportCertification?: EmotionalSupportCertification;
@@ -231,5 +214,6 @@ export interface FormComponentProps {
     errors: FieldErrors<PetRockSystem>;
     watch: UseFormWatch<PetRockSystem>;
     setValue: UseFormSetValue<PetRockSystem>;
+    getValues: UseFormGetValues<PetRockSystem>;
     control: Control<PetRockSystem>;
 }

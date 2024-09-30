@@ -20,21 +20,23 @@ export function SequenceVisualizer<T>({
     return (
         <div>
             {pages.map((page) => {
+                const isNeeded = page.isNeeded?.(data) !== false;
+                const isComplete =
+                    'isComplete' in page && page.isComplete(data);
                 return (
                     <div
                         className={classNames(
                             styles.page,
                             `${idPrefix}${page.id}` === currentPage.id &&
                                 styles.currentPage,
-                            'isComplete' in page &&
-                                page.isComplete(data) &&
-                                styles.complete,
-                            page.isNeeded?.(data) === false && styles.notNeeded,
+                            isNeeded && isComplete && styles.complete,
+                            !isNeeded && styles.notNeeded,
                         )}
                         key={page.id}
                     >
                         <div className={styles.label}>
                             {page.id
+                                .replaceAll('-', ' ')
                                 .replace(/([A-Z])/g, ' $1')
                                 .replace(/^./, (str) => str.toUpperCase())}
                         </div>

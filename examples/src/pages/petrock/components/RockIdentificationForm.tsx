@@ -1,10 +1,11 @@
 // components/RockIdentificationForm.tsx
-import { TextInput, RadioGroup, Radio } from '../../../FormLibrary';
+import { TextInput, RadioGroup, Radio, Checkbox } from '../../../FormLibrary';
 import type { FormComponentProps } from '../types';
 
 export const RockIdentificationForm = ({
     register,
     errors,
+    getValues,
 }: FormComponentProps) => {
     return (
         <div>
@@ -29,32 +30,35 @@ export const RockIdentificationForm = ({
                 })}
                 error={errors.registration?.rockDetails?.dateOfAcquisition}
             />
-            <RadioGroup name="rockType">
+            <RadioGroup
+                name="rockType"
+                defaultValue={getValues('registration.rockDetails.type')}
+            >
                 <Radio
                     label="Sedimentary"
-                    value="sedimentary"
-                    {...register('registration.rockDetails.type.sedimentary', {
+                    value="Sedimentary"
+                    {...register('registration.rockDetails.type', {
                         required: 'Rock type is required',
                     })}
                 />
                 <Radio
                     label="Igneous"
-                    value="igneous"
-                    {...register('registration.rockDetails.type.igneous', {
+                    value="Igneous"
+                    {...register('registration.rockDetails.type', {
                         required: 'Rock type is required',
                     })}
                 />
                 <Radio
                     label="Metamorphic"
-                    value="metamorphic"
-                    {...register('registration.rockDetails.type.metamorphic', {
+                    value="Metamorphic"
+                    {...register('registration.rockDetails.type', {
                         required: 'Rock type is required',
                     })}
                 />
                 <Radio
                     label="Other"
-                    value="other"
-                    {...register('registration.rockDetails.type.other')}
+                    value="Other"
+                    {...register('registration.rockDetails.type')}
                 />
             </RadioGroup>
             <TextInput
@@ -68,6 +72,18 @@ export const RockIdentificationForm = ({
                     },
                 })}
                 error={errors.registration?.rockDetails?.weight}
+            />
+            <Checkbox
+                label="This rock has siblings"
+                {...register('registration.rockDetails.hasSiblings')}
+            />
+            <Checkbox
+                label="This rock is accessorized"
+                {...register('registration.rockDetails.isAccessorized')}
+            />
+            <Checkbox
+                label="This is an emotional support rock"
+                {...register('registration.certifications.emotionalSupport')}
             />
         </div>
     );
