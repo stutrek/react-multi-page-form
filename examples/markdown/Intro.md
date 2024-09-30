@@ -1,6 +1,6 @@
 <p><a target="_blank" href="https://app.eraser.io/workspace/dANft6JRV3HMF4INka5b" id="edit-in-eraser-github-link"><img alt="Edit in Eraser" src="https://firebasestorage.googleapis.com/v0/b/second-petal-295822.appspot.com/o/images%2Fgithub%2FOpen%20in%20Eraser.svg?alt=media&amp;token=968381c8-a7e7-472a-8ed6-4a6626da5501"></a></p>
 
-![Logo](undefined "Logo")
+![Logo](/.eraser/dANft6JRV3HMF4INka5b___NfqZz0nmuSaEGZERJqy3bAkpu9T2___---figure---orzOubidYH1StavlRoJIZ---figure---XKmIsQKniFMZFQBsTtceQQ.png "Logo")
 
 Managing complex, multi-step forms in React can quickly become cumbersome, especially when dealing with conditional logic, dynamic workflows, and user navigation. **react-multi-page-form** is designed to simplify this process by providing a robust framework for handling multiple page forms and dependent workflows with ease.
 
