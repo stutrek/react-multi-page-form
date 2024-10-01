@@ -1,0 +1,39 @@
+{
+    "name": "docs",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev",
+        "build": "next build",
+        "start": "next start"
+    },
+    "dependencies": {
+        "@emotion/react": "^11.13.3",
+        "@emotion/styled": "^11.13.0",
+        "@hookform/resolvers": "^3.9.0",
+        "@leafac/rehype-shiki": "^2.2.1",
+        "@mdx-js/loader": "^3.0.1",
+        "@mdx-js/react": "^3.0.1",
+        "@mui/joy": "^5.0.0-beta.48",
+        "@next/mdx": "^14.2.13",
+        "@tailwindcss/typography": "^0.5.15",
+        "@types/mdx": "^2.0.13",
+        "classnames": "^2.5.1",
+        "flowbite-react": "^0.10.2",
+        "next": "14.2.13",
+        "react": "^18",
+        "react-dom": "^18",
+        "remark-copy-linked-files": "^1.5.0",
+        "remark-gfm": "^4.0.0",
+        "sass": "^1.79.4",
+        "zod": "^3.23.8"
+    },
+    "devDependencies": {
+        "@types/node": "^20",
+        "@types/react": "^18",
+        "@types/react-dom": "^18",
+        "postcss": "^8",
+        "tailwindcss": "^3.4.1",
+        "typescript": "^5"
+    }
+}
