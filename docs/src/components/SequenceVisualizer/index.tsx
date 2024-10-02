@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 
-import type { SequenceChild } from '../../../src/types';
 import styles from './SequenceVisualizer.module.css';
+import type { SequenceChild } from '../../../../src/types';
 
 type SequenceVisualizerProps<T> = {
     data: T;
@@ -10,12 +10,14 @@ type SequenceVisualizerProps<T> = {
     // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     pages: SequenceChild<T, any, any>[];
     idPrefix?: string;
+    goToPage: (page: string) => void;
 };
 
 export function SequenceVisualizer<T>({
     data,
     currentPage,
     pages,
+    goToPage,
     idPrefix = '',
 }: SequenceVisualizerProps<T>) {
     return (
@@ -23,7 +25,11 @@ export function SequenceVisualizer<T>({
             {pages.map((page) => {
                 const isNeeded = page.isNeeded?.(data) !== false;
                 const isComplete =
-                    'isComplete' in page && page.isComplete(data);
+                    isNeeded && 'isComplete' in page && page.isComplete(data);
+                const isForm = 'Component' in page;
+                const clickHandler = isForm
+                    ? () => goToPage(`${idPrefix}${page.id}`)
+                    : undefined;
                 return (
                     <div
                         className={classNames(
@@ -32,11 +38,13 @@ export function SequenceVisualizer<T>({
                                 styles.currentPage,
                             isNeeded && isComplete && styles.complete,
                             !isNeeded && styles.notNeeded,
+                            isForm && 'cursor-pointer',
                         )}
+                        onClick={clickHandler}
                         key={page.id}
                     >
                         <div className={styles.label}>
-                            {isComplete ? '✅ ' : ''}
+                            {isForm ? (isComplete ? '✅ ' : '⬜️ ') : ''}
                             {page.id
                                 .replaceAll('-', ' ')
                                 .replace(/([A-Z])/g, ' $1')
@@ -48,6 +56,7 @@ export function SequenceVisualizer<T>({
                                 currentPage={currentPage}
                                 pages={page.pages}
                                 idPrefix={`${idPrefix}${page.id}.`}
+                                goToPage={goToPage}
                             />
                         )}
                     </div>

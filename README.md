@@ -35,7 +35,7 @@ const MyMultiPageForm = () => {
     
     // create multi-page controls
     const { 
-        currentPage, // the page object above
+        currentPage, // the page object
         advance, // goes to the next page
         goBack, // goes back one page
         nextStep, // the page object for the next step

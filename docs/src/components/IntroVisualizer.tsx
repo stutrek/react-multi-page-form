@@ -27,7 +27,7 @@ const IntroPages: FormPage<DataModel, any, any>[] = [
     {
         id: 'State Information',
         isComplete: () => false,
-        Component: () => <div>State Info</div>,
+        Component: () => <div>Location Info</div>,
     },
     {
         id: 'California Exceptions',
@@ -123,7 +123,7 @@ export function IntroVisualizer() {
 
     return (
         <div className="text-center not-prose">
-            <div className="inline-flex gap-3 m-x-auto justify-items-center text-left">
+            <div className="inline-flex gap-3 m-x-auto justify-items-center text-left border border-gray-300 p-4 rounded-lg">
                 <div>
                     <b>Current form data</b>
                     <Checkbox
@@ -148,7 +148,7 @@ export function IntroVisualizer() {
                         style={{
                             position: 'relative',
                             height: 250,
-                            width: 430,
+                            width: 500,
                         }}
                     >
                         {components.map(({ location, shown, page }) => (

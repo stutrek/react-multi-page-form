@@ -1,5 +1,5 @@
 import { renderHook, act } from '@testing-library/react';
-import { useMultiPageForm } from '../index';
+import { useMultiPageFormBase } from '../base';
 
 describe('should increment counter', () => {
     it('should advance', async () => {
@@ -19,7 +19,7 @@ describe('should increment counter', () => {
         ];
 
         const { result } = renderHook(() =>
-            useMultiPageForm({
+            useMultiPageFormBase({
                 getCurrentData: () => ({}),
                 pages,
             }),

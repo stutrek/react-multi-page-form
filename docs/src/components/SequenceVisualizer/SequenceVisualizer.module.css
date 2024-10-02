@@ -7,8 +7,9 @@
     /* display: inline-block; */
     border-radius: 10px;
     box-sizing: border-box;
-    font-size: 9px;
+    font-size: 12px;
     color: black;
+    min-width: 150px;
 }
 .label {
     padding: 10px;
