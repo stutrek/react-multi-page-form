@@ -14,7 +14,7 @@ export const CoOwnershipForm = ({
 
     return (
         <div>
-            <h2>Co-Ownership Information</h2>
+            <h2 className="mt-0">Co-Ownership Information</h2>
             {fields.map((field, index) => (
                 <div key={field.id}>
                     <TextInput

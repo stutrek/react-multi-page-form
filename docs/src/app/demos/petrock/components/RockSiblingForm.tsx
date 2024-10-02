@@ -16,7 +16,7 @@ export const RockSiblingForm = ({
 
     return (
         <div>
-            <h2>Rock Sibling Information</h2>
+            <h2 className="mt-0">Rock Sibling Information</h2>
             {fields.map((field, index) => (
                 <div
                     key={field.id}

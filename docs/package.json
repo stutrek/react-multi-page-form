@@ -8,14 +8,12 @@
         "start": "next start"
     },
     "dependencies": {
-        "@emotion/react": "^11.13.3",
-        "@emotion/styled": "^11.13.0",
         "@hookform/resolvers": "^3.9.0",
         "@leafac/rehype-shiki": "^2.2.1",
         "@mdx-js/loader": "^3.0.1",
         "@mdx-js/react": "^3.0.1",
-        "@mui/joy": "^5.0.0-beta.48",
         "@next/mdx": "^14.2.13",
+        "@tailwindcss/forms": "^0.5.9",
         "@tailwindcss/typography": "^0.5.15",
         "@types/mdx": "^2.0.13",
         "classnames": "^2.5.1",
@@ -23,6 +21,7 @@
         "next": "14.2.13",
         "react": "^18",
         "react-dom": "^18",
+        "react-hook-form": "^7.53.0",
         "remark-copy-linked-files": "^1.5.0",
         "remark-gfm": "^4.0.0",
         "sass": "^1.79.4",

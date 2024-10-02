@@ -1,11 +1,12 @@
+'use client';
 import './App.css';
 import { TextInput } from '@/components/FormLibrary';
-import type { SequenceChild } from '../../../../src/types';
 import {
     type FormComponentProps,
     FormContainer,
 } from '@/components/FormContainer';
 import type { FieldErrors } from 'react-hook-form';
+import type { SequenceChild } from '../../../../../src/types';
 
 type FormModel = {
     name: string;

@@ -1,39 +1,39 @@
-import Input from '@mui/joy/Input';
-import JoyRadioGroup from '@mui/joy/RadioGroup';
-import JoyRadio from '@mui/joy/Radio';
-import JoyButton from '@mui/joy/Button';
-import JoyBox from '@mui/joy/Box';
-
 import type React from 'react';
 import { type ChangeEvent, forwardRef, type PropsWithChildren } from 'react';
 import type { FieldError, UseFormSetValue } from 'react-hook-form';
-import { FormControl, FormHelperText, FormLabel } from '@mui/joy';
-
-export const Button = JoyButton;
-export const RadioGroup = JoyRadioGroup;
-export const Radio = JoyRadio;
-export const Box = JoyBox;
 
 type AdditionalProps = {
     error?: FieldError | undefined | string;
     label?: string;
 };
 
-// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-type InputProps<T extends (props: any) => any> = Omit<
-    Parameters<T>[0],
+// Helper Types
+export interface DocumentReference {
+    fileName: string;
+    fileType: string;
+    fileSize: number; // in bytes
+    fileUrl?: string; // URL if the file is stored remotely
+}
+
+type HTMLInputProps<T extends HTMLElement> = Omit<
+    React.HTMLProps<T>,
     'error' | 'name'
 > &
     AdditionalProps & { name: string };
 
 type FormFieldContainerProps = {
     labelAfter?: boolean;
+    hideError?: boolean;
 } & AdditionalProps;
 
 function ErrorText({ error }: { error: FieldError | undefined | string }) {
-    return typeof error === 'string'
-        ? error
-        : (error?.message ?? <span>&nbsp;</span>);
+    return typeof error === 'string' ? (
+        error
+    ) : error?.message ? (
+        <span className="text-rose-900">{error.message}</span>
+    ) : (
+        <span>&nbsp;</span>
+    );
 }
 
 export const FormFieldContainer = ({
@@ -41,27 +41,67 @@ export const FormFieldContainer = ({
     label,
     error,
     labelAfter,
+    hideError,
 }: PropsWithChildren<FormFieldContainerProps>) => (
-    <FormControl error={!!error}>
-        {labelAfter ? null : <FormLabel>{label}</FormLabel>}
-        {children}
-        {labelAfter ? <FormLabel>{label}</FormLabel> : null}
-        <FormHelperText>
-            <ErrorText error={error} />
-        </FormHelperText>
-    </FormControl>
+    <div className={`${error ? 'text-rose-900' : ''} my-2`}>
+        {labelAfter ? (
+            <>
+                <label>
+                    {children} {label}
+                </label>
+            </>
+        ) : (
+            <>
+                <label>{label}</label>
+                {children}
+            </>
+        )}
+
+        {!hideError ? (
+            <div>
+                <ErrorText error={error} />
+            </div>
+        ) : null}
+    </div>
 );
 
-export const TextInput = forwardRef<HTMLInputElement, InputProps<typeof Input>>(
-    (props, ref) => {
-        const { error, label, ...rest } = props;
-        return (
-            <FormFieldContainer label={label} error={error}>
-                <Input {...rest} ref={ref} />
-            </FormFieldContainer>
-        );
-    },
-);
+export const Button = forwardRef<
+    HTMLButtonElement,
+    React.HTMLProps<HTMLButtonElement> & { variant?: 'primary' | 'secondary' }
+>((props, ref) => {
+    const { children, type, variant, ...rest } = props;
+    const colorClasses =
+        variant === 'secondary'
+            ? 'text-black bg-gray-300 hover:bg-gray-400'
+            : 'text-white bg-indigo-600 hover:bg-indigo-700';
+    return (
+        <button
+            className={`px-4 py-2 mr-2 ${colorClasses} rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-indigo-200`}
+            type={type as 'button' | 'submit' | 'reset' | undefined}
+            ref={ref}
+            {...rest}
+        >
+            {children}
+        </button>
+    );
+});
+
+export const TextInput = forwardRef<
+    HTMLInputElement,
+    HTMLInputProps<HTMLInputElement>
+>((props, ref) => {
+    const { error, label, ...rest } = props;
+    return (
+        <FormFieldContainer label={label} error={error}>
+            <input
+                type="text"
+                className={`${error ? 'border-rose-900' : 'border-gray-300'} mt-1 block w-full rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50`}
+                {...rest}
+                ref={ref}
+            />
+        </FormFieldContainer>
+    );
+});
 
 type SelectOption = {
     label: string;
@@ -70,15 +110,18 @@ type SelectOption = {
 
 export const Select = forwardRef<
     HTMLSelectElement,
-    React.HTMLProps<HTMLSelectElement> &
-        AdditionalProps & {
-            options: SelectOption[];
-        }
+    HTMLInputProps<HTMLSelectElement> & {
+        options: SelectOption[];
+    }
 >((props, ref) => {
     const { error, label, options, ...rest } = props;
     return (
         <FormFieldContainer label={label} error={error}>
-            <select {...rest} ref={ref}>
+            <select
+                className={`${error ? 'border-rose-900' : 'border-gray-300'} block w-full mt-1 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50`}
+                {...rest}
+                ref={ref}
+            >
                 {options.map((option) => (
                     <option key={option.value} value={option.value}>
                         {option.label}
@@ -95,25 +138,32 @@ export const Checkbox = forwardRef<
 >((props, ref) => {
     const { error, label, ...rest } = props;
     return (
-        <FormControl error={!!error} orientation="horizontal">
-            <label>
-                <input type="checkbox" {...rest} ref={ref} />
-                {label}
-            </label>
-            <FormHelperText>
-                <ErrorText error={error} />
-            </FormHelperText>
-        </FormControl>
+        <FormFieldContainer label={label} error={error} labelAfter hideError>
+            <input type="checkbox" {...rest} ref={ref} />
+        </FormFieldContainer>
+    );
+});
+
+export const Radio = forwardRef<
+    HTMLInputElement,
+    React.HTMLProps<HTMLInputElement> & AdditionalProps
+>((props, ref) => {
+    const { error, label, ...rest } = props;
+    return (
+        <FormFieldContainer label={label} error={error} labelAfter hideError>
+            <input type="radio" {...rest} ref={ref} />
+        </FormFieldContainer>
     );
 });
 
 export const FileInput = forwardRef<
     HTMLInputElement,
     React.HTMLProps<HTMLInputElement> &
-        AdditionalProps & {
+        Omit<AdditionalProps, 'error'> & {
             // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             setValue: UseFormSetValue<any>;
             name: string;
+            error?: Partial<{ [K in keyof DocumentReference]: FieldError }>;
         }
 >((props, ref) => {
     const { error, onChange, onBlur, setValue, name, ...rest } = props;
@@ -129,14 +179,17 @@ export const FileInput = forwardRef<
         }
     };
     return (
-        <FormControl error={!!error}>
-            <Checkbox
-                name={name}
-                error={error}
-                {...rest}
-                onChange={handleChange}
-                ref={ref}
-            />
-        </FormControl>
+        <Checkbox
+            name={name}
+            error={
+                error?.fileName ||
+                error?.fileSize ||
+                error?.fileType ||
+                error?.fileUrl
+            }
+            {...rest}
+            onChange={handleChange}
+            ref={ref}
+        />
     );
 });

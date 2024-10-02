@@ -1,10 +1,4 @@
-// Helper Types
-export interface DocumentReference {
-    fileName: string;
-    fileType: string;
-    fileSize: number; // in bytes
-    fileUrl?: string; // URL if the file is stored remotely
-}
+import type { DocumentReference } from '@/components/FormLibrary';
 
 // 1. Applicant Information
 export interface ApplicantInformation {

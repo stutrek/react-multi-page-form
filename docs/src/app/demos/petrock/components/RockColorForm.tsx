@@ -1,5 +1,4 @@
 // components/RockColorForm.tsx
-import { Divider, Stack } from '@mui/joy';
 import { TextInput, Checkbox, Button } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 import { useFieldArray } from 'react-hook-form';
@@ -20,8 +19,8 @@ export const RockColorForm = ({
     });
 
     return (
-        <Stack spacing={1}>
-            <h2>Rock Color Information</h2>
+        <div>
+            <h2 className="mt-0">Rock Color Information</h2>
             <TextInput
                 label="Primary Color"
                 {...register('registration.rockDetails.color.primaryColor', {
@@ -70,7 +69,7 @@ export const RockColorForm = ({
                     Add Secondary Color
                 </Button>
             </div>
-            <Divider />
+            <hr className="my-2" />
             <Checkbox
                 label="Is this rock artificially colored?"
                 {...register('registration.rockDetails.color.isArtificial')}
@@ -92,6 +91,6 @@ export const RockColorForm = ({
                     }
                 />
             )}
-        </Stack>
+        </div>
     );
 };

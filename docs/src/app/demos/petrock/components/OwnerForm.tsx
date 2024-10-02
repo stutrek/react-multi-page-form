@@ -5,7 +5,7 @@ import type { FormComponentProps } from '../types';
 export const OwnerForm = ({ register, errors }: FormComponentProps) => {
     return (
         <div>
-            <h2>Owner Information</h2>
+            <h2 className="mt-0">Owner Information</h2>
             <TextInput
                 label="Full Name"
                 {...register('registration.owner.name', {

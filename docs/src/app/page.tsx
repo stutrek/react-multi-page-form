@@ -1,4 +1,4 @@
-import Intro from '@/markdown/Intro.md';
+import Intro from '@/markdown/Intro.mdx';
 import { Header } from './header';
 export default function () {
     return (
@@ -9,7 +9,7 @@ export default function () {
                     alt="React Multi Page Form"
                     className="h-13"
                 />
-                <Header showLogo={false} align="center" />
+                <Header showLogo={false} />
             </div>
 
             <Intro />

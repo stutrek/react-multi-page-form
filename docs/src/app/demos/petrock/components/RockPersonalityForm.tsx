@@ -1,11 +1,5 @@
 // components/RockPersonalityForm.tsx
-import { Divider, Stack } from '@mui/joy';
-import {
-    RadioGroup,
-    Radio,
-    Checkbox,
-    TextInput,
-} from '@/components/FormLibrary';
+import { Radio, Checkbox, TextInput } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
 export const RockPersonalityForm = ({
@@ -15,9 +9,9 @@ export const RockPersonalityForm = ({
 }: FormComponentProps) => {
     return (
         <div>
-            <h2>Rock Personality Profile</h2>
-            <Stack spacing={2}>
-                <RadioGroup name="rockDemeanor">
+            <h2 className="mt-0">Rock Personality Profile</h2>
+            <div>
+                <div className="mt-2">
                     <Radio
                         label="Introverted"
                         value="Introverted"
@@ -68,8 +62,8 @@ export const RockPersonalityForm = ({
                             },
                         )}
                     />
-                </RadioGroup>
-                <Divider />
+                </div>
+                <hr className="my-2" />
                 <Checkbox
                     label="Does your pet rock enjoy physical contact?"
                     {...register(
@@ -93,7 +87,7 @@ export const RockPersonalityForm = ({
                     'registration.personalityProfile.interactionPreferences.physicalContact',
                 ) && (
                     <>
-                        <RadioGroup name="preferredContactType">
+                        <div className="mt-2">
                             <Radio
                                 label="Rolling"
                                 value="Rolling"
@@ -127,7 +121,7 @@ export const RockPersonalityForm = ({
                                     },
                                 )}
                             />
-                        </RadioGroup>
+                        </div>
                         {errors.registration?.personalityProfile
                             ?.interactionPreferences?.preferredContactType && (
                             <p>
@@ -151,7 +145,7 @@ export const RockPersonalityForm = ({
                             ?.interactionFrequency
                     }
                 />
-            </Stack>
+            </div>
         </div>
     );
 };

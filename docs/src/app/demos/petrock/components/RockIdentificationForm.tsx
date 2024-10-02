@@ -1,10 +1,5 @@
 // components/RockIdentificationForm.tsx
-import {
-    TextInput,
-    RadioGroup,
-    Radio,
-    Checkbox,
-} from '@/components/FormLibrary';
+import { TextInput, Radio, Checkbox } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
 export const RockIdentificationForm = ({
@@ -14,7 +9,7 @@ export const RockIdentificationForm = ({
 }: FormComponentProps) => {
     return (
         <div>
-            <h2>Rock Identification</h2>
+            <h2 className="mt-0">Rock Identification</h2>
             <TextInput
                 label="Rock Name"
                 {...register('registration.rockDetails.name', {
@@ -35,10 +30,7 @@ export const RockIdentificationForm = ({
                 })}
                 error={errors.registration?.rockDetails?.dateOfAcquisition}
             />
-            <RadioGroup
-                name="rockType"
-                defaultValue={getValues('registration.rockDetails.type')}
-            >
+            <div className="mt-2">
                 <Radio
                     label="Sedimentary"
                     value="Sedimentary"
@@ -65,7 +57,7 @@ export const RockIdentificationForm = ({
                     value="Other"
                     {...register('registration.rockDetails.type')}
                 />
-            </RadioGroup>
+            </div>
             <TextInput
                 label="Rock Weight (in grams)"
                 type="number"

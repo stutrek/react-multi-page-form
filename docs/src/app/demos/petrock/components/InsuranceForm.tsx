@@ -5,7 +5,7 @@ import type { FormComponentProps } from '../types';
 export const InsuranceForm = ({ register, errors }: FormComponentProps) => {
     return (
         <div>
-            <h2>Insurance Information</h2>
+            <h2 className="mt-0">Insurance Information</h2>
             <TextInput
                 label="Insurance Provider"
                 {...register('insuranceVerification.provider', {

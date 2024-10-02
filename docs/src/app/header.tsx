@@ -8,10 +8,10 @@ type HeaderProps = {
 
 export function Header({ showLogo = true }: HeaderProps) {
     return (
-        <header className="p-4 border-b border-gray-300">
-            <div className="container max-w-3xl mx-auto px-4">
+        <header className="p-4y border-b border-gray-300">
+            <div className="container max-w-3xl mx-auto">
                 <nav className={navStyles.header}>
-                    <ul className="flex space-x-4">
+                    <ul className="flex">
                         {showLogo ? (
                             <li>
                                 <a href="/">

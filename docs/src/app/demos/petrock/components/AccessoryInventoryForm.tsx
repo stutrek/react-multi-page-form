@@ -16,7 +16,7 @@ export const AccessoryInventoryForm = ({
 
     return (
         <div>
-            <h2>Accessory Inventory</h2>
+            <h2 className="mt-0">Accessory Inventory</h2>
             {fields.map((field, index) => (
                 <div
                     key={field.id}

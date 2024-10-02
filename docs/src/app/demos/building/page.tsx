@@ -1,3 +1,4 @@
+'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { sample } from './data';
 import { buildingPermitApplicationSequence } from './sequence';

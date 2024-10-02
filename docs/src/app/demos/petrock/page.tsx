@@ -3,43 +3,44 @@ import { pages } from './sequence';
 import type { PetRockSystem } from './types';
 import * as samples from './sampleData';
 import { useState } from 'react';
-import { Box, Button } from '@/components/FormLibrary';
+import { Button } from '@/components/FormLibrary';
 import { FormContainer } from '@/components/FormContainer';
 
 export default function PetRock() {
     const [sampleData, setSampleData] = useState<PetRockSystem>();
     return (
         <>
-            <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
+            <div className="flex">
                 <Button
-                    variant="outlined"
                     color="neutral"
+                    variant="secondary"
                     onClick={() => setSampleData(undefined)}
                 >
                     Empty Form
                 </Button>
                 <Button
-                    variant="outlined"
                     color="neutral"
+                    variant="secondary"
                     onClick={() => setSampleData(samples.bumpyMcRough)}
                 >
                     Bumpy McRough
                 </Button>
                 <Button
-                    variant="outlined"
                     color="neutral"
+                    variant="secondary"
                     onClick={() => setSampleData(samples.glassyMcShiny)}
                 >
                     Glassy McShiny
                 </Button>
                 <Button
-                    variant="outlined"
                     color="neutral"
+                    variant="secondary"
                     onClick={() => setSampleData(samples.rockyMcSmooth)}
                 >
                     Rocky McSmooth
                 </Button>
-            </Box>
+            </div>
+            <hr className={'my-2'} />
             <FormContainer
                 defaultValues={sampleData}
                 key={sampleData?.registration.rockDetails.name || 'none'}

@@ -1,9 +1,9 @@
+'use client';
 import { useForm } from 'react-hook-form';
 import {
     Button,
     TextInput,
     Checkbox,
-    RadioGroup,
     Radio,
     FileInput,
 } from '@/components/FormLibrary';
@@ -56,11 +56,11 @@ export default function ComponentLibrary() {
                     })}
                     error={errors.checkbox2}
                 />
-                <RadioGroup name="radio">
+                <div className="mt-2">
                     <Radio label="Dog" value="dog" {...register('radio')} />
                     <Radio label="Cat" value="cat" {...register('radio')} />
                     <Radio label="Fish" value="fish" {...register('radio')} />
-                </RadioGroup>
+                </div>
 
                 <FileInput
                     label="File"

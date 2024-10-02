@@ -14,8 +14,7 @@ import { useMultiPageHookForm } from '../../../src/hookForm';
 import { useState } from 'react';
 import { SequenceVisualizer } from './SequenceVisualizer';
 import { type SequenceChild, StartingPage } from '../../../src/types';
-import { Box, Button } from './FormLibrary';
-import { Divider, Stack } from '@mui/joy';
+import { Button } from './FormLibrary';
 
 export interface FormComponentProps<DataT extends FieldValues> {
     register: UseFormRegister<DataT>;
@@ -79,47 +78,39 @@ export function FormContainer<DataT extends FieldValues>({
             </Button>
         </div>
     ) : (
-        <Box sx={{ display: 'flex', gap: 2 }} className="form">
+        <div className="form flex gap-2">
             <SequenceVisualizer
                 data={watch()}
                 currentPage={currentPage}
                 pages={pages}
             />
             <form onSubmit={handleSubmit(onSubmit)}>
-                <Stack spacing={2}>
-                    <div className="form-card">
-                        <currentPage.Component
-                            register={register}
-                            errors={errors}
-                            watch={watch}
-                            setValue={setValue}
-                            getValues={getValues}
-                            control={control}
-                        />
+                <div className="form-card">
+                    <currentPage.Component
+                        register={register}
+                        errors={errors}
+                        watch={watch}
+                        setValue={setValue}
+                        getValues={getValues}
+                        control={control}
+                    />
+                </div>
+                <hr className="my-4" />
+                <div className="form-nav">
+                    <div className="flex gap-2">
+                        {previousStep && (
+                            <Button onClick={goBack} color="neutral">
+                                Prev
+                            </Button>
+                        )}
+                        {nextStep ? (
+                            <Button onClick={advance}>Next</Button>
+                        ) : (
+                            <Button type="submit">Submit</Button>
+                        )}
                     </div>
-                    <Divider />
-                    <div className="form-nav">
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                gap: 2,
-                                flexWrap: 'wrap',
-                            }}
-                        >
-                            {previousStep && (
-                                <Button onClick={goBack} color="neutral">
-                                    Prev
-                                </Button>
-                            )}
-                            {nextStep ? (
-                                <Button onClick={advance}>Next</Button>
-                            ) : (
-                                <Button type="submit">Submit</Button>
-                            )}
-                        </Box>
-                    </div>
-                </Stack>
+                </div>
             </form>
-        </Box>
+        </div>
     );
 }

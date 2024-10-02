@@ -9,7 +9,6 @@ import type {
 import {
     TextInput,
     Checkbox,
-    RadioGroup,
     Radio,
     FileInput,
 } from '@/components/FormLibrary';
@@ -32,10 +31,9 @@ export const ApplicantInformationComponent: BuildingFormComponent = ({
     errors,
     watch,
 }) => {
-    const role = watch('applicantInformation.roleInProject');
     return (
         <div>
-            <h2>Applicant Information</h2>
+            <h2 className="mt-0">Applicant Information</h2>
             <TextInput
                 label="Full Name"
                 {...register('applicantInformation.fullName')}
@@ -65,7 +63,7 @@ export const ApplicantInformationComponent: BuildingFormComponent = ({
                 {...register('applicantInformation.contactInformation.email')}
                 error={errors.applicantInformation?.contactInformation?.email}
             />
-            <RadioGroup name="roleInProject" value={role}>
+            <div className="mt-2">
                 <Radio
                     label="Owner"
                     value="Owner"
@@ -86,7 +84,7 @@ export const ApplicantInformationComponent: BuildingFormComponent = ({
                     value="Authorized Agent"
                     {...register('applicantInformation.roleInProject')}
                 />
-            </RadioGroup>
+            </div>
         </div>
     );
 };
@@ -100,7 +98,7 @@ export const ProjectLocationDescriptionComponent: BuildingFormComponent = ({
     const projectType = watch('projectLocationDescription.projectType');
     return (
         <div>
-            <h2>Project Location and Description</h2>
+            <h2 className="mt-0">Project Location and Description</h2>
             <TextInput
                 label="Street Address"
                 {...register(
@@ -131,7 +129,7 @@ export const ProjectLocationDescriptionComponent: BuildingFormComponent = ({
                         ?.legalDescriptionOfProperty
                 }
             />
-            <RadioGroup name="projectType" value={projectType}>
+            <div className="mt-2">
                 <Radio
                     label="New Construction"
                     value="New Construction"
@@ -157,7 +155,7 @@ export const ProjectLocationDescriptionComponent: BuildingFormComponent = ({
                     value="Change of Use"
                     {...register('projectLocationDescription.projectType')}
                 />
-            </RadioGroup>
+            </div>
         </div>
     );
 };
@@ -170,7 +168,7 @@ export const ZoningComplianceComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Zoning Compliance Verification</h2>
+            <h2 className="mt-0">Zoning Compliance Verification</h2>
             <TextInput
                 label="Current Zoning Classification"
                 {...register(
@@ -244,7 +242,7 @@ export const SitePlanSubmissionComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Site Plan Submission</h2>
+            <h2 className="mt-0">Site Plan Submission</h2>
             <FileInput
                 label="Site Plan Drawings"
                 {...register('sitePlanSubmission.sitePlanDrawings')}
@@ -280,7 +278,7 @@ export const EnvironmentalImpactAssessmentComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Environmental Impact Assessment</h2>
+            <h2 className="mt-0">Environmental Impact Assessment</h2>
             <Checkbox
                 label="Presence of Wetlands or Protected Areas"
                 {...register(
@@ -325,7 +323,7 @@ export const BuildingPlansSpecificationsComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Building Plans and Specifications</h2>
+            <h2 className="mt-0">Building Plans and Specifications</h2>
             <FileInput
                 label="Floor Plans"
                 {...register(
@@ -402,7 +400,7 @@ export const FireSafetyPlanComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Fire Safety Plan</h2>
+            <h2 className="mt-0">Fire Safety Plan</h2>
             <FileInput
                 label="Fire Safety Plan Document"
                 {...register('buildingPlansSpecifications.fireSafetyPlan')}
@@ -421,7 +419,7 @@ export const UtilitiesInfrastructureComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Utilities and Infrastructure</h2>
+            <h2 className="mt-0">Utilities and Infrastructure</h2>
             <Checkbox
                 label="Electrical"
                 {...register(
@@ -494,7 +492,7 @@ export const AccessibilityComplianceComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Accessibility Compliance</h2>
+            <h2 className="mt-0">Accessibility Compliance</h2>
             <Checkbox
                 label="Meets ADA Standards"
                 {...register('accessibilityCompliance.meetsADAStandards')}
@@ -517,7 +515,7 @@ export const FireProtectionSystemsComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Fire Protection Systems</h2>
+            <h2 className="mt-0">Fire Protection Systems</h2>
             <Checkbox
                 label="Sprinkler Systems"
                 {...register(
@@ -559,7 +557,7 @@ export const EmergencyEvacuationPlanComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Emergency Evacuation Plan</h2>
+            <h2 className="mt-0">Emergency Evacuation Plan</h2>
             <FileInput
                 label="Emergency Evacuation Plan Document"
                 {...register('fireLifeSafety.emergencyEvacuationPlan')}
@@ -577,7 +575,7 @@ export const FloodplainDeterminationComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Floodplain Determination</h2>
+            <h2 className="mt-0">Floodplain Determination</h2>
             <Checkbox
                 label="Is the project located in a designated flood zone?"
                 {...register('floodplainAndStormwaterManagement.isInFloodZone')}
@@ -595,7 +593,7 @@ export const StormwaterManagementPlanComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Stormwater Management Plan</h2>
+            <h2 className="mt-0">Stormwater Management Plan</h2>
             <TextInput
                 label="Erosion Control Measures"
                 {...register(
@@ -629,7 +627,7 @@ export const HistoricPreservationReviewComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Historic Preservation Review</h2>
+            <h2 className="mt-0">Historic Preservation Review</h2>
             <Checkbox
                 label="Is the property a historic property?"
                 {...register('historicPreservationReview.isHistoricProperty')}
@@ -657,7 +655,7 @@ export const TrafficImpactAnalysisComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Traffic Impact Analysis</h2>
+            <h2 className="mt-0">Traffic Impact Analysis</h2>
             <Checkbox
                 label="Anticipates Traffic Increase"
                 {...register(
@@ -695,7 +693,7 @@ export const NeighborNotificationComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Neighbor Notification and Public Hearings</h2>
+            <h2 className="mt-0">Neighbor Notification and Public Hearings</h2>
             <Checkbox
                 label="Notified Adjacent Owners"
                 {...register(
@@ -749,7 +747,7 @@ export const ContractorDetailsComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Contractor and Subcontractor Details</h2>
+            <h2 className="mt-0">Contractor and Subcontractor Details</h2>
             <TextInput
                 label="General Contractor Name"
                 {...register(
@@ -836,7 +834,7 @@ export const FeeCalculationAndPaymentComponent: BuildingFormComponent = ({
     const paymentMethod = watch('feeCalculationAndPayment.paymentMethod');
     return (
         <div>
-            <h2>Fee Calculation and Payment</h2>
+            <h2 className="mt-0">Fee Calculation and Payment</h2>
             <TextInput
                 label="Permit Fee"
                 type="number"
@@ -849,7 +847,7 @@ export const FeeCalculationAndPaymentComponent: BuildingFormComponent = ({
                 {...register('feeCalculationAndPayment.totalFee')}
                 error={errors.feeCalculationAndPayment?.totalFee}
             />
-            <RadioGroup name="paymentMethod" value={paymentMethod}>
+            <div className="mt-2">
                 <Radio
                     label="Online"
                     value="Online"
@@ -865,7 +863,7 @@ export const FeeCalculationAndPaymentComponent: BuildingFormComponent = ({
                     value="Money Order"
                     {...register('feeCalculationAndPayment.paymentMethod')}
                 />
-            </RadioGroup>
+            </div>
             <TextInput
                 label="Payment Reference Number"
                 {...register('feeCalculationAndPayment.paymentReferenceNumber')}
@@ -882,7 +880,7 @@ export const FinalReviewAndCertificationComponent: BuildingFormComponent = ({
 }) => {
     return (
         <div>
-            <h2>Final Review and Certification</h2>
+            <h2 className="mt-0">Final Review and Certification</h2>
             <Checkbox
                 label="I certify that all information is accurate."
                 {...register(

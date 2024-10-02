@@ -8,7 +8,7 @@ export const EmotionalSupportForm = ({
 }: FormComponentProps) => {
     return (
         <div>
-            <h2>Emotional Support Rock Certification</h2>
+            <h2 className="mt-0">Emotional Support Rock Certification</h2>
             <TextInput
                 label="Certification Authority"
                 {...register(
