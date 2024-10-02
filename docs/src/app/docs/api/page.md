@@ -20,7 +20,7 @@ type FormPage<DataT, ComponentProps, ErrorList> = {
 
 	// these manage the sequence
 	isFinal?: (data: Partial<DataT>) => boolean; // allows you to mark pages as end pages.
-    isNeeded?: (data: Partial<DataT>) => boolean | undefined; // Determines if this page is needed based on form data.
+    isRequired?: (data: Partial<DataT>) => boolean | undefined; // Determines if this page is needed based on form data.
     validate?: (data: Partial<DataT>) => ErrorList | undefined; // Determines whether or not to continue.
     
 	// event handlers
@@ -58,7 +58,7 @@ A sequence contains pages or more sequences that represent a single workflow. Th
 export type FormSequence<DataT, ComponentProps, ErrorList> = {
     id: string; // Unique identifier for the form sequence.
     pages: SequenceChild[]; // Array of form pages or nested sequences.
-    isNeeded?: (data: Partial<DataT>) => boolean | undefined; // Determines if the sequence is needed based on form data.
+    isRequired?: (data: Partial<DataT>) => boolean | undefined; // Determines if the sequence is needed based on form data.
 };
 ```
 
@@ -67,7 +67,7 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
 ```ts
 const mySequence: FormSequence<MyData, MyComponentProps, FieldError> = {
 	id: 'my-sequence',
-	isNeeded: (data) => !!data.fieldToCheck,
+	isRequired: (data) => !!data.fieldToCheck,
 	pages: [myPage, myPage2, myOtherSequence],
 }
 ```

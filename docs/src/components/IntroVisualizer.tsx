@@ -21,7 +21,7 @@ const IntroPages: FormPage<DataModel, any, any>[] = [
     {
         id: 'Additional Form',
         isComplete: () => false,
-        isNeeded: (data) => data.needsAdditionalForm,
+        isRequired: (data) => data.needsAdditionalForm,
         Component: () => <div>Add'l Form</div>,
     },
     {
@@ -32,31 +32,31 @@ const IntroPages: FormPage<DataModel, any, any>[] = [
     {
         id: 'California Exceptions',
         isComplete: () => false,
-        isNeeded: (data) => data.state === 'California',
+        isRequired: (data) => data.state === 'California',
         Component: () => <div>CA</div>,
     },
     {
         id: 'New York Additional Data',
         isComplete: () => false,
-        isNeeded: (data) => data.state === 'New York',
+        isRequired: (data) => data.state === 'New York',
         Component: () => <div>NY</div>,
     },
     {
         id: 'Tennesse Music Data',
         isComplete: () => false,
-        isNeeded: (data) => data.state === 'Tennesse',
+        isRequired: (data) => data.state === 'Tennesse',
         Component: () => <div>TN</div>,
     },
     {
         id: 'Texas Lone Star Data',
         isComplete: () => false,
-        isNeeded: (data) => data.state === 'Texas',
+        isRequired: (data) => data.state === 'Texas',
         Component: () => <div>TX</div>,
     },
     {
         id: 'Confirmation',
         isComplete: () => false,
-        isNeeded: (data) => data.needsConfirmation,
+        isRequired: (data) => data.needsConfirmation,
         Component: () => <div>Confirm</div>,
     },
 ];
@@ -96,7 +96,7 @@ export function IntroVisualizer() {
         let shownCount = 0;
         let hiddenCount = 0;
         return IntroPages.map((page) => {
-            if (!page.isNeeded || page.isNeeded(data)) {
+            if (!page.isRequired || page.isRequired(data)) {
                 const location = {
                     x: shownCount * 85,
                     y: 0,

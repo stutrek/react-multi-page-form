@@ -25,7 +25,7 @@ export const pages: SequenceChild<
     },
     {
         id: 'co-ownership-info',
-        isNeeded: (data) => !!data.registration?.owner?.hasCoOwners,
+        isRequired: (data) => !!data.registration?.owner?.hasCoOwners,
         isComplete: (data) =>
             !data.registration?.owner?.hasCoOwners ||
             (!!data.registration?.coOwners &&
@@ -45,7 +45,7 @@ export const pages: SequenceChild<
     },
     {
         id: 'rock-color',
-        isNeeded: (data) =>
+        isRequired: (data) =>
             (!!data.registration?.rockDetails?.color?.secondaryColors &&
                 data.registration.rockDetails.color.secondaryColors.length >
                     0) ||
@@ -60,7 +60,7 @@ export const pages: SequenceChild<
     },
     {
         id: 'rock-siblings',
-        isNeeded: (data) => !!data.registration?.rockDetails?.hasSiblings,
+        isRequired: (data) => !!data.registration?.rockDetails?.hasSiblings,
         isComplete: (data) =>
             !data.registration?.rockDetails?.hasSiblings ||
             (!!data.registration?.rockDetails?.lineage?.knownSiblings &&
@@ -76,7 +76,7 @@ export const pages: SequenceChild<
     },
     {
         id: 'accessory-inventory',
-        isNeeded: (data) => !!data.registration?.rockDetails?.isAccessorized,
+        isRequired: (data) => !!data.registration?.rockDetails?.isAccessorized,
         isComplete: (data) =>
             !data.registration?.rockDetails?.isAccessorized ||
             (!!data.accessoryInventory &&
@@ -87,7 +87,7 @@ export const pages: SequenceChild<
     },
     {
         id: 'emotional-support',
-        isNeeded: (data) =>
+        isRequired: (data) =>
             !!data.registration?.certifications?.emotionalSupport,
         isComplete: (data) =>
             !!data.emotionalSupportCertification?.certificationDetails

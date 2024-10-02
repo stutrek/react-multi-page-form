@@ -31,7 +31,7 @@ const pages = [
 ]
 const MyMultiPageForm = () => {
     // use react-hook-form's useForm
-    const formApi = useForm<FormModel>();
+    const hookForm = useForm<FormModel>();
     
     // create multi-page controls
     const { 
@@ -41,7 +41,7 @@ const MyMultiPageForm = () => {
         nextStep, // the page object for the next step
         previousStep // the page object for the previous step
     } = useMultiPageHookForm({
-        formApi,
+        hookForm,
         pages,
     });
     
@@ -71,7 +71,7 @@ A **sequence** is an array of pages and sequences that represent a specific flow
 type FormPage<DataT, ComponentProps, ErrorList> = {
     id: string;
     // determines whether or not this page is needed
-    isNeeded?: (data: Partial<DataT>) => boolean | undefined
+    isRequired?: (data: Partial<DataT>) => boolean | undefined
     // determines if the page is already complete
     isComplete: (data: Partial<DataT>) => boolean;
     // determines if this should be a final step in the flow
@@ -92,7 +92,7 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
     // an array of pages or sequences that make up this sequence
     pages: SequenceChild<DataT, ComponentProps, ErrorList>[];
     // determines if this sequence is needed
-    isNeeded?: IsNeededPredicate<DataT>;
+    isRequired?: isRequiredPredicate<DataT>;
 };
 ```
 
@@ -116,12 +116,12 @@ const pages = [
 
 export function MyMultiPageForm() {
     // set up React Hook Form
-    const formApi = useForm<FormModel>({});
+    const hookForm = useForm<FormModel>({});
     const {
         register,
         handleSubmit,
         formState: { errors },
-    } = formApi;
+    } = hookForm;
     
     // set up the multi-page controls
     const { 
@@ -131,7 +131,7 @@ export function MyMultiPageForm() {
         nextStep,
         previousStep 
     } = useMultiPageHookForm({
-        formApi,
+        hookForm,
         pages: sequence,
     });
     

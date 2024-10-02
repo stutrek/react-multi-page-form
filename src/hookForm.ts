@@ -21,7 +21,7 @@ export type MultiPageReactHookFormParams<
     DataT extends FieldValues,
     ComponentProps,
     ErrorList,
-> = { formApi: UseFormReturn<DataT> } & Omit<
+> = { hookForm: UseFormReturn<DataT> } & Omit<
     MultiPageFormParams<DataT, ComponentProps, ErrorList>,
     'getCurrentData'
 >;
@@ -53,14 +53,14 @@ export const useMultiPageHookForm = <
     DataT extends FieldValues,
     ComponentProps,
 >({
-    formApi,
+    hookForm,
     onBeforePageChange,
     ...rest
 }: MultiPageReactHookFormParams<DataT, ComponentProps, FieldErrors>) => {
-    const { trigger, reset, control } = formApi;
+    const { trigger, reset, control } = hookForm;
 
     const multiPageForm = useMultiPageFormBase({
-        getCurrentData: () => formApi.getValues(),
+        getCurrentData: () => hookForm.getValues(),
         onBeforePageChange: async (data, page) => {
             if (onBeforePageChange) {
                 const result = await onBeforePageChange(data, page);
@@ -69,7 +69,7 @@ export const useMultiPageHookForm = <
                 }
             }
             const mountedFields = getMountedFields(
-                formApi.control._fields,
+                hookForm.control._fields,
             ) as Path<DataT>[];
             const valid = await trigger(mountedFields);
 

@@ -24,7 +24,20 @@ export function Header({ showLogo = true }: HeaderProps) {
                             </li>
                         ) : null}
                         <li>
-                            <a href="/docs">Docs</a>
+                            <button type="button">Docs</button>
+                            <ul className="shadow-lg rounded-lg">
+                                <li>
+                                    <Link href="/docs">Introduction</Link>
+                                </li>
+                                <li>
+                                    <Link href="/docs/api">API Reference</Link>
+                                </li>
+                                <li>
+                                    <Link href="/docs/complex-flows">
+                                        Handling Complex Flows
+                                    </Link>
+                                </li>
+                            </ul>
                         </li>
                         <li>
                             <button type="button">Demos</button>

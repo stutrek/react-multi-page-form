@@ -23,9 +23,9 @@ export function SequenceVisualizer<T>({
     return (
         <div className={styles.visualizer}>
             {pages.map((page) => {
-                const isNeeded = page.isNeeded?.(data) !== false;
+                const isRequired = page.isRequired?.(data) !== false;
                 const isComplete =
-                    isNeeded && 'isComplete' in page && page.isComplete(data);
+                    isRequired && 'isComplete' in page && page.isComplete(data);
                 const isForm = 'Component' in page;
                 const clickHandler = isForm
                     ? () => goToPage(`${idPrefix}${page.id}`)
@@ -36,8 +36,8 @@ export function SequenceVisualizer<T>({
                             styles.page,
                             `${idPrefix}${page.id}` === currentPage.id &&
                                 styles.currentPage,
-                            isNeeded && isComplete && styles.complete,
-                            !isNeeded && styles.notNeeded,
+                            isRequired && isComplete && styles.complete,
+                            !isRequired && styles.notNeeded,
                             isForm && 'cursor-pointer',
                         )}
                         onClick={clickHandler}

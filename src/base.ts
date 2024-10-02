@@ -17,15 +17,15 @@ function wrapChild<DataT, T extends SequenceChild<DataT, any, any>>(
     return {
         ...child,
         id: `${parent.id}.${child.id}`,
-        isNeeded: (data: DataT) => {
-            if (parent.isNeeded) {
-                const parentIsNeeded = parent.isNeeded(data);
-                if (parentIsNeeded === false) {
+        isRequired: (data: DataT) => {
+            if (parent.isRequired) {
+                const parentisRequired = parent.isRequired(data);
+                if (parentisRequired === false) {
                     return false;
                 }
             }
-            if (child.isNeeded) {
-                return child.isNeeded(data);
+            if (child.isRequired) {
+                return child.isRequired(data);
             }
             return true;
         },
@@ -33,11 +33,11 @@ function wrapChild<DataT, T extends SequenceChild<DataT, any, any>>(
 }
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-function isNeeded<DataT, Page extends FormPage<DataT, any, any>>(
+function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
     page: Page,
     data: DataT,
 ) {
-    if (page.isNeeded === undefined || page.isNeeded(data) !== false) {
+    if (page.isRequired === undefined || page.isRequired(data) !== false) {
         return true;
     }
 }
@@ -84,7 +84,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         }
         if (!startingPage || startingPage === StartingPage.FirstIncomplete) {
             const index = pages.findIndex((page) => {
-                return isNeeded(page, data) && !page.isComplete(data);
+                return isRequired(page, data) && !page.isComplete(data);
             });
             if (index !== -1) {
                 return index;
@@ -111,8 +111,8 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
 
         for (let i = currentPageIndex - 1; i >= 0; i--) {
             const page = pages[i];
-            const pageIsNeeded = isNeeded(page, data);
-            if (pageIsNeeded) {
+            const pageisRequired = isRequired(page, data);
+            if (pageisRequired) {
                 return page;
             }
         }
@@ -127,12 +127,12 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         if (!currentPage.isFinal?.(data)) {
             for (let i = currentPageIndex + 1; i < pages.length; i++) {
                 const page = pages[i];
-                const pageIsNeeded = isNeeded(page, data);
+                const pageisRequired = isRequired(page, data);
                 const pageIsComplete = page.isComplete(data);
-                if (pageIsNeeded && !nextStep) {
+                if (pageisRequired && !nextStep) {
                     nextStep = page;
                 }
-                if (pageIsNeeded && !pageIsComplete) {
+                if (pageisRequired && !pageIsComplete) {
                     nextIncompleteStep = page;
                     break;
                 }
@@ -174,7 +174,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
 
         for (let i = currentPageIndex + 1; i < pages.length; i++) {
             const page = pages[i];
-            if (isNeeded(page, data)) {
+            if (isRequired(page, data)) {
                 if (currentPage.onExit) {
                     await currentPage.onExit(data);
                 }
@@ -191,7 +191,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         const data = getCurrentData();
         for (let i = currentPageIndex - 1; i >= 0; i--) {
             const page = pages[i];
-            if (isNeeded(page, data)) {
+            if (isRequired(page, data)) {
                 setCurrentPageIndex(i);
                 break;
             }

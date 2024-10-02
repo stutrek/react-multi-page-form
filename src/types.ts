@@ -22,7 +22,7 @@ export type FormPage<DataT, ComponentProps, ErrorList> = {
      * @param data - Partial form data available at the current step.
      * @returns A boolean indicating whether the page is needed.
      */
-    isNeeded?: (data: Partial<DataT>) => boolean | undefined;
+    isRequired?: (data: Partial<DataT>) => boolean | undefined;
 
     /**
      * Function to determine if the page is complete based on the current form data.
@@ -96,7 +96,7 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
      * @param data - Partial form data available at the current step.
      * @returns A boolean indicating whether the sequence is needed.
      */
-    isNeeded?: (data: Partial<DataT>) => boolean | undefined;
+    isRequired?: (data: Partial<DataT>) => boolean | undefined;
 };
 
 export type SequenceChild<DataT, ComponentProps, ErrorList> =

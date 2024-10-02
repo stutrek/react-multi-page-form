@@ -72,7 +72,7 @@ const projectLocationDescriptionPage: BuildingFormPage = {
 // Zoning Compliance Page (Conditional)
 const zoningCompliancePage: BuildingFormPage = {
     id: 'zoningCompliance',
-    isNeeded: (data) =>
+    isRequired: (data) =>
         data.projectLocationDescription?.projectType === 'Change of Use',
     isComplete: (data) =>
         !!data.projectLocationDescription?.zoningComplianceVerification,
@@ -95,7 +95,7 @@ const sitePlanSubmissionPage: BuildingFormPage = {
 // Environmental Impact Assessment Page (Conditional)
 const environmentalImpactAssessmentPage: BuildingFormPage = {
     id: 'environmentalImpactAssessment',
-    isNeeded: (data) => data.sitePlanSubmission?.includesLandscapingChanges,
+    isRequired: (data) => data.sitePlanSubmission?.includesLandscapingChanges,
     isComplete: (data) =>
         !!data.sitePlanSubmission?.environmentalImpactAssessment,
     Component: EnvironmentalImpactAssessmentComponent,
@@ -118,7 +118,7 @@ const buildingPlansSpecificationsPage: BuildingFormPage = {
 // Fire Safety Plan Page (Conditional)
 const fireSafetyPlanPage: BuildingFormPage = {
     id: 'fireSafetyPlan',
-    isNeeded: (data) =>
+    isRequired: (data) =>
         data.buildingPlansSpecifications?.requiresFireSafetyPlan,
     isComplete: (data) => !!data.buildingPlansSpecifications?.fireSafetyPlan,
     Component: FireSafetyPlanComponent,
@@ -172,7 +172,7 @@ const fireProtectionSystemsPage: BuildingFormPage = {
 // Emergency Evacuation Plan Page (Conditional)
 const emergencyEvacuationPlanPage: BuildingFormPage = {
     id: 'emergencyEvacuationPlan',
-    isNeeded: (data) => data.fireLifeSafety?.requiresEvacuationPlan,
+    isRequired: (data) => data.fireLifeSafety?.requiresEvacuationPlan,
     isComplete: (data) => !!data.fireLifeSafety?.emergencyEvacuationPlan,
     Component: EmergencyEvacuationPlanComponent,
 };
@@ -208,7 +208,7 @@ const floodplainManagementSequence: BuildingFormSequence = {
 // Historic Preservation Review Component (Conditional)
 const historicPreservationReviewPage: BuildingFormPage = {
     id: 'historicPreservationReview',
-    isNeeded: (data) => data.historicPreservationReview?.isHistoricProperty,
+    isRequired: (data) => data.historicPreservationReview?.isHistoricProperty,
     isComplete: (data) =>
         data.historicPreservationReview?.isHistoricProperty !== undefined,
     Component: HistoricPreservationReviewComponent,
@@ -217,7 +217,7 @@ const historicPreservationReviewPage: BuildingFormPage = {
 // Traffic Impact Analysis Component (Conditional)
 const trafficImpactAnalysisPage: BuildingFormPage = {
     id: 'trafficImpactAnalysis',
-    isNeeded: (data) =>
+    isRequired: (data) =>
         data.projectLocationDescription?.projectType === 'New Construction' ||
         data.projectLocationDescription?.projectType === 'Addition',
     isComplete: (data) =>
@@ -228,7 +228,7 @@ const trafficImpactAnalysisPage: BuildingFormPage = {
 // Neighbor Notification and Public Hearings Component (Conditional)
 const neighborNotificationPage: BuildingFormPage = {
     id: 'neighborNotification',
-    isNeeded: (data) => {
+    isRequired: (data) => {
         const varianceRequested =
             data.projectLocationDescription?.zoningComplianceVerification
                 ?.varianceOrSpecialUsePermit?.varianceRequested;

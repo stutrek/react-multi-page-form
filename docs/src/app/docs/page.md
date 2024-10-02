@@ -64,7 +64,7 @@ const MyComponent = (props: MyComponentProps) => {
 - a **page** represents a single page of the form. The user should only see one page at a time.
 - a **sequence** is a list of pages and other sequences.
 
-When designing complex workflows, there may be paths where certain pages or sequences are skipped. Often this is represented in a flow chart. It is recommended that each branch of a flow chart that has more than one page gets represented as a sequence. See [the docs for complex flows](./complex-flows) for help transforming your flow into sequences.
+When designing complex workflows, there may be paths where certain pages or sequences are skipped. Often this is represented in a flow chart. It is recommended that each branch of a flow chart that has more than one page gets represented as a sequence. See [the docs for complex flows](/docs/complex-flows) for help transforming your flow into sequences.
 
 ### Making a page
 
@@ -76,12 +76,16 @@ import { MyFormComponent } from './components/pageOne';
 const locationPage: HookFormPage<MyDataType, MyComponentProps> = {
     id: 'location-page',
     isComplete: (data) => !!data.location,
-    isNeeded: (data) => !!data.personLivesOnEarth,
+    isRequired: (data) => !!data.personLivesOnEarth,
     Component: MyFormComponent
 }
 ```
 
 ### Making a sequence
+
+Sequences allow you to bundle multiple pages together. For example, if a user lives on Earth, you might want to ask them about their location, favorite food, and pets.
+
+Here's how you create a sequence for those pages:
 
 ```typescript
 import { HookFormSequence } from 'react-multi-page-forms';
@@ -89,7 +93,7 @@ import { locationPage, foodPage, petPage } from './pages/earth';
 
 const earthSequence: HookFormSequence<MyDataType, MyComponentProps> = {
     id: 'earth-sequece',
-    isNeeded: (data) => !!data.personLivesOnEarth,
+    isRequired: (data) => !!data.personLivesOnEarth,
     pages: [
         locationPage,
         foodPage,
