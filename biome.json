@@ -25,6 +25,9 @@
             "a11y": {
                 "noLabelWithoutControl": "off",
                 "useKeyWithClickEvents": "off"
+            },
+            "suspicious": {
+                "noExplicitAny": "off"
             }
         }
     },

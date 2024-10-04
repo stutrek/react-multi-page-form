@@ -5,27 +5,69 @@ import type {
     UseFormReturn,
 } from 'react-hook-form';
 import { useMultiPageFormBase } from './base';
-import type { FormPage, FormSequence, MultiPageFormParams } from './types';
+import type {
+    FormPage,
+    FormSequence,
+    MultiPageFormParams,
+    SequenceChild,
+} from './types';
 
+/**
+ * Represents a form page configured to work with React Hook Form.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ * @template ComponentProps - (optional) The props passed to the component.
+ */
 export type HookFormPage<
     DataT extends FieldValues,
     ComponentProps = { hookForm: UseFormReturn<DataT> },
 > = FormPage<DataT, ComponentProps, FieldErrors>;
 
+/**
+ * Represents a form sequence configured to work with React Hook Form.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ * @template ComponentProps - (optional) The props passed to the components.
+ */
 export type HookFormSequence<
     DataT extends FieldValues,
     ComponentProps = { hookForm: UseFormReturn<DataT> },
 > = FormSequence<DataT, ComponentProps, FieldErrors>;
 
+/**
+ * Represents a sequence child (either a page or a sequence) configured to work with React Hook Form.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ * @template ComponentProps - (optional) The props passed to the components.
+ */
+export type HookFormSequenceChild<
+    DataT extends FieldValues,
+    ComponentProps = { hookForm: UseFormReturn<DataT> },
+> = SequenceChild<DataT, ComponentProps, FieldErrors>;
+
+/**
+ * Parameters for initializing and managing a multi-page form using React Hook Form.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ * @template ComponentProps - (optional) The props passed to the form components.
+ */
 export type MultiPageReactHookFormParams<
     DataT extends FieldValues,
     ComponentProps,
-    ErrorList,
 > = { hookForm: UseFormReturn<DataT> } & Omit<
-    MultiPageFormParams<DataT, ComponentProps, ErrorList>,
+    MultiPageFormParams<DataT, ComponentProps, FieldErrors<DataT>>,
     'getCurrentData'
 >;
 
+/**
+ * Recursively retrieves all mounted field names from React Hook Form's internal fields.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ * @param {UseFormReturn<DataT>['control']['_fields']} fields - The internal fields from React Hook Form's control object.
+ * @param {Path<DataT>[]} [mountedFields=[]] - An array to collect the mounted field paths.
+ * @param {string} [prefix=''] - The prefix for nested field paths.
+ * @returns {Path<DataT>[]} An array of mounted field paths.
+ */
 function getMountedFields<DataT extends FieldValues>(
     fields: UseFormReturn<DataT>['control']['_fields'],
     mountedFields: Path<DataT>[] = [],
@@ -49,14 +91,26 @@ function getMountedFields<DataT extends FieldValues>(
     return mountedFields;
 }
 
+/**
+ * A hook that integrates multi-page form logic with React Hook Form.
+ *
+ * This hook wraps the `useMultiPageFormBase` hook, providing integration with React Hook Form.
+ * It handles form validation, triggers, and manages form state transitions between pages.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ * @template ComponentProps - (optional) The props passed to the form components.
+ *
+ * @param {MultiPageReactHookFormParams<DataT, ComponentProps>} params - The parameters for configuring the multi-page form.
+ * @returns {ReturnType<typeof useMultiPageFormBase>} An object containing the current page, navigation functions, and navigation state.
+ */
 export const useMultiPageHookForm = <
     DataT extends FieldValues,
-    ComponentProps,
+    ComponentProps = { hookForm: UseFormReturn<DataT> },
 >({
     hookForm,
     onBeforePageChange,
     ...rest
-}: MultiPageReactHookFormParams<DataT, ComponentProps, FieldErrors>) => {
+}: MultiPageReactHookFormParams<DataT, ComponentProps>) => {
     const { trigger, reset, control } = hookForm;
 
     const multiPageForm = useMultiPageFormBase({
