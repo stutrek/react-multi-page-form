@@ -27,26 +27,38 @@ export function useCallbackRef<T extends any[], U>(
  * @param {FormSequence} parent - The parent form sequence containing the child.
  * @returns {SequenceChild} - The wrapped child with updated `id` and `isRequired` properties.
  */
-function wrapChild<DataT, U, V, T extends SequenceChild<DataT, U, V>>(
-    child: T,
-    parent: FormSequence<DataT, U, V>,
-): T {
+function wrapChild<DataT, ComponentProps, ErrorList>(
+    child: SequenceChild<DataT, ComponentProps, ErrorList>,
+    parent: FormSequence<DataT, ComponentProps, ErrorList>,
+): SequenceChild<DataT, ComponentProps, ErrorList> {
+    const newId = `${parent.id}.${child.id}`;
+    const newIsRequired = (data: Partial<DataT>) => {
+        if (parent.isRequired) {
+            const parentIsRequired = parent.isRequired(data);
+            if (parentIsRequired === false) {
+                return false;
+            }
+        }
+        if (child.isRequired) {
+            return child.isRequired(data);
+        }
+        return true;
+    };
+
+    if ('pages' in child) {
+        // It's a sequence
+        return {
+            ...child,
+            id: newId,
+            isRequired: newIsRequired,
+        };
+    }
+    // It's a page
     return {
         ...child,
-        id: `${parent.id}.${child.id}`,
-        isRequired: (data: DataT) => {
-            if (parent.isRequired) {
-                const parentisRequired = parent.isRequired(data);
-                if (parentisRequired === false) {
-                    return false;
-                }
-            }
-            if (child.isRequired) {
-                return child.isRequired(data);
-            }
-            return true;
-        },
-    } as T;
+        id: newId,
+        isRequired: newIsRequired,
+    };
 }
 
 /**
@@ -59,21 +71,30 @@ function wrapChild<DataT, U, V, T extends SequenceChild<DataT, U, V>>(
  * @param {SequenceChild[]} pagesInput - The array of form pages and sequences to flatten.
  * @returns {FormPage[]} - A flat array of form pages with updated `id` and `isRequired` properties.
  */
-export function flattenPages<U, V, W>(
-    pagesInput: SequenceChild<U, V, W>[],
-): FormPage<U, V, W>[] {
-    const pages = [...pagesInput];
-    for (let i = 0; i < pages.length; i++) {
-        const item = pages[i];
+export function flattenPages<DataT, ComponentProps, ErrorList>(
+    pagesInput: SequenceChild<DataT, ComponentProps, ErrorList>[],
+): FormPage<DataT, ComponentProps, ErrorList>[] {
+    const result: FormPage<DataT, ComponentProps, ErrorList>[] = [];
+
+    for (const item of pagesInput) {
         if ('pages' in item) {
-            const sequencePages = item.pages.map((child) =>
-                wrapChild(child, item),
+            // It's a sequence
+            const sequence = item as FormSequence<
+                DataT,
+                ComponentProps,
+                ErrorList
+            >;
+            const wrappedChildren = sequence.pages.map((child) =>
+                wrapChild(child, sequence),
             );
-            // @ts-ignore
-            pages.splice(i, 1, ...sequencePages);
-            i -= 1;
+            const flattenedChildren = flattenPages(wrappedChildren);
+            result.push(...flattenedChildren);
+        } else {
+            // It's a page
+            const page = item as FormPage<DataT, ComponentProps, ErrorList>;
+            result.push(page);
         }
     }
 
-    return pages as FormPage<U, V, W>[];
+    return result;
 }

@@ -20,8 +20,8 @@ import type {
  */
 export type HookFormPage<
     DataT extends FieldValues,
-    ComponentProps = { hookForm: UseFormReturn<DataT> },
-> = FormPage<DataT, ComponentProps, FieldErrors>;
+    ComponentProps = DefaultHookFormPageProps<DataT>,
+> = FormPage<DataT, ComponentProps, FieldErrors<DataT>>;
 
 /**
  * Represents a form sequence configured to work with React Hook Form.
@@ -31,8 +31,8 @@ export type HookFormPage<
  */
 export type HookFormSequence<
     DataT extends FieldValues,
-    ComponentProps = { hookForm: UseFormReturn<DataT> },
-> = FormSequence<DataT, ComponentProps, FieldErrors>;
+    ComponentProps = DefaultHookFormPageProps<DataT>,
+> = FormSequence<DataT, ComponentProps, FieldErrors<DataT>>;
 
 /**
  * Represents a sequence child (either a page or a sequence) configured to work with React Hook Form.
@@ -42,8 +42,8 @@ export type HookFormSequence<
  */
 export type HookFormSequenceChild<
     DataT extends FieldValues,
-    ComponentProps = { hookForm: UseFormReturn<DataT> },
-> = SequenceChild<DataT, ComponentProps, FieldErrors>;
+    ComponentProps = DefaultHookFormPageProps<DataT>,
+> = SequenceChild<DataT, ComponentProps, FieldErrors<DataT>>;
 
 /**
  * Parameters for initializing and managing a multi-page form using React Hook Form.
@@ -54,10 +54,20 @@ export type HookFormSequenceChild<
 export type MultiPageReactHookFormParams<
     DataT extends FieldValues,
     ComponentProps,
-> = { hookForm: UseFormReturn<DataT> } & Omit<
-    MultiPageFormParams<DataT, ComponentProps, FieldErrors<DataT>>,
-    'getCurrentData'
->;
+> = DefaultHookFormPageProps<DataT> &
+    Omit<
+        MultiPageFormParams<DataT, ComponentProps, FieldErrors<DataT>>,
+        'getCurrentData'
+    >;
+
+/**
+ * Default props for a form page using React Hook Form.
+ *
+ * @template DataT - The type of the form data extending FieldValues.
+ */
+export type DefaultHookFormPageProps<DataT extends FieldValues> = {
+    hookForm: UseFormReturn<DataT>;
+};
 
 /**
  * Recursively retrieves all mounted field names from React Hook Form's internal fields.
@@ -105,7 +115,7 @@ function getMountedFields<DataT extends FieldValues>(
  */
 export const useMultiPageHookForm = <
     DataT extends FieldValues,
-    ComponentProps = { hookForm: UseFormReturn<DataT> },
+    ComponentProps = DefaultHookFormPageProps<DataT>,
 >({
     hookForm,
     onBeforePageChange,

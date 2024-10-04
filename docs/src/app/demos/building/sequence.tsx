@@ -6,7 +6,6 @@ import type {
     UseFormSetValue,
     UseFormWatch,
 } from 'react-hook-form';
-import type { FormPage, FormSequence } from '../../../../src/types';
 import type { BuildingPermitApplication } from './data'; // Assuming this is where it's defined
 
 import {
@@ -30,6 +29,10 @@ import {
     FeeCalculationAndPaymentComponent,
     FinalReviewAndCertificationComponent,
 } from './pageComponents';
+import type {
+    HookFormPage,
+    HookFormSequence,
+} from '../../../../../src/hookForm';
 
 // Define ComponentProps and ErrorList
 type ComponentProps = {
@@ -40,17 +43,12 @@ type ComponentProps = {
     getValues: UseFormGetValues<BuildingPermitApplication>;
 };
 
-type BuildingFormSequence = FormSequence<
+type BuildingFormSequence = HookFormSequence<
     BuildingPermitApplication,
-    ComponentProps,
-    FieldErrors<BuildingPermitApplication>
+    ComponentProps
 >;
 
-type BuildingFormPage = FormPage<
-    BuildingPermitApplication,
-    ComponentProps,
-    FieldErrors<BuildingPermitApplication>
->;
+type BuildingFormPage = HookFormPage<BuildingPermitApplication, ComponentProps>;
 
 // Applicant Information Page
 const applicantInformationPage: BuildingFormPage = {

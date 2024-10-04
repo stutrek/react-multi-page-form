@@ -8,6 +8,7 @@ import type {
     UseFormSetValue,
     UseFormWatch,
     Resolver,
+    UseFormReturn,
 } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useMultiPageHookForm } from '../../../src/hookForm';
@@ -17,6 +18,7 @@ import { type SequenceChild, StartingPage } from '../../../src/types';
 import { Button } from './FormLibrary';
 
 export interface FormComponentProps<DataT extends FieldValues> {
+    hookForm: UseFormReturn<DataT>;
     register: UseFormRegister<DataT>;
     errors: FieldErrors<DataT>;
     watch: UseFormWatch<DataT>;
@@ -34,7 +36,11 @@ export function FormContainer<DataT extends FieldValues>({
 }: PropsWithChildren<{
     defaultValues?: DefaultValues<DataT>;
     resolver?: Resolver<DataT>;
-    pages: SequenceChild<DataT, FormComponentProps<DataT>, FieldErrors>[];
+    pages: SequenceChild<
+        DataT,
+        FormComponentProps<DataT>,
+        FieldErrors<DataT>
+    >[];
 }>): JSX.Element {
     const [submitted, setSubmitted] = useState(false);
 
@@ -92,6 +98,7 @@ export function FormContainer<DataT extends FieldValues>({
             <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="form-card w-96">
                     <currentPage.Component
+                        hookForm={hookForm}
                         register={register}
                         errors={errors}
                         watch={watch}

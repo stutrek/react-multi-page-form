@@ -2,11 +2,13 @@ import { useFieldArray } from 'react-hook-form';
 import { TextInput, Select, Button } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
-export const CoOwnershipForm = ({
-    register,
-    errors,
-    control,
-}: FormComponentProps) => {
+export const CoOwnershipForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+        control,
+    } = hookForm;
+
     const { fields, append, remove } = useFieldArray({
         control,
         name: 'registration.coOwners',

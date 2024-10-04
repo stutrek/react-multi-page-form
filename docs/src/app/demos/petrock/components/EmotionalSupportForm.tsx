@@ -2,10 +2,12 @@
 import { TextInput, Select } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
-export const EmotionalSupportForm = ({
-    register,
-    errors,
-}: FormComponentProps) => {
+export const EmotionalSupportForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+    } = hookForm;
+
     return (
         <div>
             <h2 className="mt-0">Emotional Support Rock Certification</h2>

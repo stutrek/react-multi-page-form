@@ -2,11 +2,13 @@
 import { Radio, Checkbox, TextInput } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
-export const RockPersonalityForm = ({
-    register,
-    errors,
-    watch,
-}: FormComponentProps) => {
+export const RockPersonalityForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+        watch,
+    } = hookForm;
+
     return (
         <div>
             <h2 className="mt-0">Rock Personality Profile</h2>

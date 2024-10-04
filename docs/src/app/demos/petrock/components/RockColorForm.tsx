@@ -3,12 +3,14 @@ import { TextInput, Checkbox, Button } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 import { useFieldArray } from 'react-hook-form';
 
-export const RockColorForm = ({
-    register,
-    errors,
-    watch,
-    control,
-}: FormComponentProps) => {
+export const RockColorForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+        control,
+        watch,
+    } = hookForm;
+
     const isArtificialColor = watch(
         'registration.rockDetails.color.isArtificial',
     );
@@ -55,11 +57,7 @@ export const RockColorForm = ({
                                 ?.secondaryColors?.[index]?.name
                         }
                     />
-                    <Button
-                        type="button"
-                        onClick={() => remove(index)}
-                        color="danger"
-                    >
+                    <Button type="button" onClick={() => remove(index)}>
                         Remove
                     </Button>
                 </div>

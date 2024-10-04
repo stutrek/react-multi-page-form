@@ -3,11 +3,13 @@ import { TextInput, Checkbox, Button } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 import { useFieldArray } from 'react-hook-form';
 
-export const AccessoryInventoryForm = ({
-    register,
-    errors,
-    control,
-}: FormComponentProps) => {
+export const AccessoryInventoryForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+        control,
+    } = hookForm;
+
     // Initialize useFieldArray for accessories
     const { fields, append, remove } = useFieldArray({
         control,
@@ -97,7 +99,7 @@ export const AccessoryInventoryForm = ({
                 onClick={() =>
                     append({
                         type: '',
-                        dateAdded: new Date(),
+                        dateAdded: new Date().toISOString().split('T')[0],
                         material: '',
                         securelyAttached: false,
                     })

@@ -2,7 +2,12 @@
 import { TextInput, Select } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
-export const InsuranceForm = ({ register, errors }: FormComponentProps) => {
+export const InsuranceForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+    } = hookForm;
+
     return (
         <div>
             <h2 className="mt-0">Insurance Information</h2>

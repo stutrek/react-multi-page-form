@@ -2,7 +2,12 @@
 import { TextInput, Checkbox } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 
-export const OwnerForm = ({ register, errors }: FormComponentProps) => {
+export const OwnerForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+    } = hookForm;
+
     return (
         <div>
             <h2 className="mt-0">Owner Information</h2>

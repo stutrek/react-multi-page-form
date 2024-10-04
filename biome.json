@@ -24,7 +24,8 @@
             "recommended": true,
             "a11y": {
                 "noLabelWithoutControl": "off",
-                "useKeyWithClickEvents": "off"
+                "useKeyWithClickEvents": "off",
+                "useButtonType": "off"
             },
             "suspicious": {
                 "noExplicitAny": "off"

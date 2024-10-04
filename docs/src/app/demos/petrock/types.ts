@@ -1,11 +1,4 @@
-import type {
-    Control,
-    FieldErrors,
-    UseFormGetValues,
-    UseFormRegister,
-    UseFormSetValue,
-    UseFormWatch,
-} from 'react-hook-form';
+import type { DefaultHookFormPageProps } from '../../../../../src/hookForm';
 
 // Base reusable types
 interface Owner {
@@ -208,12 +201,4 @@ export interface PetRockSystem {
     claimReports?: ClaimReport[];
 }
 
-// ./types.ts
-export interface FormComponentProps {
-    register: UseFormRegister<PetRockSystem>;
-    errors: FieldErrors<PetRockSystem>;
-    watch: UseFormWatch<PetRockSystem>;
-    setValue: UseFormSetValue<PetRockSystem>;
-    getValues: UseFormGetValues<PetRockSystem>;
-    control: Control<PetRockSystem>;
-}
+export type FormComponentProps = DefaultHookFormPageProps<PetRockSystem>;

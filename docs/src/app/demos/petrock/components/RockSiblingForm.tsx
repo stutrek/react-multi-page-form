@@ -3,11 +3,13 @@ import { TextInput, Button } from '@/components/FormLibrary';
 import type { FormComponentProps } from '../types';
 import { useFieldArray } from 'react-hook-form';
 
-export const RockSiblingForm = ({
-    register,
-    errors,
-    control,
-}: FormComponentProps) => {
+export const RockSiblingForm = ({ hookForm }: FormComponentProps) => {
+    const {
+        register,
+        formState: { errors },
+        control,
+    } = hookForm;
+
     // Initialize useFieldArray for knownSiblings
     const { fields, append, remove } = useFieldArray({
         control,
