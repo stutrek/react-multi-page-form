@@ -86,20 +86,26 @@ export const CoOwnershipForm = ({
                             { value: 'Other', label: 'Other' },
                         ]}
                     />
-                    <Button color="danger" onClick={() => remove(index)}>
+                    <Button
+                        onClick={(event) => {
+                            event.preventDefault();
+                            remove(index);
+                        }}
+                    >
                         Remove
                     </Button>
                 </div>
             ))}
             <Button
-                onClick={() =>
+                onClick={(event) => {
+                    event.preventDefault();
                     append({
                         name: '',
                         email: '',
                         ownershipPercentage: 0,
                         relationshipToPrimaryOwner: 'Other',
-                    })
-                }
+                    });
+                }}
             >
                 Add Co-Owner
             </Button>

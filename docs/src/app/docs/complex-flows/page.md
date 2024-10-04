@@ -1,10 +1,10 @@
 # Large and Complex Flows
 
-Let's say you are building an onboarding flow for an app that allows users to search doctors and schedule appointments. There are a lot of details in this flow, including insurances, video, existing software, and more. Bueracracy has made this hard on everyone. There are parts of this form that require specialized knowledge of iinsurances and bueracracy, health care specialties, and even software integration. It's likely different people will need to review different parts of this workflow.
+Let's say you are building an onboarding flow for an app that allows users to search doctors and schedule appointments. There are a lot of details in this flow, including insurances, video, existing software, and more. Bureaucracy has made this hard on everyone. There are parts of this form that require specialized knowledge of insurances and bureaucracy, health care specialties, and even software integration. Different team members may need to review various parts of this workflow due to specialized knowledge requirements.
 
-Here's the flow that you received from product, you can click on it to see more detail, but the relevant sections will be highlighted.
+Here’s the flowchart provided by the product team. You can click on it to see more details; the relevant sections will be highlighted.
 
-[![complex flow](/big-form/full.png "if you're thinking \"oh my, if you have this you should build a system to handle it\", That's why we're here.")](/big-form/full.png)
+[![complex flow](/big-form/full.png "if you're thinking \"oh my, if you have this you should build a system to handle it\", welcome to my website.")](/big-form/full.png)
 
 We will look at a few of the more interesting parts of this workflow, starting with the simplest and moving to the more complex.
 
@@ -71,7 +71,6 @@ React Multi Page Form makes it easy to keep the code for the mental health workf
 This flow fits cleaning into two different sequences. The specialties sequence has a page for specialties, then includes the sequence for mental health, with an `isRequired`.
 
 ```typescript
-
 // The pages in this sequence do not have an `isRequired` predicate.
 // That will be on the sequence.
 const mentalHealthSequence = {
@@ -103,8 +102,9 @@ The laws relevant to each state can be very esoteric.
 
 This is best modeled as a sequence of sequences. Each state sequence is responsible for checking whether or not it should be shown.
 
-```typescript
+Here’s how you can define a sequence for Wyoming, which has specific requirements including a conditional video visit page.
 
+```typescript
 // Wyoming is the most interesting one
 const wyomingSequence = {
 	id: 'wyoming',
@@ -126,12 +126,11 @@ const wyomingSequence = {
 		isComplete: (data) => !!data.states.wyoming.approval,
 		Component: WyFinalApproval
 	}],
-	// this sequence is needed if there's a location in WY
-	// or a doc is licensed in WY and accepts video visits.
 	isRequired: (data) => 
-		data.locations.locations.some((loc) => loc.state === 'WY')
-		|| (data.locations.licensedStates.includes('WY') && data.locations.acceptsVideoVisits)
-}
+		// Required if there's a location in Wyoming
+		data.locations.locations.some((loc) => loc.state === 'WY') ||
+		// Or if the doctor is licensed in Wyoming and accepts video visits
+		(data.locations.licensedStates.includes('WY') && data.acceptsVideoVisits)}
 
 // the other states would have very similar setups
 const californiaSequence = {
@@ -141,7 +140,7 @@ const californiaSequence = {
 	],
 	isRequired: (data) => 
 		data.locations.locations.some((loc) => loc.state === 'CA')
-		|| (data.locations.licensedStates.includes('CA') && data.locations.acceptsVideoVisits)
+		|| (data.locations.licensedStates.includes('CA') && data.acceptsVideoVisits)
 }
 
 // the main sequence
@@ -161,7 +160,8 @@ export const stateSpecificSequence = {
 When all of your sequences are made, they can be assembled into a single array to be passed into React Multi Page Form.
 
 ```typescript
-// this is just an array, it doesn't need to be a sequence
+// This is just an array of pages and sequences.
+// The order in this array is the order pages will be shown.
 export const fullWorkflow = [
 	personalInfoForm,
 	specialtiesSequence,

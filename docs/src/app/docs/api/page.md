@@ -19,7 +19,7 @@ type FormPage<DataT, ComponentProps, ErrorList> = {
     isComplete: (data: Partial<DataT>) => boolean; // Checks if the user has already filled out this page.
 
 	// these manage the sequence
-	isFinal?: (data: Partial<DataT>) => boolean; // allows you to mark pages as end pages.
+	isFinal?: (data: Partial<DataT>) => boolean; // return true if this should be the final page of the form.
     isRequired?: (data: Partial<DataT>) => boolean | undefined; // Determines if this page is needed based on form data.
     validate?: (data: Partial<DataT>) => ErrorList | undefined; // Determines whether or not to continue.
     
@@ -36,8 +36,8 @@ type MyComponentProps = {
 	register: UseFormRegister<MyData>;
 }
 
-const myPage: FormPage<MyData, MyComponentProps, FieldError> = {
-	id: 'my-page,
+const myPage: FormPage<MyData> = {
+	id: 'my-page',
 	isComplete: (data) => !!data.myField,
 	Component: ({register}) => {
 		return <div>
@@ -57,7 +57,7 @@ A sequence contains pages or more sequences that represent a single workflow. Th
 ```ts
 export type FormSequence<DataT, ComponentProps, ErrorList> = {
     id: string; // Unique identifier for the form sequence.
-    pages: SequenceChild[]; // Array of form pages or nested sequences.
+    pages: SequenceChild[]; // A SequenceChild is either a FormPage or a FormSequence.
     isRequired?: (data: Partial<DataT>) => boolean | undefined; // Determines if the sequence is needed based on form data.
 };
 ```
@@ -118,12 +118,12 @@ type MyComponentProps = {
 export function MyMultiPageForm() {
     // use react-hook-form's useForm
 	const hookForm = useForm<MyDataType>();
-
-	// create multi-page controls
+    // create multi-page controls
 	const {
         currentPage, // the current page object
         advance, // goes to the next page
         goBack, // goes back one page
+        goTo, // goes to a page by id
         nextStep, // the page object for the next step
         previousStep // the page object for the previous step
 	} = useMultiPageHookForm<MyDataType, MyComponentProps>({
@@ -133,8 +133,7 @@ export function MyMultiPageForm() {
 
     return (<>
         <currentPage.Component
-            errors={errors}
-            register={register}
+            hookForm={hookForm}
         />
     
         {previousStep && <button onClick={goBack}>Prev</button>}

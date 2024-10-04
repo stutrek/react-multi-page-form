@@ -9,7 +9,7 @@ type HeaderProps = {
 export function Header({ showLogo = true }: HeaderProps) {
     return (
         <header className="p-4y border-b border-gray-300">
-            <div className="container max-w-3xl mx-auto">
+            <div className="container max-w-3xl mx-auto flex justify-between items-center whitespace-nowrap">
                 <nav className={navStyles.header}>
                     <ul className="flex">
                         {showLogo ? (
@@ -18,7 +18,7 @@ export function Header({ showLogo = true }: HeaderProps) {
                                     <img
                                         src="/Logo.svg"
                                         alt="React Multi Page Form"
-                                        className="h-6"
+                                        className="h-7"
                                     />
                                 </a>
                             </li>
@@ -27,7 +27,12 @@ export function Header({ showLogo = true }: HeaderProps) {
                             <button type="button">Docs</button>
                             <ul className="shadow-lg rounded-lg">
                                 <li>
-                                    <Link href="/docs">Introduction</Link>
+                                    <Link href="/docs">Getting Started</Link>
+                                </li>
+                                <li>
+                                    <Link href="/docs/using">
+                                        Using React Multi Page Form
+                                    </Link>
                                 </li>
                                 <li>
                                     <Link href="/docs/api">API Reference</Link>
@@ -60,6 +65,11 @@ export function Header({ showLogo = true }: HeaderProps) {
                             </ul>
                         </li>
                     </ul>
+                </nav>
+                <nav>
+                    <a href="https://github.com/stutrek/react-multi-page-form">
+                        GitHub
+                    </a>
                 </nav>
             </div>
         </header>

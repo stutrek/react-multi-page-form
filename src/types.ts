@@ -26,6 +26,8 @@ export type FormPage<DataT, ComponentProps, ErrorList> = {
 
     /**
      * Function to determine if the page is complete based on the current form data.
+     * This can be loose, it should not include validation. It is used to determine
+     * what the next incomplete page is when navigating the form.
      *
      * @param data - Partial form data available at the current step.
      * @returns A boolean indicating whether the page is complete.
@@ -41,7 +43,9 @@ export type FormPage<DataT, ComponentProps, ErrorList> = {
     isFinal?: (data: Partial<DataT>) => boolean;
 
     /**
-     * Optional function to validate the form data for this page.
+     * Optional function to validate the form data for this page. If using React Hook Form,
+     * all fields in the DOM will automatically be vaidated. This is useful for further
+     * validation that may be asynchronous or require multiple fields.
      *
      * @param data - Partial form data available at the current step.
      * @returns An ErrorList if validation fails, or undefined if validation passes.

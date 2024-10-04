@@ -1,4 +1,4 @@
-import Intro from '@/markdown/Intro.mdx';
+import Intro from './Intro.mdx';
 import { Header } from './header';
 export default function () {
     return (
