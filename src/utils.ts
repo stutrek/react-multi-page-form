@@ -92,7 +92,10 @@ export function flattenPages<DataT, ComponentProps, ErrorList>(
         } else {
             // It's a page
             const page = item as FormPage<DataT, ComponentProps, ErrorList>;
-            result.push(page);
+            result.push({
+                isRequired: () => true,
+                ...page,
+            });
         }
     }
 

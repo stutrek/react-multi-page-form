@@ -42,6 +42,11 @@ export function Header({ showLogo = true }: HeaderProps) {
                                         Handling Complex Flows
                                     </Link>
                                 </li>
+                                <li>
+                                    <Link href="/docs/testing">
+                                        Testing Flows and Forms
+                                    </Link>
+                                </li>
                             </ul>
                         </li>
                         <li>
