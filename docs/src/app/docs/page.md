@@ -123,8 +123,7 @@ const MyMultiPageForm = () => {
         currentPage, // the page object
         advance, // goes to the next page
         goBack, // goes back one page
-        nextStep, // the page object for the next step
-        previousStep // the page object for the previous step
+        isFinal, // if this is the last page
     } = useMultiPageHookForm<FormSchema>({
         hookForm,
         pages: [mySequence, otherPage],
@@ -137,7 +136,7 @@ const MyMultiPageForm = () => {
         />
     
         {previousStep && <button onClick={goBack}>Prev</button>}
-        {nextStep ? (
+        {!isFinal ? (
             <button onClick={advance}>Next</button>
         ) : (
             <button type="submit">Submit</button>

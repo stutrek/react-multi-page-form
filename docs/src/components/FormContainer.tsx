@@ -59,7 +59,7 @@ export function FormContainer<DataT extends FieldValues>({
         control,
     } = hookForm;
 
-    const { currentPage, advance, goBack, nextStep, previousStep, goTo } =
+    const { currentPage, advance, goBack, isFinal, goTo } =
         useMultiPageHookForm({
             hookForm,
             pages,
@@ -110,12 +110,7 @@ export function FormContainer<DataT extends FieldValues>({
                 <hr className="my-4" />
                 <div className="form-nav">
                     <div className="flex gap-2">
-                        {previousStep && (
-                            <Button onClick={goBack} color="neutral">
-                                Prev
-                            </Button>
-                        )}
-                        {nextStep ? (
+                        {!isFinal ? (
                             <Button onClick={advance}>Next</Button>
                         ) : (
                             <Button type="submit">Submit</Button>

@@ -31,7 +31,7 @@ function wrapChild<DataT, ComponentProps, ErrorList>(
     child: SequenceChild<DataT, ComponentProps, ErrorList>,
     parent: FormSequence<DataT, ComponentProps, ErrorList>,
 ): SequenceChild<DataT, ComponentProps, ErrorList> {
-    const newId = `${parent.id}.${child.id}`;
+    const newId = child.id; // `${parent.id}.${child.id}`;
     const newIsRequired = (data: Partial<DataT>) => {
         if (parent.isRequired) {
             const parentIsRequired = parent.isRequired(data);
@@ -73,9 +73,12 @@ function wrapChild<DataT, ComponentProps, ErrorList>(
  */
 export function flattenPages<DataT, ComponentProps, ErrorList>(
     pagesInput: SequenceChild<DataT, ComponentProps, ErrorList>[],
-): FormPage<DataT, ComponentProps, ErrorList>[] {
+): [
+    FormPage<DataT, ComponentProps, ErrorList>[],
+    Record<string, FormPage<DataT, ComponentProps, ErrorList>>,
+] {
     const result: FormPage<DataT, ComponentProps, ErrorList>[] = [];
-
+    const map: Record<string, FormPage<DataT, ComponentProps, ErrorList>> = {};
     for (const item of pagesInput) {
         if ('pages' in item) {
             // It's a sequence
@@ -87,11 +90,14 @@ export function flattenPages<DataT, ComponentProps, ErrorList>(
             const wrappedChildren = sequence.pages.map((child) =>
                 wrapChild(child, sequence),
             );
-            const flattenedChildren = flattenPages(wrappedChildren);
+            const [flattenedChildren, flattenedMap] =
+                flattenPages(wrappedChildren);
             result.push(...flattenedChildren);
+            Object.assign(map, flattenedMap);
         } else {
             // It's a page
             const page = item as FormPage<DataT, ComponentProps, ErrorList>;
+            map[page.id] = page;
             result.push({
                 isRequired: () => true,
                 ...page,
@@ -99,5 +105,5 @@ export function flattenPages<DataT, ComponentProps, ErrorList>(
         }
     }
 
-    return result;
+    return [result, map];
 }

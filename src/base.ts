@@ -45,15 +45,15 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
     onPageChange,
     onValidationError,
 }: MultiPageFormParams<DataT, ComponentProps, ErrorList>) {
-    const pageChangeCount = useRef(0);
-    const pages = useMemo(() => {
+    const pagesRefChangeCounter = useRef(0);
+    const [pages, pagesMap] = useMemo(() => {
         if (process.env.NODE_ENV !== 'production') {
-            if (pageChangeCount.current > 0) {
+            if (pagesRefChangeCounter.current > 0) {
                 console.warn(
                     'useMultiPageFormBase: pages changed after first render, this can lead to performance issues and unexpected behavior.',
                 );
             }
-            pageChangeCount.current++;
+            pagesRefChangeCounter.current++;
         }
         return flattenPages(pagesInput);
     }, [pagesInput]);
@@ -71,9 +71,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
             if (found !== -1) {
                 return found;
             }
-            console.warn(
-                'Form page not found. Resuming from first incomplete page.',
-            );
+            console.warn('Form page not found. Resuming from first page.');
         }
         if (!startingPage || startingPage === StartingPage.FirstIncomplete) {
             const index = pages.findIndex((page) => {
@@ -86,6 +84,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         return 0;
     });
 
+    const navigationStack = useRef<number[]>([]);
     const currentPage = pages[currentPageIndex];
 
     /**
@@ -95,59 +94,23 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
     // biome-ignore lint/correctness/useExhaustiveDependencies: onPageChange should be excluded.
     useEffect(() => {
         const data = getCurrentData();
+
         if (onPageChange) {
-            onPageChange(data, currentPage);
+            onPageChange(data, pagesMap[currentPage.id]);
         }
-        if (currentPage.onArrive) {
+        if (currentPage?.onArrive) {
             currentPage.onArrive(data);
         }
+
+        return () => {
+            navigationStack.current.push(currentPageIndex);
+        };
     }, [currentPage]);
 
-    /**
-     * Computes the previous required page.
-     *
-     * @returns {FormPage<DataT, ComponentProps, ErrorList> | undefined} The previous required page, or undefined if none exists.
-     */
-    const previousStep = useMemo(() => {
-        const data = getCurrentData();
-
-        for (let i = currentPageIndex - 1; i >= 0; i--) {
-            const page = pages[i];
-            const pageisRequired = isRequired(page, data);
-            if (pageisRequired) {
-                return page;
-            }
-        }
-    }, [currentPageIndex, pages, getCurrentData]);
-
-    /**
-     * Computes the next required page and the next incomplete required page.
-     *
-     * @returns {[FormPage<DataT, ComponentProps, ErrorList> | undefined, FormPage<DataT, ComponentProps, ErrorList> | undefined]} A tuple containing the next required page and the next incomplete required page.
-     */
-    const [nextStep, nextIncompleteStep] = useMemo(() => {
-        const data = getCurrentData();
-        let nextStep: FormPage<DataT, ComponentProps, ErrorList> | undefined;
-        let nextIncompleteStep:
-            | FormPage<DataT, ComponentProps, ErrorList>
-            | undefined;
-        if (!currentPage.isFinal?.(data)) {
-            for (let i = currentPageIndex + 1; i < pages.length; i++) {
-                const page = pages[i];
-                const pageisRequired = isRequired(page, data);
-                const pageIsComplete = page.isComplete(data);
-                if (pageisRequired && !nextStep) {
-                    nextStep = page;
-                }
-                if (pageisRequired && !pageIsComplete) {
-                    nextIncompleteStep = page;
-                    break;
-                }
-            }
-        }
-        return [nextStep, nextIncompleteStep];
-    }, [currentPage, currentPageIndex, pages, getCurrentData]);
-
+    const advanceAndNavState = useRef({
+        navigating: false,
+        goToCalledInNavigation: false,
+    });
     /**
      * Advances to the next required page.
      *
@@ -157,6 +120,10 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
      * @param {SyntheticEvent} [event] - An optional event to prevent default behavior.
      */
     const advance = useCallbackRef(async (event?: SyntheticEvent) => {
+        if (advanceAndNavState.current.navigating) {
+            console.warn('Navigation already in progress.');
+            return;
+        }
         if (event) {
             event.preventDefault();
         }
@@ -171,10 +138,11 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
             return;
         }
 
+        advanceAndNavState.current.navigating = true;
         if (onBeforePageChange) {
             const errorList = await onBeforePageChange(
                 data,
-                pages[currentPageIndex],
+                pagesMap[pages[currentPageIndex].id],
             );
             if (errorList === false) {
                 return;
@@ -193,10 +161,16 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
                 if (currentPage.onExit) {
                     await currentPage.onExit(data);
                 }
-                setCurrentPageIndex(i);
+                if (
+                    advanceAndNavState.current.goToCalledInNavigation === false
+                ) {
+                    setCurrentPageIndex(i);
+                }
                 break;
             }
         }
+        advanceAndNavState.current.navigating = false;
+        advanceAndNavState.current.goToCalledInNavigation = false;
     });
 
     /**
@@ -208,14 +182,39 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         if (event) {
             event.preventDefault();
         }
+        if (advanceAndNavState.current.navigating) {
+            console.warn('Navigation already in progress.');
+            return;
+        }
+        advanceAndNavState.current.navigating = true;
         const data = getCurrentData();
-        for (let i = currentPageIndex - 1; i >= 0; i--) {
-            const page = pages[i];
-            if (isRequired(page, data)) {
-                setCurrentPageIndex(i);
-                break;
+        let nextPageIndex: number | undefined;
+
+        if (navigationStack.current.length) {
+            if (currentPage.onExit) {
+                await currentPage.onExit(data);
+            }
+            nextPageIndex = navigationStack.current?.pop();
+        } else {
+            for (let i = currentPageIndex - 1; i >= 0; i--) {
+                const page = pages[i];
+                if (isRequired(page, data)) {
+                    if (currentPage.onExit) {
+                        await currentPage.onExit(data);
+                    }
+                    nextPageIndex = i;
+                    break;
+                }
             }
         }
+        if (nextPageIndex !== undefined) {
+            setCurrentPageIndex(nextPageIndex);
+        } else {
+            console.warn('No previous page found.');
+        }
+
+        advanceAndNavState.current.navigating = false;
+        advanceAndNavState.current.goToCalledInNavigation = false;
     });
 
     /**
@@ -223,21 +222,29 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
      *
      * @param {string} pageId - The identifier of the page to navigate to.
      */
-    const goTo = useCallbackRef((pageId: string) => {
+    const goTo = useCallbackRef(async (pageId: string) => {
+        if (advanceAndNavState.current.navigating) {
+            advanceAndNavState.current.goToCalledInNavigation = true;
+        }
         const index = pages.findIndex((page) => page.id === pageId);
         if (index !== -1) {
+            if (currentPage.onExit) {
+                const data = getCurrentData();
+                await currentPage.onExit(data);
+            }
+
             setCurrentPageIndex(index);
         }
     });
 
     return {
         sequence: pages,
-        currentPage: pages[currentPageIndex],
+        currentPage: pagesMap[pages[currentPageIndex]?.id],
+        isFinal:
+            currentPageIndex === pages.length - 1 ||
+            currentPage.isFinal?.(getCurrentData()),
         advance,
         goBack,
         goTo,
-        previousStep,
-        nextStep,
-        nextIncompleteStep,
     };
 }
