@@ -10,7 +10,7 @@ import { EmotionalSupportForm } from './components/EmotionalSupportForm';
 import { InsuranceForm } from './components/InsuranceForm';
 
 import type { FormComponentProps, PetRockSystem } from './types';
-import type { SequenceChild } from '../../../../src/types';
+import type { SequenceChild } from '../../../../../src/types';
 
 // Form sequence
 export const pages: SequenceChild<

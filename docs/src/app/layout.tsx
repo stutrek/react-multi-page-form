@@ -9,6 +9,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <base href="/react-multi-page-form/" />
+            </head>
             <body className="antialiased">{children}</body>
         </html>
     );

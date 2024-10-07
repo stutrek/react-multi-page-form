@@ -4,7 +4,7 @@ import { FormPagesTester } from '../../../../../../src/testUtils/FormPagesTester
 import { pages } from '../sequence';
 import { rockyMcSmooth } from '../sampleData';
 
-const flattened = flattenPages(pages);
+const [flattened] = flattenPages(pages);
 
 export default function PetRockTest() {
     return (

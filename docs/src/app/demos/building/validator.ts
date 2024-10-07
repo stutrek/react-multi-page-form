@@ -1,7 +1,6 @@
 import { z } from 'zod';
 import type {
     BuildingPermitApplication,
-    DocumentReference,
     ApplicantInformation,
     ContactInformation,
     LicenseNumbers,
@@ -41,6 +40,7 @@ import type {
     InspectionScheduling,
     PostSubmissionRequirements,
 } from './data';
+import type { DocumentReference } from '@/components/FormLibrary';
 
 // Helper Types
 const DocumentReferenceSchema: z.ZodType<DocumentReference> = z.object({

@@ -14,13 +14,13 @@ export function Header({ showLogo = true }: HeaderProps) {
                     <ul className="flex">
                         {showLogo ? (
                             <li>
-                                <a href="/">
+                                <Link href="/">
                                     <img
-                                        src="/Logo.svg"
+                                        src="./Logo.svg"
                                         alt="React Multi Page Form"
                                         className="h-7"
                                     />
-                                </a>
+                                </Link>
                             </li>
                         ) : null}
                         <li>
