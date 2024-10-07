@@ -1,3 +1,4 @@
+'use client';
 import type {
     Control,
     DefaultValues,
@@ -59,7 +60,7 @@ export function FormContainer<DataT extends FieldValues>({
         control,
     } = hookForm;
 
-    const { currentPage, advance, goBack, isFinal, goTo } =
+    const { currentPage, advance, goBack, isFinal, isFirst, goTo } =
         useMultiPageHookForm({
             hookForm,
             pages,
@@ -110,6 +111,7 @@ export function FormContainer<DataT extends FieldValues>({
                 <hr className="my-4" />
                 <div className="form-nav">
                     <div className="flex gap-2">
+                        {!isFirst && <Button onClick={goBack}>Back</Button>}
                         {!isFinal ? (
                             <Button onClick={advance}>Next</Button>
                         ) : (

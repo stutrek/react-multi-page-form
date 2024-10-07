@@ -1,3 +1,7 @@
+export const metadata = {
+    title: 'API Reference'
+}
+
 # API
 
 The API consists of a few items:
@@ -124,6 +128,7 @@ export function MyMultiPageForm() {
         goBack, // goes back one page
         goTo, // goes to a page by id
         isFinal, // if this is the last page
+        isFirst, // if this is the first page in the sequence
 	} = useMultiPageHookForm<MyDataType, MyComponentProps>({
 		hookForm,
 		pages: [myPage, mySequence],

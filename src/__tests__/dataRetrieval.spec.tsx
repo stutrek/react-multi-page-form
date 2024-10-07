@@ -34,7 +34,7 @@ describe('useMultiPageFormBase - Data Retrieval Tests', () => {
             await result.current.advance();
         });
 
-        expect(getCurrentData).toHaveBeenCalledTimes(3);
+        expect(getCurrentData).toHaveBeenCalledTimes(4);
     });
 
     it('passes current data to callbacks', () => {

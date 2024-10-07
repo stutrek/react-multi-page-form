@@ -24,7 +24,6 @@ const FirstPage = (props: FormComponentProps<FormModel>) => {
                 {...register('name', {
                     // required: true,
                     validate: (v) => {
-                        console.log(v);
                         if (!v) {
                             return 'Name is required';
                         }
@@ -75,13 +74,11 @@ const sequence: SequenceChild<
     {
         id: 'first',
         isComplete: (data) => !!data.name?.length,
-        validate: () => undefined,
         Component: FirstPage,
     },
     {
         id: 'second',
         isComplete: (data) => !!data.pet?.length,
-        validate: () => undefined,
         Component: SecondPage,
     },
 ] as const;

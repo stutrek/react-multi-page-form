@@ -1,5 +1,13 @@
 import type { PropsWithChildren } from 'react';
 import { Header } from '../header';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+    title: {
+        template: '%s | Demos',
+        default: 'Demos',
+    },
+};
 
 export default function DemoLayout({ children }: PropsWithChildren) {
     return (

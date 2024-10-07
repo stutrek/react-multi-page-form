@@ -87,6 +87,19 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
     const navigationStack = useRef<number[]>([]);
     const currentPage = pages[currentPageIndex];
 
+    const previousPageIndex = useMemo(() => {
+        if (navigationStack.current.length) {
+            return navigationStack.current[navigationStack.current.length - 1];
+        }
+        const currentData = getCurrentData();
+        for (let i = currentPageIndex - 1; i > -1; i--) {
+            const page = pages[i];
+            if (page && isRequired(page, currentData)) {
+                return i;
+            }
+        }
+    }, [pages, currentPageIndex, getCurrentData]);
+
     /**
      * Effect hook that triggers when the current page changes.
      * It invokes the `onPageChange` and `currentPage.onArrive` callbacks if they are provided.
@@ -101,10 +114,6 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         if (currentPage?.onArrive) {
             currentPage.onArrive(data);
         }
-
-        return () => {
-            navigationStack.current.push(currentPageIndex);
-        };
     }, [currentPage]);
 
     const advanceAndNavState = useRef({
@@ -169,6 +178,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
                 break;
             }
         }
+        navigationStack.current.push(currentPageIndex);
         advanceAndNavState.current.navigating = false;
         advanceAndNavState.current.goToCalledInNavigation = false;
     });
@@ -235,6 +245,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
 
             setCurrentPageIndex(index);
         }
+        navigationStack.current.push(currentPageIndex);
     });
 
     return {
@@ -243,6 +254,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         isFinal:
             currentPageIndex === pages.length - 1 ||
             currentPage?.isFinal?.(getCurrentData()),
+        isFirst: previousPageIndex === undefined,
         advance,
         goBack,
         goTo,
