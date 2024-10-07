@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "description": "Tools to handle multi-page forms",
     "main": "dist/index.js",
+    "files": ["dist"],
     "scripts": {
         "build": "tsc",
         "build:watch": "tsc -w",
