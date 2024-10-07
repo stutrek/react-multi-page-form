@@ -242,7 +242,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         currentPage: pagesMap[pages[currentPageIndex]?.id],
         isFinal:
             currentPageIndex === pages.length - 1 ||
-            currentPage.isFinal?.(getCurrentData()),
+            currentPage?.isFinal?.(getCurrentData()),
         advance,
         goBack,
         goTo,
