@@ -68,6 +68,15 @@ export type FormPage<DataT, ComponentProps, ErrorList> = {
     onExit?: (data: Partial<DataT>) => Promise<void> | void;
 
     /**
+     * Function to determine the next page by ID. For use in special
+     * circumstances where using a sequence is not possible or practical.
+     *
+     * @param data - Partial form data available at the current step.
+     * @returns The ID of the next page, or undefined if the next page should be the default.
+     */
+    alternateNextPage?: (data: Partial<DataT>) => string | undefined;
+
+    /**
      * The React component that renders the content of this form page.
      *
      * @param props - The props passed to the component, including form methods and errors.

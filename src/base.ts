@@ -120,6 +120,30 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         navigating: false,
         goToCalledInNavigation: false,
     });
+
+    /**
+     * Navigates to a specific page by its identifier.
+     *
+     * @param {string} pageId - The identifier of the page to navigate to.
+     */
+    const goTo = useCallbackRef(async (pageId: string) => {
+        const index = pages.findIndex((page) => page.id === pageId);
+        if (index !== -1) {
+            if (advanceAndNavState.current.navigating) {
+                advanceAndNavState.current.goToCalledInNavigation = true;
+            }
+            if (currentPage.onExit) {
+                const data = getCurrentData();
+                await currentPage.onExit(data);
+            }
+
+            setCurrentPageIndex(index);
+            navigationStack.current.push(currentPageIndex);
+        } else {
+            console.warn(`Page with ID '${pageId}' not found.`);
+        }
+    });
+
     /**
      * Advances to the next required page.
      *
@@ -164,18 +188,24 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
             }
         }
 
-        for (let i = currentPageIndex + 1; i < pages.length; i++) {
-            const page = pages[i];
-            if (isRequired(page, data)) {
-                if (currentPage.onExit) {
-                    await currentPage.onExit(data);
-                }
-                if (
-                    advanceAndNavState.current.goToCalledInNavigation === false
-                ) {
+        if (currentPage.alternateNextPage) {
+            const alternateNextPage = currentPage.alternateNextPage(data);
+            if (alternateNextPage) {
+                goTo(alternateNextPage);
+            }
+        }
+
+        if (advanceAndNavState.current.goToCalledInNavigation === false) {
+            for (let i = currentPageIndex + 1; i < pages.length; i++) {
+                const page = pages[i];
+                if (isRequired(page, data)) {
+                    if (currentPage.onExit) {
+                        await currentPage.onExit(data);
+                    }
+
                     setCurrentPageIndex(i);
+                    break;
                 }
-                break;
             }
         }
         navigationStack.current.push(currentPageIndex);
@@ -225,27 +255,6 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
 
         advanceAndNavState.current.navigating = false;
         advanceAndNavState.current.goToCalledInNavigation = false;
-    });
-
-    /**
-     * Navigates to a specific page by its identifier.
-     *
-     * @param {string} pageId - The identifier of the page to navigate to.
-     */
-    const goTo = useCallbackRef(async (pageId: string) => {
-        if (advanceAndNavState.current.navigating) {
-            advanceAndNavState.current.goToCalledInNavigation = true;
-        }
-        const index = pages.findIndex((page) => page.id === pageId);
-        if (index !== -1) {
-            if (currentPage.onExit) {
-                const data = getCurrentData();
-                await currentPage.onExit(data);
-            }
-
-            setCurrentPageIndex(index);
-        }
-        navigationStack.current.push(currentPageIndex);
     });
 
     return {
