@@ -79,10 +79,9 @@ export const pages: SequenceChild<
         isRequired: (data) => !!data.registration?.rockDetails?.isAccessorized,
         isComplete: (data) =>
             !data.registration?.rockDetails?.isAccessorized ||
-            (!!data.accessoryInventory &&
-                data.accessoryInventory.accessories.every(
-                    (accessory) => !!accessory?.type,
-                )),
+            !!data.accessoryInventory?.accessories?.every(
+                (accessory) => !!accessory?.type,
+            ),
         Component: AccessoryInventoryForm,
     },
     {

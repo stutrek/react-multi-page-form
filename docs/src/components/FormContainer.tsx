@@ -10,6 +10,7 @@ import type {
     UseFormWatch,
     Resolver,
     UseFormReturn,
+    DeepPartial,
 } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useMultiPageHookForm } from '../../../src/hookForm';
@@ -90,6 +91,7 @@ export function FormContainer<DataT extends FieldValues>({
             <div>
                 <h3 className="mt-0">Full Sequence</h3>
                 <SequenceVisualizer
+                    // @ts-expect-error
                     data={watch()}
                     currentPage={currentPage}
                     pages={pages}
