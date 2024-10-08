@@ -1,6 +1,7 @@
 import type { DefaultValues, FieldValues } from 'react-hook-form';
 import { FormPageTester } from './FormPageTester';
 import type { HookFormPage } from '../../hookForm';
+import type { DeepPartial } from '../../types';
 
 export function FormPageMultipleTester<
     DataT extends FieldValues,
@@ -13,7 +14,7 @@ export function FormPageMultipleTester<
 }: {
     page: HookFormPage<DataT, ComponentProps>;
     sampleData: DefaultValues<DataT>;
-    additionalProps?: Partial<ComponentProps>;
+    additionalProps?: DeepPartial<ComponentProps>;
     validator?: any; // Replace 'any' with the appropriate type for the validator
 }): JSX.Element {
     return (

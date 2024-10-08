@@ -6,12 +6,12 @@ import {
     useState,
 } from 'react';
 import { StartingPage } from './types';
-import type { FormPage, MultiPageFormParams } from './types';
+import type { DeepPartial, FormPage, MultiPageFormParams } from './types';
 import { flattenPages, useCallbackRef } from './utils';
 
 function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
     page: Page,
-    data: DataT,
+    data: DeepPartial<DataT>,
 ) {
     if (page.isRequired === undefined || page.isRequired(data) !== false) {
         return true;

@@ -20,17 +20,17 @@ type HookFormPage<DataT, ComponentProps = { hookForm: UseFormReturn }> = {
     // these three are required
 	id: string; // Unique identifier for the form page.
     Component: (props: ComponentProps) => JSX.Element; // React component to render the form page.
-    isComplete: (data: Partial<DataT>) => boolean; // Checks if the user has already filled out this page.
+    isComplete: (data: DeepPartial<DataT>) => boolean; // Checks if the user has already filled out this page.
 
 	// these manage the sequence
-	isFinal?: (data: Partial<DataT>) => boolean; // return true if this should be the final page of the form.
-    isRequired?: (data: Partial<DataT>) => boolean | undefined; // Determines if this page is needed based on form data. Default: () => true
-    validate?: (data: Partial<DataT>) => Promise<FieldErrors | undefined>; // Determines whether or not to continue.
-    alternateNextPage: (data: Partial<DataT>) => pageId; // Useful if you need to override the default order of pages
+	isFinal?: (data: DeepPartial<DataT>) => boolean; // return true if this should be the final page of the form.
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined; // Determines if this page is needed based on form data. Default: () => true
+    validate?: (data: DeepPartial<DataT>) => Promise<FieldErrors | undefined>; // Determines whether or not to continue.
+    alternateNextPage?: (data: DeepPartial<DataT>) => pageId; // Useful if you need to override the default order of pages
     
 	// event handlers
-	onArrive?: (data: Partial<DataT>) => void; // Function to execute upon arriving at this page.
-    onExit?: (data: Partial<DataT>) => Promise<void> | void; // Function to execute when exiting the page.
+	onArrive?: (data: DeepPartial<DataT>) => void; // Function to execute upon arriving at this page.
+    onExit?: (data: DeepPartial<DataT>) => Promise<void> | void; // Function to execute when exiting the page.
 };
 ```
 
@@ -63,7 +63,7 @@ A sequence contains pages or more sequences that represent a single workflow. Th
 export type FormSequence<DataT, ComponentProps, ErrorList> = {
     id: string; // Unique identifier for the form sequence.
     pages: HookFormSequenceChild[]; // A SequenceChild is either a FormPage or a FormSequence.
-    isRequired?: (data: Partial<DataT>) => boolean | undefined; // Determines if the sequence is needed based on form data.
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined; // Determines if the sequence is needed based on form data.
 };
 ```
 

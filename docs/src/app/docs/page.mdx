@@ -29,7 +29,7 @@ To allow consistent typing throughout the library, you need a single type for yo
 
 ### Schema
 
-This is the shape the data takes for the entirety of the form. Not all of it will be on the screen at the same time, and you'll have a chance to save data when changing pages. This data will be Partial'd, since it won't all be available until the user is done providing it.
+This is the shape the data takes for the entirety of the form. Not all of it will be on the screen at the same time, and you'll have a chance to save data when changing pages. This data will be DeepPartial'd, since it won't all be available until the user is done providing it.
 
 ```typescript
 type MySchema = {

@@ -1,4 +1,4 @@
-# react-multi-page-form
+![React Multi Page Form](https://stutrek.github.io/react-multi-page-form/Logo.svg "")
 
 This is a tool for managing the sequence and flow of multi-page workflows. Given a long series of screens, it can put them in the proper order makes it easy to show and hide screens based on previous input.
 
@@ -6,7 +6,9 @@ Workflows can be composed, allowing you to reuse parts of a flow.
 
 This should be used in combination with a component library and validation schema to improve your form management.
 
-All of the examples use react-hook-form, but any library could be used.
+An integration with React Hook Form is provided, but the base could be used with any library.
+
+[View the docs](https://stutrek.github.io/react-multi-page-form/)
 
 ## Basic Usage
 
@@ -61,6 +63,9 @@ const MyMultiPageForm = () => {
     </>);
 };
 ```
+[View the docs](https://stutrek.github.io/react-multi-page-form/)
+
+
 ### Pages and Sequences
 
 A **page** represents a single screen that will be shown to the user as part of this multi-step form. It can have as many fields or as few as you'd like. It can even have logic to show and hide fields built in.
@@ -71,18 +76,20 @@ A **sequence** is an array of pages and sequences that represent a specific flow
 type FormPage<DataT, ComponentProps, ErrorList> = {
     id: string;
     // determines whether or not this page is needed
-    isRequired?: (data: Partial<DataT>) => boolean | undefined
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined
     // determines if the page is already complete
-    isComplete: (data: Partial<DataT>) => boolean;
+    isComplete: (data: DeepPartial<DataT>) => boolean;
     // determines if this should be a final step in the flow
-    isFinal?: (data: Partial<DataT>) => boolean;
+    isFinal?: (data: DeepPartial<DataT>) => boolean;
+    // if you need to break the flow of the sequence, this makes that possible
+    alternateNextPage?: (data: DeepPartial<DataT>) => Boolean
     // Mounted inputs are automatically validated.
     // If you need specific validation logic, put it here.
-    validate?: (data: Partial<DataT>) => ErrorList | undefined;
+    validate?: (data: DeepPartial<DataT>) => ErrorList | undefined;
     // callback on arrival
-    onArrive?: (data: Partial<DataT>) => void;
+    onArrive?: (data: DeepPartial<DataT>) => void;
     // callback on departure
-    onExit?: (data: Partial<DataT>) => Promise<void> | void;
+    onExit?: (data: DeepPartial<DataT>) => Promise<void> | void;
     // the component that will be rendered
     Component: (props: ComponentProps) => JSX.Element;
 };
@@ -95,6 +102,9 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
     isRequired?: isRequiredPredicate<DataT>;
 };
 ```
+
+[View the docs](https://stutrek.github.io/react-multi-page-form/)
+
 
 ## A More Complete Example
 
@@ -163,5 +173,6 @@ export function MyMultiPageForm() {
     );
 }
 ```
+[View the docs](https://stutrek.github.io/react-multi-page-form/)
 
 

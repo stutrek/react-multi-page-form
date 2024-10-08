@@ -1,4 +1,9 @@
-import type { FormPage, FormSequence, SequenceChild } from '../types';
+import type {
+    DeepPartial,
+    FormPage,
+    FormSequence,
+    SequenceChild,
+} from '../types';
 import { flattenPages } from '../utils';
 
 /**
@@ -11,7 +16,7 @@ import { flattenPages } from '../utils';
  */
 export function followSequence<DataT, U, V>(
     sequence: SequenceChild<DataT, U, V>[] | FormSequence<DataT, U, V>,
-    data: DataT,
+    data: DeepPartial<DataT>,
 ): FormPage<DataT, U, V>[] {
     if (!Array.isArray(sequence)) {
         sequence = sequence.pages;

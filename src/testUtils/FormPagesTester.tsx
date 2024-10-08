@@ -1,5 +1,5 @@
 import React from 'react';
-import type { FormPage } from '../types'; // Adjust the import path as needed
+import type { DeepPartial, FormPage } from '../types'; // Adjust the import path as needed
 import { FormPageMultipleTester } from './components/FormPageMultipleTester'; // Adjust the import path as needed
 import type { DefaultValues, FieldValues } from 'react-hook-form';
 
@@ -14,8 +14,8 @@ import type { DefaultValues, FieldValues } from 'react-hook-form';
  *
  * @param {object} props - The component props.
  * @param {HookFormPage<DataT, ComponentProps>[]} props.pages - An array of `FormPage` objects to be tested.
- * @param {Partial<DataT>} props.sampleData - Sample data to use for testing.
- * @param {Partial<ComponentProps>} [props.additionalProps] - Optional additional props to pass to the components.
+ * @param {DeepPartial<DataT>} props.sampleData - Sample data to use for testing.
+ * @param {DeepPartial<ComponentProps>} [props.additionalProps] - Optional additional props to pass to the components.
  * @param {Resolver<DataT>} [props.validator] - Optional React Hook Form resolver for validation.
  *
  * @returns {JSX.Element} The rendered component.
@@ -28,7 +28,7 @@ export function FormPagesTester<DataT extends FieldValues, ComponentProps>({
 }: {
     pages: FormPage<DataT, ComponentProps, any>[];
     sampleData: DefaultValues<DataT>;
-    additionalProps?: Partial<ComponentProps>;
+    additionalProps?: DeepPartial<ComponentProps>;
     validator?: any; // Replace 'any' with the appropriate type for the validator
 }): JSX.Element {
     return (

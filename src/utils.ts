@@ -1,5 +1,10 @@
 import { useCallback, useRef } from 'react';
-import type { FormPage, FormSequence, SequenceChild } from './types';
+import type {
+    DeepPartial,
+    FormPage,
+    FormSequence,
+    SequenceChild,
+} from './types';
 
 // this provides a stable function that always calls the latest callback.
 // it doesn't need a dependency array, and prevents memory leaks.
@@ -32,7 +37,7 @@ function wrapChild<DataT, ComponentProps, ErrorList>(
     parent: FormSequence<DataT, ComponentProps, ErrorList>,
 ): SequenceChild<DataT, ComponentProps, ErrorList> {
     const newId = child.id; // `${parent.id}.${child.id}`;
-    const newIsRequired = (data: Partial<DataT>) => {
+    const newIsRequired = (data: DeepPartial<DataT>) => {
         if (parent.isRequired) {
             const parentIsRequired = parent.isRequired(data);
             if (parentIsRequired === false) {

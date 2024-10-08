@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { followSequence } from '../testUtils/followSequence';
-import type { SequenceChild } from '../types';
+import type { DeepPartial, SequenceChild } from '../types';
 
 describe('followSequence', () => {
     beforeEach(() => {
@@ -142,14 +142,14 @@ describe('followSequence', () => {
         const pages = [
             {
                 id: 'page1',
-                isRequired: (data: Partial<typeof formData>) =>
+                isRequired: (data: DeepPartial<typeof formData>) =>
                     data.includePage1,
                 isComplete: () => false,
                 Component: () => <div />,
             },
             {
                 id: 'page2',
-                alternateNextPage: (data: Partial<typeof formData>) =>
+                alternateNextPage: (data: DeepPartial<typeof formData>) =>
                     data.skipToPage4 ? 'page4' : undefined,
                 isComplete: () => false,
                 Component: () => <div />,
@@ -209,7 +209,7 @@ describe('followSequence', () => {
         const pages = [
             {
                 id: 'page1',
-                isFinal: (data: Partial<typeof formData>) => !!data.endHere,
+                isFinal: (data: DeepPartial<typeof formData>) => !!data.endHere,
                 isComplete: () => false,
                 Component: () => <div />,
             },

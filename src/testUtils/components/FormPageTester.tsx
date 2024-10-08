@@ -4,7 +4,7 @@ import {
     useForm,
     type UseFormReturn,
 } from 'react-hook-form';
-import type { FormPage } from '../../types'; // Adjust the import path as needed
+import type { DeepPartial, FormPage } from '../../types'; // Adjust the import path as needed
 import { useLayoutEffect } from 'react';
 
 export function FormPageTester<DataT extends FieldValues, ComponentProps>({
@@ -16,7 +16,7 @@ export function FormPageTester<DataT extends FieldValues, ComponentProps>({
 }: {
     page: FormPage<DataT, ComponentProps, any>;
     defaultValues?: DefaultValues<DataT>;
-    additionalProps?: Partial<ComponentProps>;
+    additionalProps?: DeepPartial<ComponentProps>;
     validator?: any; // Replace 'any' with the appropriate type for the validator
     shouldValidate?: boolean;
 }): JSX.Element {

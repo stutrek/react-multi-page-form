@@ -19,62 +19,62 @@ export type FormPage<DataT, ComponentProps, ErrorList> = {
     /**
      * Optional predicate to determine if this page is needed based on the current form data.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns A boolean indicating whether the page is needed.
      */
-    isRequired?: (data: Partial<DataT>) => boolean | undefined;
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined;
 
     /**
      * Function to determine if the page is complete based on the current form data.
      * This can be loose, it should not include validation. It is used to determine
      * what the next incomplete page is when navigating the form.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns A boolean indicating whether the page is complete.
      */
-    isComplete: (data: Partial<DataT>) => boolean;
+    isComplete: (data: DeepPartial<DataT>) => boolean;
 
     /**
      * Optional predicate to determine if this page is the final page in the form sequence.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns A boolean indicating whether this is the final page.
      */
-    isFinal?: (data: Partial<DataT>) => boolean;
+    isFinal?: (data: DeepPartial<DataT>) => boolean;
 
     /**
      * Optional function to validate the form data for this page. If using React Hook Form,
      * all fields in the DOM will automatically be vaidated. This is useful for further
      * validation that may be asynchronous or require multiple fields.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns An ErrorList if validation fails, or undefined if validation passes.
      */
-    validate?: (data: Partial<DataT>) => ErrorList | undefined;
+    validate?: (data: DeepPartial<DataT>) => ErrorList | undefined;
 
     /**
      * Optional function to execute when arriving at this page.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      */
-    onArrive?: (data: Partial<DataT>) => void;
+    onArrive?: (data: DeepPartial<DataT>) => void;
 
     /**
      * Optional function to execute when exiting this page.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns A Promise or void. If a Promise is returned, the form will wait for it to resolve.
      */
-    onExit?: (data: Partial<DataT>) => Promise<void> | void;
+    onExit?: (data: DeepPartial<DataT>) => Promise<void> | void;
 
     /**
      * Function to determine the next page by ID. For use in special
      * circumstances where using a sequence is not possible or practical.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns The ID of the next page, or undefined if the next page should be the default.
      */
-    alternateNextPage?: (data: Partial<DataT>) => string | undefined;
+    alternateNextPage?: (data: DeepPartial<DataT>) => string | undefined;
 
     /**
      * The React component that renders the content of this form page.
@@ -106,10 +106,10 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
     /**
      * Optional predicate to determine if this sequence is needed based on the current form data.
      *
-     * @param data - Partial form data available at the current step.
+     * @param data - DeepPartial form data available at the current step.
      * @returns A boolean indicating whether the sequence is needed.
      */
-    isRequired?: (data: Partial<DataT>) => boolean | undefined;
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined;
 };
 
 export type SequenceChild<DataT, ComponentProps, ErrorList> =
@@ -129,7 +129,7 @@ export type MultiPageFormParams<DataT, ComponentProps, ErrorList> = {
      *
      * @returns The current data of type DataT.
      */
-    getCurrentData: () => DataT;
+    getCurrentData: () => DeepPartial<DataT>;
 
     /**
      * An array of form pages or nested sequences that constitute the form workflow.
@@ -152,7 +152,7 @@ export type MultiPageFormParams<DataT, ComponentProps, ErrorList> = {
      * @returns A Promise resolving to an ErrorList or a boolean indicating whether to proceed with the page change.
      */
     onBeforePageChange?: (
-        data: DataT,
+        data: DeepPartial<DataT>,
         page: FormPage<DataT, ComponentProps, ErrorList>,
     ) => Promise<ErrorList | boolean> | ErrorList | boolean;
 
@@ -163,7 +163,7 @@ export type MultiPageFormParams<DataT, ComponentProps, ErrorList> = {
      * @param newPage - The new form page being navigated to.
      */
     onPageChange?: (
-        data: DataT,
+        data: DeepPartial<DataT>,
         newPage: FormPage<DataT, ComponentProps, ErrorList>,
     ) => void;
 
@@ -173,7 +173,7 @@ export type MultiPageFormParams<DataT, ComponentProps, ErrorList> = {
      *
      * @param data - The final form data.
      */
-    onComplete?: (data: DataT) => void;
+    onComplete?: (data: DeepPartial<DataT>) => void;
 
     /**
      * Callback function that is invoked when there are validation errors in the form.
@@ -182,3 +182,16 @@ export type MultiPageFormParams<DataT, ComponentProps, ErrorList> = {
      */
     onValidationError?: (errorList: ErrorList) => void;
 };
+
+// https://pendletonjones.com/deep-partial
+export type DeepPartial<T> = unknown extends T
+    ? T
+    : T extends object
+      ? {
+            [P in keyof T]?: T[P] extends Array<infer U>
+                ? Array<DeepPartial<U>>
+                : T[P] extends ReadonlyArray<infer U>
+                  ? ReadonlyArray<DeepPartial<U>>
+                  : DeepPartial<T[P]>;
+        }
+      : T;

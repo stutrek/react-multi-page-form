@@ -16,7 +16,7 @@ export function Header({ showLogo = true }: HeaderProps) {
                             <li>
                                 <Link href="/">
                                     <img
-                                        src="./Logo.svg"
+                                        src="/react-multi-page-form/Logo.svg"
                                         alt="React Multi Page Form"
                                         className="h-7"
                                     />

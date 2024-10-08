@@ -1,4 +1,5 @@
 import type {
+    DeepPartial,
     FieldErrors,
     FieldValues,
     Path,
@@ -124,6 +125,7 @@ export const useMultiPageHookForm = <
     const { trigger, reset, control } = hookForm;
 
     const multiPageForm = useMultiPageFormBase({
+        // @ts-ignore
         getCurrentData: () => hookForm.getValues(),
         onBeforePageChange: async (data, page) => {
             if (onBeforePageChange) {

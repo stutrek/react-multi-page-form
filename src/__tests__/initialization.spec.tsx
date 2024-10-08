@@ -1,7 +1,7 @@
 import React from 'react';
 import { renderHook } from '@testing-library/react';
 import { useMultiPageFormBase } from '../base';
-import { StartingPage } from '../types';
+import { type DeepPartial, StartingPage } from '../types';
 
 describe('useMultiPageFormBase - Initialization Tests', () => {
     const pages = [
@@ -285,7 +285,7 @@ describe('useMultiPageFormBase - Initialization Tests', () => {
             {
                 id: 'page2',
                 isComplete: () => false,
-                isRequired: (data: Partial<{ skipPage2: boolean }>) =>
+                isRequired: (data: DeepPartial<{ skipPage2: boolean }>) =>
                     !data.skipPage2,
                 Component: () => <div />,
             },
