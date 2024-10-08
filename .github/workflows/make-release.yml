@@ -1,0 +1,66 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_type:
+        type: choice
+        description: 'Version type'
+        required: true
+        default: 'patch'
+        options:
+            - patch
+            - minor
+            - major
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Fetch all history for accurate tagging
+
+      - name: Configure Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git checkout main
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22'  # Specify your Node.js version
+          registry-url: 'https://registry.npmjs.org/'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Bump version and push changes
+        id: npm_version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npm version ${{ github.event.inputs.version_type }} -m "chore(release): %s"
+          NEW_VERSION=$(node -p "require('./package.json').version")
+          git push origin HEAD:main --follow-tags
+          echo "NEW_VERSION=v${NEW_VERSION}" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.npm_version.outputs.NEW_VERSION }}
+          release_name: Release ${{ steps.npm_version.outputs.NEW_VERSION }}
+          draft: false
+          prerelease: false
+
+      - name: Publish to npm
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish

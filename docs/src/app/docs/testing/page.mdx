@@ -6,14 +6,14 @@ export const metadata = {
 
 React Multi Page Forms provides two tools to make testing and development easier.
 
-## `flattenPages`
+## Testing the sequence with `followSequence`
 
-This method takes any sequence and flattens it, using a depth first search. This is the same utility used internally to determine the order of pages and sequences.
+This function takes a sequence or an array of pages and sequences, some data, and runs through the form. It returns an array of visited pages.
 
 This utility enables you to test sequences easily.
 
 ```typescript
-import { flattenPages } from 'react-multi-page-form/utils';
+import { followSequence } from 'react-multi-page-form/testUtils/followSequence';
 import { wyomingSequence } from '../stateSequences';
 
 describe('wyoming sequence', () => {
@@ -25,7 +25,9 @@ describe('wyoming sequence', () => {
 			acceptsVideoVisits: true
 		};
 
-		const pageIds = flattened.filter(page => page.isRequired(data));
+		const visited = followSequence(wyomingSequence, data)
+
+		const pageIds = visited.map(page => page.id);
 
 		expect(pageIds).toEqual([
 			'page-one',
@@ -34,27 +36,10 @@ describe('wyoming sequence', () => {
 			'last-page'
 		]);
 	})
-
-	it("should exclude video visits when they're not accepted", () => {
-		const flattened = flattenPages(wyomingSequence);
-		
-		const data = {
-			state: 'WY',
-			acceptsVideoVisits: false
-		};
-
-		const pageIds = flattened.filter(page => page.isRequired(data));
-
-		expect(pageIds).toEqual([
-			'page-one',
-			'page-two',
-			'last-page'
-		]);
-} )
-
+});
 ```
 
-## The `FormPagesTester` Component
+## Viewing all forms with the `FormPagesTester` component
 
 Building and ensuring accurate validation on your forms can be very challenging. This utility component takes an array of pages and sample data, and makes a single page that contains all the forms for the sequence. This component can be useful when combined with Storybook and visual testing.
 
