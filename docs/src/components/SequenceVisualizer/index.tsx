@@ -1,15 +1,12 @@
 import classNames from 'classnames';
 
 import styles from './SequenceVisualizer.module.css';
-import type { SequenceChild } from '../../../../src/types';
+import type { DeepPartial, SequenceChild } from '../../../../src/types';
 
 type SequenceVisualizerProps<T> = {
-    data: T;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+    data: DeepPartial<T>;
     currentPage: SequenceChild<T, any, any>;
-    // biome-ignore lint/suspicious/noExplicitAny: <explanation>
     pages: SequenceChild<T, any, any>[];
-    idPrefix?: string;
     goToPage: (page: string) => void;
 };
 
@@ -18,7 +15,6 @@ export function SequenceVisualizer<T>({
     currentPage,
     pages,
     goToPage,
-    idPrefix = '',
 }: SequenceVisualizerProps<T>) {
     return (
         <div className={styles.visualizer}>
@@ -28,13 +24,14 @@ export function SequenceVisualizer<T>({
                     isRequired && 'isComplete' in page && page.isComplete(data);
                 const isForm = 'Component' in page;
                 const clickHandler = isForm
-                    ? () => goToPage(`${idPrefix}${page.id}`)
+                    ? () => goToPage(page.id)
                     : undefined;
                 return (
                     <div
                         className={classNames(
                             styles.page,
-                            `${idPrefix}${page.id}` === currentPage.id &&
+                            !('pages' in page) &&
+                                page.id === currentPage.id &&
                                 styles.currentPage,
                             isRequired && isComplete && styles.complete,
                             !isRequired && styles.notNeeded,
@@ -55,7 +52,6 @@ export function SequenceVisualizer<T>({
                                 data={data}
                                 currentPage={currentPage}
                                 pages={page.pages}
-                                idPrefix={`${idPrefix}${page.id}.`}
                                 goToPage={goToPage}
                             />
                         )}

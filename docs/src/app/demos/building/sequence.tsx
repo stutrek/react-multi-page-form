@@ -101,7 +101,7 @@ const environmentalImpactAssessmentPage: BuildingFormPage = {
 
 // Site Plan Submission Sequence
 const sitePlanSubmissionSequence: BuildingFormSequence = {
-    id: 'sitePlanSubmission',
+    id: 'sitePlanSubmissionSequence',
     pages: [sitePlanSubmissionPage, environmentalImpactAssessmentPage],
 };
 

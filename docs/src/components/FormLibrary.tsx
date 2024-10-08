@@ -57,7 +57,7 @@ export const FormFieldContainer = ({
             </>
         )}
 
-        {!hideError ? (
+        {error || !hideError ? (
             <div>
                 <ErrorText error={error} />
             </div>
@@ -172,7 +172,6 @@ export const FileInput = forwardRef<
     HTMLInputElement,
     React.HTMLProps<HTMLInputElement> &
         Omit<AdditionalProps, 'error'> & {
-            // biome-ignore lint/suspicious/noExplicitAny: <explanation>
             setValue: UseFormSetValue<any>;
             name: string;
             error?: Partial<{ [K in keyof DocumentReference]: FieldError }>;
@@ -190,15 +189,16 @@ export const FileInput = forwardRef<
             setValue(name, undefined);
         }
     };
+    const errorToUse = error
+        ? {
+              message: 'Please check the box to "upload" a file',
+              type: 'required',
+          }
+        : undefined;
     return (
         <Checkbox
             name={name}
-            error={
-                error?.fileName ||
-                error?.fileSize ||
-                error?.fileType ||
-                error?.fileUrl
-            }
+            error={errorToUse}
             {...rest}
             onChange={handleChange}
             ref={ref}

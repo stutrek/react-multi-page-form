@@ -1,3 +1,4 @@
+import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { useMultiPageFormBase } from '../base';
 
@@ -136,5 +137,38 @@ describe('useMultiPageFormBase - Callback Invocation Tests', () => {
         expect(onBeforePageChange).toHaveBeenCalled();
         expect(onValidationError).toHaveBeenCalledWith(errorList);
         expect(result.current.currentPage.id).toBe('page1');
+    });
+
+    it('can advance when onBeforePageChange is "fixed"', async () => {
+        // Initially, onBeforePageChange returns false
+        let allowNavigation = false;
+        const onBeforePageChange = jest.fn(() => allowNavigation);
+
+        const { result } = renderHook(() =>
+            useMultiPageFormBase({
+                getCurrentData,
+                pages,
+                onBeforePageChange,
+            }),
+        );
+
+        // First attempt to advance; should be prevented
+        await act(async () => {
+            await result.current.advance();
+        });
+
+        expect(onBeforePageChange).toHaveBeenCalledTimes(1);
+        expect(result.current.currentPage.id).toBe('page1');
+
+        // Now, "fix" onBeforePageChange to return true
+        allowNavigation = true;
+
+        // Second attempt to advance; should proceed
+        await act(async () => {
+            await result.current.advance();
+        });
+
+        expect(onBeforePageChange).toHaveBeenCalledTimes(2);
+        expect(result.current.currentPage.id).toBe('page2');
     });
 });

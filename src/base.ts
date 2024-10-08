@@ -178,12 +178,14 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
                 pagesMap[pages[currentPageIndex].id],
             );
             if (errorList === false) {
+                advanceAndNavState.current.navigating = false;
                 return;
             }
             if (errorList !== true && errorList) {
                 if (onValidationError) {
                     onValidationError(errorList);
                 }
+                advanceAndNavState.current.navigating = false;
                 return;
             }
         }
