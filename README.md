@@ -8,7 +8,7 @@ This should be used in combination with a component library and validation schem
 
 All of the examples use react-hook-form, but any library could be used.
 
-## Basic API
+## Basic Usage
 
 - Create an array of pages and/or sequences. One for each page of the form.
 - Set up `react-hook-form` 
@@ -38,7 +38,8 @@ const MyMultiPageForm = () => {
         currentPage, // the page object
         advance, // goes to the next page
         goBack, // goes back one page
-        isFinal: // if this is the last page
+        isFinal, // if this is the last page
+        isFirst, // if this is the first page
     } = useMultiPageHookForm({
         hookForm,
         pages,
@@ -51,7 +52,7 @@ const MyMultiPageForm = () => {
             register={register}
         />
     
-        {previousStep && <button onClick={goBack}>Prev</button>}
+        {!isFirst && <button onClick={goBack}>Prev</button>}
         {!isFinal ? (
             <button onClick={advance}>Next</button>
         ) : (
@@ -127,7 +128,8 @@ export function MyMultiPageForm() {
         currentPage,
         advance,
         goBack,
-        isFinal
+        isFinal,
+        isFirst
     } = useMultiPageHookForm({
         hookForm,
         pages: sequence,
@@ -149,7 +151,7 @@ export function MyMultiPageForm() {
                     />
                 </div>
                 <div className="card">
-                    {previousStep && <button onClick={goBack}>Prev</button>}
+                    {!isFirst && <button onClick={goBack}>Prev</button>}
                     {!isFinal ? (
                         <button onClick={advance}>Next</button>
                     ) : (
