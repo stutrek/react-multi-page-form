@@ -4,7 +4,7 @@ import type {
     FormSequence,
     SequenceChild,
 } from '../types';
-import { flattenPages } from '../utils';
+import { flattenPages, getNextPageIndex } from '../utils';
 
 /**
  * Follows a sequence of pages based on the provided data.
@@ -24,7 +24,10 @@ export function followSequence<DataT, U, V>(
     const [pages, pageMap] = flattenPages(sequence);
 
     const visitedPages: FormPage<DataT, any, any>[] = [];
-    const visitedPageIds = new Set<string>();
+
+    if (pages.length === 0) {
+        return [];
+    }
 
     // start at the first page
     // for each page
@@ -32,42 +35,31 @@ export function followSequence<DataT, U, V>(
     // if it's not required, skip it
     // if it has a alternateNextPage, go to that page
     // continue until the end is reached or a page has isFinal
-    let currentPage: FormPage<DataT, U, V> | undefined = pages[0];
-    while (currentPage) {
-        visitedPages.push(pageMap[currentPage.id]);
-
-        if (visitedPageIds.has(currentPage.id)) {
+    let currentPageIndex: number | undefined = 0;
+    while (true) {
+        if (currentPageIndex === undefined) {
+            break;
+        }
+        const currentPage = pages[currentPageIndex];
+        if (visitedPages.includes(pageMap[currentPage.id])) {
+            visitedPages.push(pageMap[currentPage.id]);
             throw new Error(
-                `Loop detected at page '${currentPage.id}'. Navigation stopped. Full path: ${visitedPages.map((p) => p.id).join(' -> ')}`,
+                `Loop detected at page '${currentPage.id}'. Navigation stopped. Full path: ${visitedPages
+                    .map((page) => page.id)
+                    .join(' -> ')}`,
             );
         }
-        visitedPageIds.add(currentPage.id);
-
+        visitedPages.push(pageMap[currentPage.id]);
         if (currentPage.isFinal?.(data)) {
             break;
         }
 
-        const alternateNextPage: string | any =
-            currentPage.alternateNextPage?.(data);
-        if (alternateNextPage) {
-            const nextPage = pages.find(
-                (page) => page.id === alternateNextPage,
-            );
-            if (nextPage) {
-                currentPage = nextPage;
-                continue;
-            }
-        }
-
-        const searchStartIndex: number = pages.indexOf(currentPage) + 1;
-        currentPage = undefined;
-        for (let i = searchStartIndex; i < pages.length; i++) {
-            const nextPage = pages[i];
-            if (!nextPage.isRequired || nextPage.isRequired(data)) {
-                currentPage = nextPage;
-                break;
-            }
-        }
+        currentPageIndex = getNextPageIndex(
+            data,
+            pages,
+            currentPageIndex,
+            false,
+        );
     }
 
     return visitedPages;

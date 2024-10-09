@@ -127,13 +127,11 @@ describe('followSequence', () => {
 
         const data = {};
 
-        const visitedPages = followSequence(pages, data);
-
-        expect(visitedPages.map((page) => page.id)).toEqual([
-            'page1',
-            'page2',
-            'page3',
-        ]);
+        expect(() =>
+            followSequence(pages, data),
+        ).toThrowErrorMatchingInlineSnapshot(
+            `"Alternate next page "invalidPage" not found."`,
+        );
     });
 
     it('should handle data-dependent isRequired and alternateNextPage functions', () => {

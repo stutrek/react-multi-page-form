@@ -38,7 +38,8 @@ const MyMultiPageForm = () => {
     // create multi-page controls
     const { 
         currentPage, // the page object
-        advance, // goes to the next page
+        advance, // goes to the next page, including completed pages
+        advanceToNextIncomplete, // goes to the next incomplete page
         goBack, // goes back one page
         isFinal, // if this is the last page
         isFirst, // if this is the first page

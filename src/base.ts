@@ -7,7 +7,7 @@ import {
 } from 'react';
 import { StartingPage } from './types';
 import type { DeepPartial, FormPage, MultiPageFormParams } from './types';
-import { flattenPages, useCallbackRef } from './utils';
+import { flattenPages, getNextPageIndex, useCallbackRef } from './utils';
 
 function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
     page: Page,
@@ -152,68 +152,72 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
      *
      * @param {SyntheticEvent} [event] - An optional event to prevent default behavior.
      */
-    const advance = useCallbackRef(async (event?: SyntheticEvent) => {
-        if (advanceAndNavState.current.navigating) {
-            console.warn('Navigation already in progress.');
-            return;
-        }
-        if (event) {
-            event.preventDefault();
-        }
-        const data = getCurrentData();
-
-        const page = pages[currentPageIndex];
-        const validationErrors = page.validate?.(data);
-        if (validationErrors) {
-            if (onValidationError) {
-                onValidationError(validationErrors);
-            }
-            return;
-        }
-
-        advanceAndNavState.current.navigating = true;
-        if (onBeforePageChange) {
-            const errorList = await onBeforePageChange(
-                data,
-                pagesMap[pages[currentPageIndex].id],
-            );
-            if (errorList === false) {
-                advanceAndNavState.current.navigating = false;
+    const advance = useCallbackRef(
+        async (event?: SyntheticEvent, toNextIncomplete = false) => {
+            if (advanceAndNavState.current.navigating) {
+                console.warn('Navigation already in progress.');
                 return;
             }
-            if (errorList !== true && errorList) {
+            if (event) {
+                event.preventDefault();
+            }
+            const data = getCurrentData();
+
+            const page = pages[currentPageIndex];
+            const validationErrors = page.validate?.(data);
+            if (validationErrors) {
                 if (onValidationError) {
-                    onValidationError(errorList);
+                    onValidationError(validationErrors);
                 }
-                advanceAndNavState.current.navigating = false;
                 return;
             }
-        }
 
-        if (currentPage.alternateNextPage) {
-            const alternateNextPage = currentPage.alternateNextPage(data);
-            if (alternateNextPage) {
-                goTo(alternateNextPage);
-            }
-        }
-
-        if (advanceAndNavState.current.goToCalledInNavigation === false) {
-            for (let i = currentPageIndex + 1; i < pages.length; i++) {
-                const page = pages[i];
-                if (isRequired(page, data)) {
-                    if (currentPage.onExit) {
-                        await currentPage.onExit(data);
+            advanceAndNavState.current.navigating = true;
+            if (onBeforePageChange) {
+                const errorList = await onBeforePageChange(
+                    data,
+                    pagesMap[pages[currentPageIndex].id],
+                );
+                if (errorList === false) {
+                    advanceAndNavState.current.navigating = false;
+                    return;
+                }
+                if (errorList !== true && errorList) {
+                    if (onValidationError) {
+                        onValidationError(errorList);
                     }
-
-                    setCurrentPageIndex(i);
-                    break;
+                    advanceAndNavState.current.navigating = false;
+                    return;
                 }
             }
-        }
-        navigationStack.current.push(currentPageIndex);
-        advanceAndNavState.current.navigating = false;
-        advanceAndNavState.current.goToCalledInNavigation = false;
-    });
+
+            if (advanceAndNavState.current.goToCalledInNavigation === false) {
+                const nextPageIndex = getNextPageIndex(
+                    data,
+                    pages,
+                    currentPageIndex,
+                    toNextIncomplete,
+                );
+                if (nextPageIndex === undefined) {
+                    console.warn('No next page found.');
+                    return;
+                }
+                if (currentPageIndex !== nextPageIndex) {
+                    await currentPage.onExit?.(data);
+                    setCurrentPageIndex(nextPageIndex);
+                }
+            }
+            navigationStack.current.push(currentPageIndex);
+            advanceAndNavState.current.navigating = false;
+            advanceAndNavState.current.goToCalledInNavigation = false;
+        },
+    );
+
+    const advanceToNextIncomplete = useCallbackRef(
+        async (event?: SyntheticEvent) => {
+            await advance(event, true);
+        },
+    );
 
     /**
      * Navigates back to the previous required page.
@@ -249,10 +253,13 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
                 }
             }
         }
-        if (nextPageIndex !== undefined) {
-            setCurrentPageIndex(nextPageIndex);
-        } else {
-            console.warn('No previous page found.');
+        if (nextPageIndex !== currentPageIndex) {
+            await currentPage.onExit?.(data);
+            if (nextPageIndex !== undefined) {
+                setCurrentPageIndex(nextPageIndex);
+            } else {
+                console.warn('No previous page found.');
+            }
         }
 
         advanceAndNavState.current.navigating = false;
@@ -267,6 +274,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
             currentPage?.isFinal?.(getCurrentData()),
         isFirst: previousPageIndex === undefined,
         advance,
+        advanceToNextIncomplete,
         goBack,
         goTo,
     };

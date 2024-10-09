@@ -112,3 +112,81 @@ export function flattenPages<DataT, ComponentProps, ErrorList>(
 
     return [result, map];
 }
+
+function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
+    page: Page,
+    data: DeepPartial<DataT>,
+) {
+    if (page.isRequired === undefined || page.isRequired(data) !== false) {
+        return true;
+    }
+}
+
+export function getNextPageIndex<DataT, U, V>(
+    data: DeepPartial<DataT>,
+    pages: FormPage<DataT, U, V>[],
+    startingPageIndex: number,
+    toNextIncomplete: boolean,
+): number | undefined {
+    const startingPage = pages[startingPageIndex];
+    if (!startingPage) {
+        return undefined;
+    }
+    if (startingPage.isFinal?.(data)) {
+        return undefined;
+    }
+
+    const visitedPath: string[] = [];
+    const visitedPageIds = new Set<string>();
+
+    const checkLoop = (pageId: string) => {
+        visitedPath.push(pageId);
+        if (visitedPageIds.has(pageId)) {
+            throw new Error(
+                `Loop detected at page '${pageId}'. Navigation stopped. Full path: ${visitedPath.join(
+                    ' -> ',
+                )}`,
+            );
+        }
+        visitedPageIds.add(pageId);
+    };
+
+    const recurse = (currentPageIndex: number) => {
+        const currentPage = pages[currentPageIndex];
+        const alternateNextPage = currentPage.alternateNextPage?.(data);
+        if (alternateNextPage) {
+            checkLoop(alternateNextPage);
+            const nextPageIndex = pages.findIndex(
+                (page) => page.id === alternateNextPage,
+            );
+            if (nextPageIndex === -1) {
+                throw new Error(
+                    `Alternate next page "${alternateNextPage}" not found.`,
+                );
+            }
+            const nextPage = pages[nextPageIndex];
+            if (toNextIncomplete && nextPage.isComplete(data)) {
+                return recurse(nextPageIndex);
+            }
+            return nextPageIndex;
+        }
+
+        const nextPageIndex = currentPageIndex + 1;
+        const nextPage = pages[nextPageIndex];
+
+        if (nextPage) {
+            checkLoop(nextPage.id);
+            if (isRequired(nextPage, data)) {
+                if (toNextIncomplete && nextPage.isComplete(data)) {
+                    return recurse(nextPageIndex);
+                }
+                return nextPageIndex;
+            }
+            return recurse(nextPageIndex);
+        }
+
+        return undefined;
+    };
+
+    return recurse(startingPageIndex);
+}
