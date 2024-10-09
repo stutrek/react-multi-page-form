@@ -1,7 +1,8 @@
 import React from 'react';
-import type { DeepPartial, FormPage } from '../types'; // Adjust the import path as needed
+import type { DecisionNode, DeepPartial, FormPage } from '../types'; // Adjust the import path as needed
 import { FormPageMultipleTester } from './components/FormPageMultipleTester'; // Adjust the import path as needed
 import type { DefaultValues, FieldValues } from 'react-hook-form';
+import { isDecisionNode } from '../utils';
 
 /**
  * A React component that renders multiple `FormPageMultipleTester` components for testing multiple `FormPage`s.
@@ -26,24 +27,28 @@ export function FormPagesTester<DataT extends FieldValues, ComponentProps>({
     additionalProps,
     validator,
 }: {
-    pages: FormPage<DataT, ComponentProps, any>[];
+    pages: (FormPage<DataT, ComponentProps, any> | DecisionNode<DataT>)[];
     sampleData: DefaultValues<DataT>;
     additionalProps?: DeepPartial<ComponentProps>;
     validator?: any; // Replace 'any' with the appropriate type for the validator
 }): JSX.Element {
     return (
         <div>
-            {pages.map((page, index) => (
-                <React.Fragment key={page.id}>
-                    <FormPageMultipleTester<DataT, ComponentProps>
-                        page={page}
-                        sampleData={sampleData}
-                        additionalProps={additionalProps}
-                        validator={validator}
-                    />
-                    {index < pages.length - 1 && <hr />}
-                </React.Fragment>
-            ))}
+            {pages.map((page, index) =>
+                isDecisionNode(page) ? (
+                    <div key={page.id}>Decision Node: {page.id}</div>
+                ) : (
+                    <React.Fragment key={page.id}>
+                        <FormPageMultipleTester<DataT, ComponentProps>
+                            page={page}
+                            sampleData={sampleData}
+                            additionalProps={additionalProps}
+                            validator={validator}
+                        />
+                        {index < pages.length - 1 && <hr />}
+                    </React.Fragment>
+                ),
+            )}
         </div>
     );
 }

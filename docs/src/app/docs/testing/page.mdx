@@ -17,9 +17,7 @@ import { followSequence } from 'react-multi-page-form/testUtils/followSequence';
 import { wyomingSequence } from '../stateSequences';
 
 describe('wyoming sequence', () => {
-	it("should include video visits when they're accepted", () => {
-		const flattened = flattenPages(wyomingSequence);
-		
+	it("should include video visits when they're accepted", () => {	
 		const data = {
 			state: 'WY',
 			acceptsVideoVisits: true
@@ -43,7 +41,7 @@ describe('wyoming sequence', () => {
 
 Building and ensuring accurate validation on your forms can be very challenging. This utility component takes an array of pages and sample data, and makes a single page that contains all the forms for the sequence. This component can be useful when combined with Storybook and visual testing.
 
-[See an example](/demos/petrock/test) on the pet rock registration form.
+[See an example](/react-multi-page-form/demos/petrock/test) on the pet rock registration form.
 
 ```typescript
 'use client';
@@ -52,7 +50,7 @@ import { FormPagesTester } from 'react-multi-page-form/testUtils/FormPagesTester
 import { pages } from '../sequence';
 import { rockyMcSmooth } from '../sampleData';
 
-const flattened = flattenPages(pages);
+const [flattened] = flattenPages(pages);
 
 export default function PetRockTest() {
     return (
