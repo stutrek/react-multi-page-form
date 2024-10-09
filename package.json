@@ -1,9 +1,11 @@
 {
     "name": "react-multi-page-form",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Tools to handle multi-page forms",
     "main": "dist/index.js",
-    "files": ["dist"],
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "tsc",
         "build:watch": "tsc -w",
@@ -14,7 +16,10 @@
         "test": "jest",
         "test:watch": "jest --watch"
     },
-    "keywords": ["forms", "multi-page"],
+    "keywords": [
+        "forms",
+        "multi-page"
+    ],
     "author": "Stu Kabakoff",
     "license": "MIT",
     "devDependencies": {
