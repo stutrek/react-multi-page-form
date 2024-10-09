@@ -22,5 +22,8 @@
     },
     "[scss]": {
         "editor.defaultFormatter": "vscode.css-language-features"
+    },
+    "files.associations": {
+        "*.mdx": "markdown"
     }
 }

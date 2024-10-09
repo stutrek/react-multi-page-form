@@ -126,6 +126,7 @@ export function MyMultiPageForm() {
 	const {
         currentPage, // the current page object
         advance, // goes to the next page
+        advanceToNextIncomplete, // advances, skipping pages that are complete
         goBack, // goes back one page
         goTo, // goes to a page by id
         isFinal, // if this is the last page
