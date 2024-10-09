@@ -49,11 +49,11 @@ describe('getNextPageIndex', () => {
         expect(result).toBe(undefined);
     });
 
-    it('navigates to alternateNextPage when defined and exists', () => {
+    it('navigates to selectNextPage when defined and exists', () => {
         const data = {};
         const pages = [
             createPage('page1', {
-                alternateNextPage: () => 'page3',
+                selectNextPage: () => 'page3',
             }),
             createPage('page2'),
             createPage('page3'),
@@ -70,11 +70,11 @@ describe('getNextPageIndex', () => {
         expect(result).toBe(2); // Index of 'page3'
     });
 
-    it('throws error when alternateNextPage returns non-existent page', () => {
+    it('throws error when selectNextPage returns non-existent page', () => {
         const data = {};
         const pages = [
             createPage('page1', {
-                alternateNextPage: () => 'pageX',
+                selectNextPage: () => 'pageX',
             }),
             createPage('page2'),
         ];
@@ -83,16 +83,14 @@ describe('getNextPageIndex', () => {
 
         expect(() =>
             getNextPageIndex(data, pages, currentPageIndex, toNextIncomplete),
-        ).toThrowErrorMatchingInlineSnapshot(
-            `"Alternate next page "pageX" not found."`,
-        );
+        ).toThrowErrorMatchingInlineSnapshot(`"Next page "pageX" not found."`);
     });
 
-    it('skips completed alternateNextPage when toNextIncomplete is true', () => {
+    it('skips completed selectNextPage when toNextIncomplete is true', () => {
         const data = {};
         const pages = [
             createPage('page1', {
-                alternateNextPage: () => 'page3',
+                selectNextPage: () => 'page3',
             }),
             createPage('page2'),
             createPage('page3', {
@@ -112,7 +110,7 @@ describe('getNextPageIndex', () => {
         expect(result).toBe(3); // Should skip 'page3' and return index of 'page4'
     });
 
-    it('returns nextPageIndex when no alternateNextPage and next page is required', () => {
+    it('returns nextPageIndex when no selectNextPage and next page is required', () => {
         const data = {};
         const pages = [
             createPage('page1'),
@@ -369,14 +367,14 @@ describe('getNextPageIndex', () => {
         expect(result).toBe(undefined);
     });
 
-    it('handles recursive alternateNextPage leading to an incomplete page', () => {
+    it('handles recursive selectNextPage leading to an incomplete page', () => {
         const data = {};
         const pages = [
             createPage('page1', {
-                alternateNextPage: () => 'page2',
+                selectNextPage: () => 'page2',
             }),
             createPage('page2', {
-                alternateNextPage: () => 'page3',
+                selectNextPage: () => 'page3',
                 isComplete: () => true,
             }),
             createPage('page3', {
@@ -395,15 +393,15 @@ describe('getNextPageIndex', () => {
         expect(result).toBe(2); // Index of 'page3'
     });
 
-    it('throws error on circular alternateNextPage references', () => {
+    it('throws error on circular selectNextPage references', () => {
         const data = {};
         const pages = [
             createPage('page1', {
-                alternateNextPage: () => 'page2',
+                selectNextPage: () => 'page2',
                 isComplete: () => true,
             }),
             createPage('page2', {
-                alternateNextPage: () => 'page1',
+                selectNextPage: () => 'page1',
                 isComplete: () => true,
             }),
         ];

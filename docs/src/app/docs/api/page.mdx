@@ -8,6 +8,7 @@ The API consists of a few items:
 
 - pages
 - sequences
+- decision nodes
 - `useMultiPageForm` and `useMultiPageHookForm` React hooks
 
 ## Pages
@@ -26,7 +27,7 @@ type HookFormPage<DataT, ComponentProps = { hookForm: UseFormReturn }> = {
 	isFinal?: (data: DeepPartial<DataT>) => boolean; // return true if this should be the final page of the form.
     isRequired?: (data: DeepPartial<DataT>) => boolean | undefined; // Determines if this page is needed based on form data. Default: () => true
     validate?: (data: DeepPartial<DataT>) => Promise<FieldErrors | undefined>; // Determines whether or not to continue.
-    alternateNextPage?: (data: DeepPartial<DataT>) => pageId; // Useful if you need to override the default order of pages
+    selectNextPage?: (data: DeepPartial<DataT>) => pageId; // Useful if you need to override the default order of pages
     
 	// event handlers
 	onArrive?: (data: DeepPartial<DataT>) => void; // Function to execute upon arriving at this page.
@@ -65,6 +66,20 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
     pages: HookFormSequenceChild[]; // A SequenceChild is either a FormPage or a FormSequence.
     isRequired?: (data: DeepPartial<DataT>) => boolean | undefined; // Determines if the sequence is needed based on form data.
 };
+```
+
+## Decision Nodes
+
+If you need to make a decision on which page comes next isolate from a page the user will see, decision nodes will help.
+
+```ts
+export type DecisionNode<DataT> = {
+    id: string,
+    // determines whether or not this decision is needed
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined
+    // where this node should redirect to. Undefined will go to the next page in the sequence
+    selectNextPage?: (data: DeepPartial<DataT>) => Boolean
+}
 ```
 
 ### Example

@@ -68,11 +68,11 @@ describe('followSequence', () => {
         expect(visitedPages.map((page) => page.id)).toEqual(['page1', 'page3']);
     });
 
-    it('should navigate to alternate next page when alternateNextPage returns a valid page ID', () => {
+    it('should navigate to alternate next page when selectNextPage returns a valid page ID', () => {
         const pages = [
             {
                 id: 'page1',
-                alternateNextPage: () => 'page3',
+                selectNextPage: () => 'page3',
                 isComplete: () => false,
                 Component: () => <div />,
             },
@@ -111,13 +111,13 @@ describe('followSequence', () => {
         expect(visitedPages.map((page) => page.id)).toEqual(['page1', 'page2']);
     });
 
-    it('should proceed to next page when alternateNextPage returns an invalid page ID', () => {
+    it('should proceed to next page when selectNextPage returns an invalid page ID', () => {
         console.warn = jest.fn();
 
         const pages = [
             {
                 id: 'page1',
-                alternateNextPage: () => 'invalidPage',
+                selectNextPage: () => 'invalidPage',
                 isComplete: () => false,
                 Component: () => <div />,
             },
@@ -130,11 +130,11 @@ describe('followSequence', () => {
         expect(() =>
             followSequence(pages, data),
         ).toThrowErrorMatchingInlineSnapshot(
-            `"Alternate next page "invalidPage" not found."`,
+            `"Next page "invalidPage" not found."`,
         );
     });
 
-    it('should handle data-dependent isRequired and alternateNextPage functions', () => {
+    it('should handle data-dependent isRequired and selectNextPage functions', () => {
         const formData = { includePage1: true, skipToPage4: true };
 
         const pages = [
@@ -147,7 +147,7 @@ describe('followSequence', () => {
             },
             {
                 id: 'page2',
-                alternateNextPage: (data: DeepPartial<typeof formData>) =>
+                selectNextPage: (data: DeepPartial<typeof formData>) =>
                     data.skipToPage4 ? 'page4' : undefined,
                 isComplete: () => false,
                 Component: () => <div />,
@@ -175,17 +175,17 @@ describe('followSequence', () => {
         expect(visitedPages).toEqual([]);
     });
 
-    it('should prevent infinite loops when alternateNextPage creates a loop', () => {
+    it('should prevent infinite loops when selectNextPage creates a loop', () => {
         const pages = [
             {
                 id: 'page1',
-                alternateNextPage: () => 'page2',
+                selectNextPage: () => 'page2',
                 isComplete: () => false,
                 Component: () => <div />,
             },
             {
                 id: 'page2',
-                alternateNextPage: () => 'page1',
+                selectNextPage: () => 'page1',
                 isComplete: () => false,
                 Component: () => <div />,
             },

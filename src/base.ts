@@ -6,13 +6,23 @@ import {
     useState,
 } from 'react';
 import { StartingPage } from './types';
-import type { DeepPartial, FormPage, MultiPageFormParams } from './types';
-import { flattenPages, getNextPageIndex, useCallbackRef } from './utils';
+import type {
+    DecisionNode,
+    DeepPartial,
+    FormPage,
+    MultiPageFormParams,
+} from './types';
+import {
+    flattenPages,
+    getNextPageIndex,
+    isDecisionNode,
+    useCallbackRef,
+} from './utils';
 
-function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
-    page: Page,
-    data: DeepPartial<DataT>,
-) {
+function isRequired<
+    DataT,
+    Page extends FormPage<DataT, any, any> | DecisionNode<DataT>,
+>(page: Page, data: DeepPartial<DataT>) {
     if (page.isRequired === undefined || page.isRequired(data) !== false) {
         return true;
     }
@@ -60,32 +70,43 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
 
     const [currentPageIndex, setCurrentPageIndex] = useState(() => {
         const data = getCurrentData();
+        let initialIndex = 0;
 
-        if (startingPage === StartingPage.FirstPage) {
-            return 0;
-        }
         if (typeof startingPage === 'string') {
             const found = pages.findIndex((page) => {
                 return page.id === startingPage;
             });
             if (found !== -1) {
-                return found;
+                initialIndex = found;
             }
             console.warn('Form page not found. Resuming from first page.');
         }
         if (!startingPage || startingPage === StartingPage.FirstIncomplete) {
             const index = pages.findIndex((page) => {
-                return isRequired(page, data) && !page.isComplete(data);
+                return (
+                    !isDecisionNode(page) &&
+                    isRequired(page, data) &&
+                    !page.isComplete(data)
+                );
             });
             if (index !== -1) {
-                return index;
+                initialIndex = index;
             }
         }
-        return 0;
+
+        const initialNode = pages[initialIndex];
+        if (isDecisionNode(initialNode)) {
+            return getNextPageIndex(data, pages, initialIndex, false) ?? 0;
+        }
+        return initialIndex;
     });
 
     const navigationStack = useRef<number[]>([]);
-    const currentPage = pages[currentPageIndex];
+    const currentPage = pages[currentPageIndex] as FormPage<
+        DataT,
+        ComponentProps,
+        ErrorList
+    >;
 
     const previousPageIndex = useMemo(() => {
         if (navigationStack.current.length) {
@@ -163,7 +184,11 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
             }
             const data = getCurrentData();
 
-            const page = pages[currentPageIndex];
+            const page = pages[currentPageIndex] as FormPage<
+                DataT,
+                ComponentProps,
+                ErrorList
+            >;
             const validationErrors = page.validate?.(data);
             if (validationErrors) {
                 if (onValidationError) {

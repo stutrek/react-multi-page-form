@@ -82,8 +82,9 @@ type FormPage<DataT, ComponentProps, ErrorList> = {
     isComplete: (data: DeepPartial<DataT>) => boolean;
     // determines if this should be a final step in the flow
     isFinal?: (data: DeepPartial<DataT>) => boolean;
-    // if you need to break the flow of the sequence, this makes that possible
-    alternateNextPage?: (data: DeepPartial<DataT>) => Boolean
+    // if you need to break the flow of the sequence, this makes that possible.
+    // Undefined will go to the next page in the sequence
+    selectNextPage?: (data: DeepPartial<DataT>) => Boolean
     // Mounted inputs are automatically validated.
     // If you need specific validation logic, put it here.
     validate?: (data: DeepPartial<DataT>) => ErrorList | undefined;
@@ -102,6 +103,14 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
     // determines if this sequence is needed
     isRequired?: isRequiredPredicate<DataT>;
 };
+
+export type DecisionNode<DataT> = {
+    id: string,
+    // determines whether or not this decision is needed
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined
+    // where this node should redirect to. Undefined will go to the next page in the sequence
+    selectNextPage?: (data: DeepPartial<DataT>) => Boolean
+}
 ```
 
 [View the docs](https://stutrek.github.io/react-multi-page-form/)

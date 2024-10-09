@@ -4,7 +4,7 @@ import type {
     FormSequence,
     SequenceChild,
 } from '../types';
-import { flattenPages, getNextPageIndex } from '../utils';
+import { flattenPages, getNextPageIndex, isDecisionNode } from '../utils';
 
 /**
  * Follows a sequence of pages based on the provided data.
@@ -33,14 +33,14 @@ export function followSequence<DataT, U, V>(
     // for each page
     // if it's required, add it to the visited pages
     // if it's not required, skip it
-    // if it has a alternateNextPage, go to that page
+    // if it has a selectNextPage, go to that page
     // continue until the end is reached or a page has isFinal
     let currentPageIndex: number | undefined = 0;
     while (true) {
         if (currentPageIndex === undefined) {
             break;
         }
-        const currentPage = pages[currentPageIndex];
+        const currentPage = pages[currentPageIndex] as FormPage<DataT, U, V>;
         if (visitedPages.includes(pageMap[currentPage.id])) {
             visitedPages.push(pageMap[currentPage.id]);
             throw new Error(
@@ -49,7 +49,9 @@ export function followSequence<DataT, U, V>(
                     .join(' -> ')}`,
             );
         }
-        visitedPages.push(pageMap[currentPage.id]);
+        if (currentPageIndex !== 0 || !isDecisionNode(currentPage)) {
+            visitedPages.push(pageMap[currentPage.id]);
+        }
         if (currentPage.isFinal?.(data)) {
             break;
         }

@@ -1,5 +1,6 @@
 import { useCallback, useRef } from 'react';
 import type {
+    DecisionNode,
     DeepPartial,
     FormPage,
     FormSequence,
@@ -36,7 +37,6 @@ function wrapChild<DataT, ComponentProps, ErrorList>(
     child: SequenceChild<DataT, ComponentProps, ErrorList>,
     parent: FormSequence<DataT, ComponentProps, ErrorList>,
 ): SequenceChild<DataT, ComponentProps, ErrorList> {
-    const newId = child.id; // `${parent.id}.${child.id}`;
     const newIsRequired = (data: DeepPartial<DataT>) => {
         if (parent.isRequired) {
             const parentIsRequired = parent.isRequired(data);
@@ -54,14 +54,12 @@ function wrapChild<DataT, ComponentProps, ErrorList>(
         // It's a sequence
         return {
             ...child,
-            id: newId,
             isRequired: newIsRequired,
         };
     }
-    // It's a page
+    // It's a page or a decision node
     return {
         ...child,
-        id: newId,
         isRequired: newIsRequired,
     };
 }
@@ -79,10 +77,13 @@ function wrapChild<DataT, ComponentProps, ErrorList>(
 export function flattenPages<DataT, ComponentProps, ErrorList>(
     pagesInput: SequenceChild<DataT, ComponentProps, ErrorList>[],
 ): [
-    FormPage<DataT, ComponentProps, ErrorList>[],
+    (FormPage<DataT, ComponentProps, ErrorList> | DecisionNode<DataT>)[],
     Record<string, FormPage<DataT, ComponentProps, ErrorList>>,
 ] {
-    const result: FormPage<DataT, ComponentProps, ErrorList>[] = [];
+    const result: (
+        | FormPage<DataT, ComponentProps, ErrorList>
+        | DecisionNode<DataT>
+    )[] = [];
     const map: Record<string, FormPage<DataT, ComponentProps, ErrorList>> = {};
     for (const item of pagesInput) {
         if ('pages' in item) {
@@ -113,7 +114,7 @@ export function flattenPages<DataT, ComponentProps, ErrorList>(
     return [result, map];
 }
 
-function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
+function isRequired<DataT, Page extends SequenceChild<DataT, any, any>>(
     page: Page,
     data: DeepPartial<DataT>,
 ) {
@@ -122,13 +123,19 @@ function isRequired<DataT, Page extends FormPage<DataT, any, any>>(
     }
 }
 
+export function isDecisionNode<DataT>(
+    node: SequenceChild<DataT, any, any> | undefined,
+): node is DecisionNode<DataT> {
+    return !!node && 'selectNextPage' in node && !('Component' in node);
+}
+
 export function getNextPageIndex<DataT, U, V>(
     data: DeepPartial<DataT>,
-    pages: FormPage<DataT, U, V>[],
+    pages: (FormPage<DataT, U, V> | DecisionNode<DataT>)[],
     startingPageIndex: number,
     toNextIncomplete: boolean,
 ): number | undefined {
-    const startingPage = pages[startingPageIndex];
+    const startingPage = pages[startingPageIndex] as FormPage<DataT, U, V>;
     if (!startingPage) {
         return undefined;
     }
@@ -153,22 +160,25 @@ export function getNextPageIndex<DataT, U, V>(
 
     const recurse = (currentPageIndex: number) => {
         const currentPage = pages[currentPageIndex];
-        const alternateNextPage = currentPage.alternateNextPage?.(data);
-        if (alternateNextPage) {
-            checkLoop(alternateNextPage);
-            const nextPageIndex = pages.findIndex(
-                (page) => page.id === alternateNextPage,
-            );
-            if (nextPageIndex === -1) {
-                throw new Error(
-                    `Alternate next page "${alternateNextPage}" not found.`,
+        if (!isDecisionNode(currentPage) || isRequired(currentPage, data)) {
+            const selectNextPage = currentPage.selectNextPage?.(data);
+            if (selectNextPage) {
+                checkLoop(selectNextPage);
+                const nextPageIndex = pages.findIndex(
+                    (page) => page.id === selectNextPage,
                 );
+                if (nextPageIndex === -1) {
+                    throw new Error(`Next page "${selectNextPage}" not found.`);
+                }
+                const nextPage = pages[nextPageIndex];
+                if (
+                    isDecisionNode(nextPage) ||
+                    (toNextIncomplete && nextPage.isComplete(data))
+                ) {
+                    return recurse(nextPageIndex);
+                }
+                return nextPageIndex;
             }
-            const nextPage = pages[nextPageIndex];
-            if (toNextIncomplete && nextPage.isComplete(data)) {
-                return recurse(nextPageIndex);
-            }
-            return nextPageIndex;
         }
 
         const nextPageIndex = currentPageIndex + 1;
@@ -177,7 +187,10 @@ export function getNextPageIndex<DataT, U, V>(
         if (nextPage) {
             checkLoop(nextPage.id);
             if (isRequired(nextPage, data)) {
-                if (toNextIncomplete && nextPage.isComplete(data)) {
+                if (
+                    isDecisionNode(nextPage) ||
+                    (toNextIncomplete && nextPage.isComplete(data))
+                ) {
                     return recurse(nextPageIndex);
                 }
                 return nextPageIndex;

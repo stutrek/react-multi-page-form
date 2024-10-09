@@ -74,7 +74,7 @@ export type FormPage<DataT, ComponentProps, ErrorList> = {
      * @param data - DeepPartial form data available at the current step.
      * @returns The ID of the next page, or undefined if the next page should be the default.
      */
-    alternateNextPage?: (data: DeepPartial<DataT>) => string | undefined;
+    selectNextPage?: (data: DeepPartial<DataT>) => string | undefined;
 
     /**
      * The React component that renders the content of this form page.
@@ -112,9 +112,22 @@ export type FormSequence<DataT, ComponentProps, ErrorList> = {
     isRequired?: (data: DeepPartial<DataT>) => boolean | undefined;
 };
 
+export type DecisionNode<DataT> = {
+    id: string;
+    selectNextPage: (data: DeepPartial<DataT>) => string;
+    /**
+     * Optional predicate to determine if this node should be skipped based on the current form data.
+     *
+     * @param data - DeepPartial form data available at the current step.
+     * @returns A boolean indicating whether the page is needed.
+     */
+    isRequired?: (data: DeepPartial<DataT>) => boolean | undefined;
+};
+
 export type SequenceChild<DataT, ComponentProps, ErrorList> =
     | FormPage<DataT, ComponentProps, ErrorList>
-    | FormSequence<DataT, ComponentProps, ErrorList>;
+    | FormSequence<DataT, ComponentProps, ErrorList>
+    | DecisionNode<DataT>;
 
 /**
  * Represents the parameters required to initialize and manage a multi-page form workflow.
