@@ -5,6 +5,7 @@ import {
     useRef,
     useState,
 } from 'react';
+import { useCallbackStable } from 'use-callback-stable';
 import { StartingPage } from './types';
 import type {
     DecisionNode,
@@ -12,12 +13,7 @@ import type {
     FormPage,
     MultiPageFormParams,
 } from './types';
-import {
-    flattenPages,
-    getNextPageIndex,
-    isDecisionNode,
-    useCallbackRef,
-} from './utils';
+import { flattenPages, getNextPageIndex, isDecisionNode } from './utils';
 
 function isRequired<
     DataT,
@@ -147,7 +143,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
      *
      * @param {string} pageId - The identifier of the page to navigate to.
      */
-    const goTo = useCallbackRef(async (pageId: string) => {
+    const goTo = useCallbackStable(async (pageId: string) => {
         const index = pages.findIndex((page) => page.id === pageId);
         if (index !== -1) {
             if (advanceAndNavState.current.navigating) {
@@ -173,7 +169,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
      *
      * @param {SyntheticEvent} [event] - An optional event to prevent default behavior.
      */
-    const advance = useCallbackRef(
+    const advance = useCallbackStable(
         async (event?: SyntheticEvent, toNextIncomplete = false) => {
             if (advanceAndNavState.current.navigating) {
                 console.warn('Navigation already in progress.');
@@ -238,7 +234,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
         },
     );
 
-    const advanceToNextIncomplete = useCallbackRef(
+    const advanceToNextIncomplete = useCallbackStable(
         async (event?: SyntheticEvent) => {
             await advance(event, true);
         },
@@ -249,7 +245,7 @@ export function useMultiPageFormBase<DataT, ComponentProps, ErrorList>({
      *
      * @param {SyntheticEvent} [event] - An optional event to prevent default behavior.
      */
-    const goBack = useCallbackRef(async (event?: SyntheticEvent) => {
+    const goBack = useCallbackStable(async (event?: SyntheticEvent) => {
         if (event) {
             event.preventDefault();
         }

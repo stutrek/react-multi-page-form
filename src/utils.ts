@@ -1,4 +1,3 @@
-import { useCallback, useRef } from 'react';
 import type {
     DecisionNode,
     DeepPartial,
@@ -6,20 +5,6 @@ import type {
     FormSequence,
     SequenceChild,
 } from './types';
-
-// this provides a stable function that always calls the latest callback.
-// it doesn't need a dependency array, and prevents memory leaks.
-// https://www.schiener.io/2024-03-03/react-closures
-export function useCallbackRef<T extends any[], U>(
-    callback: (...args: T) => U,
-): (...args: T) => U {
-    const callbackRef = useRef(callback);
-    callbackRef.current = callback;
-    return useCallback<(...args: T) => U>(
-        (...args) => callbackRef.current(...args),
-        [],
-    );
-}
 
 /**
  * Wraps a child form page or sequence by updating its `id` to include the parent's `id`
