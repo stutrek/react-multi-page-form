@@ -16,6 +16,11 @@ export default function RootLayout({
                     &copy; 2024 Stu Kabakoff
                 </div>
             </body>
+            <script
+                defer
+                src="https://umami.stutrek.com/script.js"
+                data-website-id="3af56b1c-38b6-421c-b59c-64fe9fb50784"
+            />
         </html>
     );
 }
