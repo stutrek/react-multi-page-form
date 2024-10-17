@@ -7,7 +7,15 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
             if (href?.startsWith('/')) {
                 href = `/react-multi-page-form${href}`;
             }
-            return <a href={href} {...props} />;
+            return <a {...props} href={href} />;
+        },
+        img: (props) => {
+            let src = props.src as string;
+            if (src?.startsWith('/')) {
+                src = `/react-multi-page-form${src}`;
+            }
+            // biome-ignore lint/a11y/useAltText: <explanation>
+            return <img {...props} src={src} />;
         },
         ...components,
     };
