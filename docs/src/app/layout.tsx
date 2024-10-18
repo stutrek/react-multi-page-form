@@ -1,4 +1,6 @@
 import type { Metadata } from 'next';
+import logoIcon from '../../public/Logo Icon.png';
+import ogImage from '../../public/OG image.png';
 import './globals.css';
 import './markdown.css';
 
@@ -9,6 +11,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <link rel="icon" href={logoIcon.src} sizes="any" />
+                <link rel="apple-touch-icon" href={logoIcon.src} sizes="any" />
+            </head>
             <body className="antialiased">
                 {children}
                 <div className="container max-w-3xl mx-auto p-4 text-sm text-gray-400">
@@ -31,4 +37,7 @@ export const metadata: Metadata = {
         default: 'React Multi Page Form',
     },
     description: 'A multi-page form library for React',
+    openGraph: {
+        images: [ogImage.src],
+    },
 };
