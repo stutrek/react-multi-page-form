@@ -3,6 +3,7 @@ import logoIcon from '../../public/Logo Icon.png';
 import ogImage from '../../public/OG image.png';
 import './globals.css';
 import './markdown.css';
+import { Tracking } from './tracking';
 
 export default function RootLayout({
     children,
@@ -22,8 +23,10 @@ export default function RootLayout({
                     &copy; 2024 Stu Kabakoff
                 </div>
             </body>
+            <Tracking />
             <script
                 defer
+                async
                 src="https://umami.stutrek.com/script.js"
                 data-website-id="3af56b1c-38b6-421c-b59c-64fe9fb50784"
             />
