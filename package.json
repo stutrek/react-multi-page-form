@@ -12,7 +12,8 @@
         "lint": "biome lint ./src",
         "prepare": "husky",
         "test": "jest",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "prepublishOnly": "npm run build"
     },
     "keywords": ["forms", "multi-page"],
     "author": "Stu Kabakoff",
