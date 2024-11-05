@@ -1,6 +1,6 @@
 {
     "name": "react-multi-page-form",
-    "version": "0.2.0",
+    "version": "0.2.1",
     "description": "Tools to handle multi-page forms",
     "main": "dist/index.js",
     "files": [
